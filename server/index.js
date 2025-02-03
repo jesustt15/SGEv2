@@ -18,6 +18,7 @@ app.use(bodyparser.json());
 app.use('/sge/auth', require('./routes/auth'));
 app.use('/sge/users', require('./routes/users'));
 app.use('/sge/estudiantes', require('./routes/estudiantes'));
+app.use('/sge/profesores', require('./routes/profesores'));
 
 sequelize.sync({ force: false }) // Asegúrate de usar { force: false } en producción
     .then(() => {
