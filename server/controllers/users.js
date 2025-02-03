@@ -25,10 +25,15 @@ const login =  async(req , res = response ) => {
     try {
       const user = await User.findOne({ where: { username } });
       if (!user || !await bcrypt.compare(password, user.password)) {
-        return res.status(401).send('Invalid credentials.');
+        return res.status(401).json({
+
+            msg: 'Credenciales Incorrectas'
+        });
       }
-      const token = jwt.sign({ id: user.id }, 'secretKey', { expiresIn: '1h' });
-      res.json({ token }, 'all ok');
+      const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '1h' });
+      res.json({ token, 
+          role: user.role
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -37,10 +42,10 @@ const login =  async(req , res = response ) => {
 
 const crearUser =  async(req , res = response ) => {
     
-    const { username, password, role } = req.body;
+    const { username, password, role , name} = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
-      const user = await User.create({ username, password: hashedPassword, role });
+      const user = await User.create({ username, password: hashedPassword, role, name });
       res.status(201).json(user);
     } catch (error) {
       res.status(400).json({ error: error.message });

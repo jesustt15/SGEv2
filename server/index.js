@@ -14,14 +14,17 @@ app.use(express.json()); // Middleware para parsear JSON
 
 //Rutas
 app.use('/sge/auth', require('./routes/auth'));
+app.use('/sge/users', require('./routes/users'));
 
-app.listen(PORT, async () => {
-    try {
-      await sequelize.sync({ force: true });
-      console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    } catch (error) {
-      console.log('Error al sincronizar la base de datos:', error);
-    }
-  });
+sequelize.sync({ force: false }) // Asegúrate de usar { force: false } en producción
+    .then(() => {
+        console.log('Base de datos y tablas sincronizadas');
+        app.listen(PORT, () => {
+            console.log(`Servidor escuchando en el puerto ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error('Error al sincronizar la base de datos:', err);
+    });
 
   

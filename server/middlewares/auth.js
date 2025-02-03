@@ -1,16 +1,23 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { User } = require('../models/User');
+const  User  = require('../models/User');
 
 const authenticate = async (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(403).send('Access denied.');
+  const tokenHeader = req.headers['authorization'];
+  if (!tokenHeader) return res.status(403).send('Access denied.');
 
-  try {
+  const token = tokenHeader.split(' ')[1]; // Eliminar "Bearer "
+
+  try{
+    console.log('Token:', token);  // Añade esta línea para ver el token
     const decoded = jwt.verify(token, 'secretKey');
-    req.user = await User.findByPk(decoded.id);
-    next();
-  } catch (error) {
+    console.log('Decoded:', decoded);  // Verifica los datos decodificados
+    req.user = await User.findByPk(decoded.user_id);
+      next();
+  }
+
+   catch (error) {
+    console.error(error);
     res.status(400).send('Invalid token.');
   }
 };
