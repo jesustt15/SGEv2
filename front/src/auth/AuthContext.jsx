@@ -1,22 +1,36 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { loginRequest } from '../api';
 
 export const AuthContext = createContext();
 
+export const useAuth = () =>{
+    
+
+    const context = useContext(AuthContext);
+
+    if (!context){
+        throw new Error('useAuth debe estar en el contexto')
+    }
+     return context;
+
+} 
+
+
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     token: null,
     role: null,
+    isAuthenticated: false
   });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     if (token) {
-      setAuthState({ token, role });
+      setAuthState({ token, role, isAuthenticated: true });
     }
   }, []);
 
@@ -26,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       const { token, role } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
-      setAuthState({ token, role });
+      setAuthState({ token, role, isAuthenticated:true });
     } catch (error) {
       console.error('Error during login:', error);
     }
@@ -44,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    setAuthState({ token: null, role: null });
+    setAuthState({ token: null, role: null, isAuthenticated: false });
   };
 
   return (
