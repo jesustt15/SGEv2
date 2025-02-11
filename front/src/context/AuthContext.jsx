@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { loginRequest } from '../api';
+import {useNavigate} from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     role: null,
     isAuthenticated: false
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -41,6 +43,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       setAuthState({ token, role, isAuthenticated:true });
+      alert('bello');
+      navigate('/');
     } catch (error) {
       console.error('Error during login:', error);
     }
