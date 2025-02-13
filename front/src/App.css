@@ -1,0 +1,27 @@
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh; /* Altura completa de la ventana */
+  }
+  
+  .sidebar {
+    width: 15rem; /* Ancho del sidebar */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+    overflow-y: auto; /* Permitir desplazamiento vertical si el contenido es más grande que la pantalla */
+  }
+  
+  .main-content {
+    flex-grow: 1; /* Ocupa el resto del espacio */
+    padding: 1rem; /* Espaciado interno opcional */
+    overflow-y: auto; /* Permitir desplazamiento vertical si el contenido es más grande que la pantalla */
+  }
+   
+  .sign-out {
+    margin-top:23.5rem; /* Empuja el elemento hacia la parte inferior */
+  }
+  

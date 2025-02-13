@@ -1,21 +1,25 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../context';
+import { useAuth } from '../context/AuthContext';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
+export const RutaProtegida = () => {
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
- export const RutaProtegida = () => {
-    const { isAuthenticated } = useAuth();
-    const location = useLocation();
+  if (loading) {
+    <ProgressSpinner />
+    return null;
+  }
 
-    // Si no hay usuario, redirige a /auth/
-    if (!isAuthenticated) {
-        return <Navigate to="/auth" state={{ from: location }} replace />;
-    }
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" state={{ from: location }} replace />;
+  }
 
-    // Evita redirigir a la ruta raíz si el usuario está autenticado
   if (isAuthenticated && location.pathname === '/auth') {
     return <Navigate to="/" replace />;
   }
 
-
-    return <Outlet />;
+  return <Outlet />;
 };
+
+

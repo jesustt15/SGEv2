@@ -9,6 +9,6 @@ router.get('/', authenticate, authorize(['admin', 'user']), getUsers);
   
 router.post('/new', authenticate, authorize(['admin']), crearUser);
   
-router.put('/users/:id', authenticate, authorize(['admin']), editUser);
+router.put('/:id', authenticate, authorize(['admin']), editUser);
 
 module.exports = router;

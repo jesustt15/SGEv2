@@ -1,7 +1,8 @@
 
 import { BrowserRouter } from 'react-router-dom'
 import { AppRouter } from './router'
-import { AuthProvider } from './context'
+import { AuthProvider, UsuarioProvider } from './context'
+import './App.css';
 
 function App() {
 
@@ -9,7 +10,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRouter />
+        <UsuarioProvider>
+          <AppRouter />
+        </UsuarioProvider>
       </AuthProvider>
 </BrowserRouter>
 
