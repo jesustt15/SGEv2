@@ -1,9 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { loginRequest } from '../api';
 import {useNavigate} from 'react-router-dom';
+import { Toast } from 'primereact/toast';
 
 export const AuthContext = createContext();
 
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: false
   });
   const navigate = useNavigate();
+  const toast = useRef(null); // Referencia para el Toast
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -43,10 +45,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       setAuthState({ token, role, isAuthenticated:true });
-      alert('bello');
+      toast.current.show({ severity: 'success', summary: 'Login Exitoso', detail: 'Bienvenido de nuevo!', life: 3000 });
       navigate('/');
     } catch (error) {
       console.error('Error during login:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Usuario o contraseña incorrectos', life: 3000});
     }
   };
 
@@ -68,6 +71,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ ...authState, login, register, logout }}>
       {children}
+      <Toast ref={toast} />
     </AuthContext.Provider>
   );
 };
