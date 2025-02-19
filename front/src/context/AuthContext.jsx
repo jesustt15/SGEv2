@@ -20,8 +20,10 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     token: null,
     role: null,
+    name: null,
     isAuthenticated: false,
   });
+
   const [loading, setLoading] = useState(true); // Nuevo estado para manejar la carga inicial
   const navigate = useNavigate();
   const toast = useRef(null); // Referencia para el Toast
@@ -29,8 +31,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-    if (token && role) {
-      setAuthState({ token, role, isAuthenticated: true });
+    const name = localStorage.getItem('name');
+    if (token && role && name) {
+      setAuthState({ token, role,name, isAuthenticated: true });
     }
     setLoading(false); // La carga ha terminado
   }, []);
@@ -38,9 +41,10 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const response = await loginRequest({ username, password });
-      const { token, role } = response.data;
+      const { token, role , name } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
+      localStorage.setItem('name', name);
       setAuthState({ token, role, isAuthenticated: true });
       toast.current.show({
         severity: 'success',

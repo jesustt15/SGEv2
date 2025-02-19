@@ -10,9 +10,31 @@ html, body, #root {
   }
   
   .sidebar {
-    width: 15rem; /* Ancho del sidebar */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra opcional */
-    overflow-y: auto; /* Permitir desplazamiento vertical si el contenido es más grande que la pantalla */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    color: #fff;
+  }
+  
+  .user-avatar {
+    margin-bottom: 0.5rem;
+  }
+  
+  .menu-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .user-info p {
+    margin: 0;
+    font-weight: bold;
+    color: #333333;
   }
   
   .main-content {
@@ -21,7 +43,3 @@ html, body, #root {
     overflow-y: auto; /* Permitir desplazamiento vertical si el contenido es más grande que la pantalla */
   }
    
-  .sign-out {
-    margin-top:23.5rem; /* Empuja el elemento hacia la parte inferior */
-  }
-  
