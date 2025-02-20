@@ -1,8 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from "react";
-import {  } from '../api';
+import { createContext, useContext, useRef, useState } from "react";
 import { createUsuariosRequest, deleteUsuarioRequest, getOneUsuarioRequest, getUsuariosRequest, updateUsuarioRequest } from "../api/usuarios";
+import { useNavigate } from "react-router-dom";
+import { Toast } from 'primereact/toast';
 
 const UsuarioContext = createContext();
 
@@ -16,6 +17,8 @@ export const useUsuario = () => {
 
 export function UsuarioProvider({ children }) {
     const [usuario, setUsuario] = useState([]);
+    const toast = useRef(null); // Referencia para el Toast
+    const navigate = useNavigate();
 
     const getUsuarios = async () => {
         try {
@@ -30,10 +33,17 @@ export function UsuarioProvider({ children }) {
         try {
             const existingUser = usuario.find(u => u.username === user.username);
             if (existingUser) {
-                throw new Error('User with this email already exists.');
+                throw new Error('Usuario con este username ya existe.');
             }
             await createUsuariosRequest(user);
-            getUsuarios(); // Refresh the user list
+            getUsuarios();
+            toast.current.show({
+                severity: 'success',
+                summary: 'Registro Exitoso',
+                detail: 'Nuevo Usuario agregado',
+                life: 3000,
+              }); 
+            navigate('/usuarios'); 
         } catch (error) {
             console.error("Error creating user:", error);
             throw error; // Re-throw the error to be caught in the component
@@ -78,6 +88,7 @@ export function UsuarioProvider({ children }) {
             getOneUsuario
         }}>
             {children}
+            <Toast ref={toast} />
         </UsuarioContext.Provider>
     );
 }

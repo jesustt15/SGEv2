@@ -3,18 +3,64 @@ html, body, #root {
     margin: 0;
     padding: 0;
   }
-  
-  .container {
+    
+.table-header .p-input-icon-left .search-input {
+  padding-left: 2rem; /* Espacio dentro del input para el icono */
+}
+
+.table-header .p-input-icon-left .search-icon {
+  position: absolute;
+  left: 0.5rem; 
+}
+
+  .protected-layout {
     display: flex;
-    height: 100vh; /* Altura completa de la ventana */
+    height: 100vh;
+    overflow: hidden;
   }
   
   .sidebar {
+    width: 13rem;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    transition: width 0.3s ease-in-out; 
   }
   
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s;
+  }
+  
+  .main-content.expanded {
+    margin-left: 0;
+  }
+  
+  .header {
+    height: 60px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+  }
+  
+  .menu-toggle-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 1rem;
+  }
+  
+  .content-area {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  /* Estilos para el Sidebar */
   .user-info {
     display: flex;
     flex-direction: column;
@@ -23,23 +69,14 @@ html, body, #root {
     color: #fff;
   }
   
-  .user-avatar {
-    margin-bottom: 0.5rem;
+  .user-info p {
+    margin-top: 0.5rem;
+    font-weight: bold;
   }
   
   .menu-content {
     flex: 1;
     overflow-y: auto;
-  }
-  .user-info p {
-    margin: 0;
-    font-weight: bold;
-    color: #333333;
+    transition: opacity 0.3s ease-in-out;
   }
   
-  .main-content {
-    flex-grow: 1; /* Ocupa el resto del espacio */
-    padding: 1rem; /* Espaciado interno opcional */
-    overflow-y: auto; /* Permitir desplazamiento vertical si el contenido es más grande que la pantalla */
-  }
-   

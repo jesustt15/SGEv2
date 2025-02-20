@@ -4,7 +4,7 @@ const  User  = require('../models/User');
 
 const authenticate = async (req, res, next) => {
   const tokenHeader = req.headers['authorization'];
-  if (!tokenHeader) return res.status(403).send('Access denied.');
+  if (!tokenHeader) return res.status(401).send('Access denied.');
 
   const token = tokenHeader.split(' ')[1]; // Eliminar "Bearer "
 

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 export const RutaProtegida = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth('');
   const location = useLocation();
 
   if (loading) {

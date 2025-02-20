@@ -84,10 +84,30 @@ const editUser =  async(req , res = response ) => {
     
 }
 
+const deleteUser = async (req, res = response ) => {
+
+  try {
+    const user = await User.destroy({where: {user_id: req.params.id}});
+    if(user){
+       return res.status(204).json({
+          ok: false,
+          name: user.name,
+          msg: 'El usuario ha sido eliminado'
+       })
+    }
+    } catch (error) {
+    console.log(error);
+    res.status(500).json({error});
+ }
+
+
+}
+
 module.exports = {
     register,
     login,
     crearUser,
     getUsers,
-    editUser
+    editUser,
+    deleteUser
 }

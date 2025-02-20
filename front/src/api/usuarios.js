@@ -10,7 +10,7 @@
 import axios from './config';
 
 export const getUsuariosRequest = () => axios.get('/users');
-export const createUsuariosRequest = (user) => axios.post('/users', user);
+export const createUsuariosRequest = (user) => axios.post('/users/new', user);
 export const updateUsuarioRequest = (id, user) => axios.put(`/users/${id}`, user);
 export const deleteUsuarioRequest = (id) => axios.delete(`/users/${id}`);
 export const getOneUsuarioRequest = (id) => axios.get(`/users/${id}`);
