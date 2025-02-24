@@ -12,25 +12,29 @@ const Representante = sequelize.define('representantes', {
     type: DataTypes.ENUM('Madre', 'Padre'),
     allowNull: false,
   },
-  apellidosNombres: {
+  nombre: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  estadoCivil: DataTypes.STRING,
+  apellido: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  edo_civil: DataTypes.STRING,
   edad: DataTypes.INTEGER,
-  cedulaIdentidad: DataTypes.STRING,
+  ced: DataTypes.STRING,
   direccion: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  telefonos: {
+  telf: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   ocupacion: DataTypes.STRING,
-  trabaja: DataTypes.BOOLEAN,
-  direccionTrabajo: DataTypes.STRING,
-  telefonoTrabajo: DataTypes.STRING,
+  trabajo: DataTypes.BOOLEAN,
+  dire_trabajo: DataTypes.STRING,
+  telf_trabajo: DataTypes.STRING,
   foto: DataTypes.STRING, // Foto opcional del representante
   
 });

@@ -8,17 +8,21 @@ const Autorizado = sequelize.define('autorizados', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  apellidosNombres: {
+  nombre:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  apellido:{
     type: DataTypes.STRING,
     allowNull: false,
   },
   parentesco: DataTypes.STRING,
-  cedulaIdentidad: DataTypes.STRING,
+  ced: DataTypes.STRING,
   direccion: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  telefonos: {
+  telf: {
     type: DataTypes.STRING,
     allowNull: false,
   },

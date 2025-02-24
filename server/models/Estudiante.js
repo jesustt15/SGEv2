@@ -28,13 +28,6 @@ const Estudiante = sequelize.define('estudiantes', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  celulares: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
-    allowNull: false,
-    validate: {
-      len: [1, 2], // Se esperan hasta 2 números de celular
-    },
-  },
   cedulaEscolar: DataTypes.STRING,
   correoElectronico: {
     type: DataTypes.STRING,

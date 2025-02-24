@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Profesor = sequelize.define('profesores', {
+const Personal = sequelize.define('personals', {
   
-  profesor_id: {
+  personal_id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
@@ -16,12 +16,15 @@ const Profesor = sequelize.define('profesores', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  cedula: {
-    type: DataTypes.STRING,
+  ced: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
+  cod: DataTypes.STRING,
+  telf: DataTypes.STRING,
+  cargo: DataTypes.STRING
   
   
 });
 
-module.exports = Profesor;
+module.exports = Personal;

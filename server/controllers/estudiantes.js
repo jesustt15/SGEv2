@@ -1,5 +1,6 @@
 const {response} = require("express");
 const Estudiante = require("../models/Estudiante");
+const Representante = require("../models/Representante");
 
 
 const getEstudiantes = async(req, res = response) => {
@@ -97,6 +98,18 @@ const eliminarEstudiante = async(req, res = response) => {
 
 }
 
+async function asociarEstudianteRepresentante(estudiante_id, representante_id) {
+    const estudiante = await Estudiante.findByPk(estudiante_id);
+    const representante = await Representante.findByPk(representante_id);
+  
+    if (estudiante && representante) {
+      await estudiante.addRepresentante(representante);
+      console.log('Representante asociado al estudiante exitosamente.');
+    } else {
+      console.log('Estudiante o Representante no encontrados.');
+    }
+  }
+
 
 module.exports = {
 
@@ -104,5 +117,6 @@ module.exports = {
     getOneEstudiante,
     eliminarEstudiante,
     editarEstudiante,
-    crearEstudiante
+    crearEstudiante,
+    asociarEstudianteRepresentante
 }
