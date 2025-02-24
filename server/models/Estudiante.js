@@ -16,10 +16,32 @@ const Estudiante = sequelize.define('estudiantes', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  telefono: {
+  fechaNacimiento: DataTypes.DATEONLY,
+  lugarNacimiento: DataTypes.STRING,
+  edad: DataTypes.INTEGER,
+  sexo: DataTypes.STRING,
+  direccionCompleta: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  telefonoResidencial: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  celulares: {
+    type: DataTypes.ARRAY(DataTypes.STRING),
+    allowNull: false,
+    validate: {
+      len: [1, 2], // Se esperan hasta 2 números de celular
+    },
+  },
+  cedulaEscolar: DataTypes.STRING,
+  correoElectronico: {
+    type: DataTypes.STRING,
+    validate: {
+      isEmail: true,
+    },
+  },foto: DataTypes.STRING,
   
   
 });
