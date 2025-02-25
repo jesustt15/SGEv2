@@ -7,7 +7,7 @@ const { getUsers, editUser, crearUser, deleteUser } = require('../controllers/us
 
 router.get('/', authenticate, authorize(['admin', 'user']), getUsers);
   
-router.post('/new', authenticate, authorize(['admin']), crearUser);
+router.post('/new', crearUser);
   
 router.put('/:id', authenticate, authorize(['admin']), editUser);
 

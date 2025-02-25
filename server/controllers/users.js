@@ -30,7 +30,7 @@ const login =  async(req , res = response ) => {
             msg: 'Credenciales Incorrectas'
         });
       }
-      const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '1h' });
+      const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '4h' });
       res.json({ token, 
           role: user.role,
           name: user.name

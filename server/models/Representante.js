@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Estudiante = require('./Estudiante');
 
 const Representante = sequelize.define('representantes', {
   
@@ -38,5 +39,6 @@ const Representante = sequelize.define('representantes', {
   foto: DataTypes.STRING, // Foto opcional del representante
   
 });
+
 
 module.exports = Representante;

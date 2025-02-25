@@ -34,11 +34,13 @@ const getOneEstudiante = async(req, res = response) => {
 
 const crearEstudiante = async(req, res = response) => {
 
-    const {nombres, apellidos, telefono } = req.body;
+    const {nombres, apellidos,direccionCompleta,telefonoResidencial, fechaNacimiento,
+            lugarNacimiento, edad, sexo, cedulaEscolar, correoElectronico, foto } = req.body;
 
     try {
 
-        const estudiante = await Estudiante.create({nombres, apellidos , telefono});
+        const estudiante = await Estudiante.create({nombres, apellidos,direccionCompleta,telefonoResidencial, fechaNacimiento,
+            lugarNacimiento, edad, sexo, cedulaEscolar, correoElectronico, foto});
         res.status(201).json(estudiante)
         
     } catch (error) {
@@ -98,17 +100,51 @@ const eliminarEstudiante = async(req, res = response) => {
 
 }
 
-async function asociarEstudianteRepresentante(estudiante_id, representante_id) {
-    const estudiante = await Estudiante.findByPk(estudiante_id);
-    const representante = await Representante.findByPk(representante_id);
+const asociarEstudianteRepresentante = async(req , res = response) => {
+        const {estudiante_id, representante_id} = req.body;
   
-    if (estudiante && representante) {
-      await estudiante.addRepresentante(representante);
-      console.log('Representante asociado al estudiante exitosamente.');
+        try {
+            const estudiante = await Estudiante.findByPk(estudiante_id);
+            const representante = await Representante.findByPk(representante_id);
+        
+            if (estudiante && representante) {
+              await estudiante.addRepresentante(representante);
+              res.status(200).json({ message: 'Representante asociado al estudiante exitosamente.' });
+            } else {
+              res.status(404).json({ message: 'Estudiante o Representante no encontrados.' });
+            }
+          } catch (error) {
+            res.status(500).json({ message: error.message })
+            }
+}
+
+const getRepresentantesDeAlumno = async (req, res = response) => {
+  const { id } = req.params;
+  console.log(id);
+  
+  try {
+    const estudiante = await Estudiante.findByPk(id, {
+      include: [
+        {
+          model: Representante,
+          as: 'representantes',
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+    
+    if (estudiante) {
+      res.status(200).json(estudiante.representantes);
     } else {
-      console.log('Estudiante o Representante no encontrados.');
+      res.status(404).json({ message: 'Estudiante no encontrado.' });
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+};
+
 
 
 module.exports = {
@@ -118,5 +154,6 @@ module.exports = {
     eliminarEstudiante,
     editarEstudiante,
     crearEstudiante,
-    asociarEstudianteRepresentante
+    asociarEstudianteRepresentante,
+    getRepresentantesDeAlumno
 }
