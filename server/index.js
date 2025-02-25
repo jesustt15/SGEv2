@@ -34,4 +34,4 @@ sequelize.sync({ force: false }) // Asegúrate de usar { force: false } en produ
         console.error('Error al sincronizar la base de datos:', err);
     });
 
-  //este es el ultimo
+ 
