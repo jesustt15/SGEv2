@@ -8,11 +8,14 @@ require('dotenv').config();
 
 const {PORT} = process.env;
 
+
+
 const app = express();
 
 app.use(cors()); //usar el corss
 app.use(express.json()); // Middleware para parsear JSON
 app.use(bodyparser.json());
+app.use('/uploads', express.static('uploads'));
 
 //Rutas
 app.use('/sge/auth', require('./routes/auth'));

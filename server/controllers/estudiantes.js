@@ -1,6 +1,34 @@
 const {response} = require("express");
+const multer = require("multer");
 const Estudiante = require("../models/Estudiante");
 const Representante = require("../models/Representante");
+
+
+
+
+// Configuración de almacenamiento
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Carpeta donde se almacenarán las fotos
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+// Filtro para tipos de archivo
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('El archivo no es una imagen válida.'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+});
 
 
 const getEstudiantes = async(req, res = response) => {
@@ -32,23 +60,44 @@ const getOneEstudiante = async(req, res = response) => {
 
 }
 
-const crearEstudiante = async(req, res = response) => {
+const crearEstudiante = async (req, res = response) => {
+  const {
+    nombres,
+    apellidos,
+    direccionCompleta,
+    telefonoResidencial,
+    fechaNacimiento,
+    lugarNacimiento,
+    edad,
+    sexo,
+    cedulaEscolar,
+    correoElectronico,
+  } = req.body;
 
-    const {nombres, apellidos,direccionCompleta,telefonoResidencial, fechaNacimiento,
-            lugarNacimiento, edad, sexo, cedulaEscolar, correoElectronico, foto } = req.body;
+  try {
+    // Obtener la ruta de la foto
+    const fotoRuta = req.file ? req.file.path : null;
 
-    try {
+    const estudiante = await Estudiante.create({
+      nombres,
+      apellidos,
+      direccionCompleta,
+      telefonoResidencial,
+      fechaNacimiento,
+      lugarNacimiento,
+      edad,
+      sexo,
+      cedulaEscolar,
+      correoElectronico,
+      foto: fotoRuta,
+    });
 
-        const estudiante = await Estudiante.create({nombres, apellidos,direccionCompleta,telefonoResidencial, fechaNacimiento,
-            lugarNacimiento, edad, sexo, cedulaEscolar, correoElectronico, foto});
-        res.status(201).json(estudiante)
-        
-    } catch (error) {
+    res.status(201).json(estudiante);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-        res.status(400).json({error: error.message})   
-    }
-
-}
 
 const editarEstudiante = async(req, res = response) => {
 
@@ -155,5 +204,7 @@ module.exports = {
     editarEstudiante,
     crearEstudiante,
     asociarEstudianteRepresentante,
-    getRepresentantesDeAlumno
+    getRepresentantesDeAlumno, 
+    
+    upload
 }

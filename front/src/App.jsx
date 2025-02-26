@@ -1,7 +1,7 @@
 
 import { BrowserRouter } from 'react-router-dom'
 import { AppRouter } from './router'
-import { AuthProvider, UsuarioProvider } from './context'
+import { AuthProvider, EstudianteProvider, UsuarioProvider } from './context'
 import './App.css';
 
 function App() {
@@ -11,7 +11,9 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <UsuarioProvider>
-          <AppRouter />
+          <EstudianteProvider>
+              <AppRouter />
+          </EstudianteProvider>
         </UsuarioProvider>
       </AuthProvider>
 </BrowserRouter>

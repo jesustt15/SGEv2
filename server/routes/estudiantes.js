@@ -7,7 +7,8 @@ const {
     eliminarEstudiante,
     getOneEstudiante,
     asociarEstudianteRepresentante,
-    getRepresentantesDeAlumno
+    getRepresentantesDeAlumno,
+    upload
 } = require("../controllers/estudiantes");
 
 const router = Router();
@@ -16,7 +17,7 @@ const router = Router();
 router.get('/', authenticate, authorize(['admin', 'user']), getEstudiantes);
 
 // Ruta para crear un estudiante
-router.post('/', authenticate, authorize(['admin']), crearEstudiante);
+router.post('/', authenticate, authorize(['admin']), upload.single('foto'), crearEstudiante);
 
 // Ruta para asociar un representante a un estudiante
 router.post('/asociar', authenticate, authorize(['admin']), asociarEstudianteRepresentante);

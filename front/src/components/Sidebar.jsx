@@ -24,10 +24,10 @@ export const Sidebar = () => {
         ...(role === 'admin'
           ? [
               {
-                label: 'Editar Estudiante',
+                label: 'Agregar Estudiante',
                 icon: 'pi pi-pencil',
                 template: (item, options) => (
-                  <NavLink to="/estudiantes/editar" className={options.className}>
+                  <NavLink to="/estudiantes/new" className={options.className}>
                     <i className={options.iconClassName}></i>
                     <span className={options.labelClassName}>{item.label}</span>
                   </NavLink>
@@ -37,7 +37,7 @@ export const Sidebar = () => {
                 label: 'Borrar Estudiante',
                 icon: 'pi pi-trash',
                 template: (item, options) => (
-                  <NavLink to="/estudiantes/borrar" className={options.className}>
+                  <NavLink to="/estudiantes" className={options.className}>
                     <i className={options.iconClassName}></i>
                     <span className={options.labelClassName}>{item.label}</span>
                   </NavLink>
