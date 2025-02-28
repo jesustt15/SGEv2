@@ -8,8 +8,8 @@ const {
     getOneEstudiante,
     asociarEstudianteRepresentante,
     getRepresentantesDeAlumno,
-    upload
 } = require("../controllers/estudiantes");
+const uploadMiddleware = require('../middlewares/uploadMiddleware')
 
 const router = Router();
 
@@ -17,7 +17,7 @@ const router = Router();
 router.get('/', authenticate, authorize(['admin', 'user']), getEstudiantes);
 
 // Ruta para crear un estudiante
-router.post('/', authenticate, authorize(['admin']), upload.single('foto'), crearEstudiante);
+router.post('/', authenticate, authorize(['admin']), uploadMiddleware.uploadEstudiante.single('foto'), crearEstudiante);
 
 // Ruta para asociar un representante a un estudiante
 router.post('/asociar', authenticate, authorize(['admin']), asociarEstudianteRepresentante);

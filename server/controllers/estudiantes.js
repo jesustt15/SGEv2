@@ -1,34 +1,9 @@
 const {response} = require("express");
-const multer = require("multer");
 const Estudiante = require("../models/Estudiante");
 const Representante = require("../models/Representante");
+const path = require('path');
 
 
-
-
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Carpeta donde se almacenarán las fotos
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-
-// Filtro para tipos de archivo
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('El archivo no es una imagen válida.'), false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-});
 
 
 const getEstudiantes = async(req, res = response) => {
@@ -73,10 +48,10 @@ const crearEstudiante = async (req, res = response) => {
     cedulaEscolar,
     correoElectronico,
   } = req.body;
+  const foto = req.file;
+  const fotoPath = foto ? path.join('uploads', 'fotoEstudiante', foto.filename) : null;
 
   try {
-    // Obtener la ruta de la foto
-    const fotoRuta = req.file ? req.file.path : null;
 
     const estudiante = await Estudiante.create({
       nombres,
@@ -89,7 +64,7 @@ const crearEstudiante = async (req, res = response) => {
       sexo,
       cedulaEscolar,
       correoElectronico,
-      foto: fotoRuta,
+      foto: fotoPath,
     });
 
     res.status(201).json(estudiante);
@@ -206,5 +181,4 @@ module.exports = {
     asociarEstudianteRepresentante,
     getRepresentantesDeAlumno, 
     
-    upload
 }

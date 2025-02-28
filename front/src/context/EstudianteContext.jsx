@@ -30,13 +30,13 @@ export function EstudianteProvider({ children }) {
         }
     };
 
-    const createEstudiante = async (estudiante) => {
+    const createEstudiante = async (est) => {
         try {
-            const existingestudiante = estudiante.find(u => u.cedulaEscolar === estudiante.cedulaEscolar);
+            const existingestudiante = estudiante.find(u => u.cedulaEscolar === est.cedulaEscolar);
             if (existingestudiante) {
                 throw new Error('este Estudiante ya existe.');
             }
-            await createEstudiantesRequest(estudiante);
+            await createEstudiantesRequest(est);
             getEstudiantes();
             toast.current.show({
                 severity: 'success',

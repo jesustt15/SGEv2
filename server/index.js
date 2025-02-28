@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const sequelize = require('./config/database');
+const fs = require('fs');
+const path = require('path');
+
 require('dotenv').config();
 
 
