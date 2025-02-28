@@ -26,7 +26,7 @@ router.post('/asociar', authenticate, authorize(['admin']), asociarEstudianteRep
 router.get('/:id/representantes', authenticate, authorize(['admin', 'user']), getRepresentantesDeAlumno);
 
 // Rutas para editar, eliminar y obtener un estudiante específico
-router.put('/:id', authenticate, authorize(['admin']), editarEstudiante);
+router.put('/:id', authenticate, authorize(['admin']),  uploadMiddleware.uploadEstudiante.single('foto') ,editarEstudiante);
 router.delete('/:id', authenticate, authorize(['admin']), eliminarEstudiante);
 router.get('/:id', authenticate, authorize(['admin', 'user']), getOneEstudiante);
 

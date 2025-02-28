@@ -34,13 +34,13 @@ const getOneRepresentante = async(req, res = response) => {
 const crearRepresentante = async(req, res = response) => {
 
     const {tipo, nombre, apellido, edo_civil, edad, ced,telf,
-            direccion, ocupacion, trabajo, dire_trabajo, telf_trabajo, foto
+            direccion, ocupacion, trabajo, dire_trabajo, telf_trabajo, correoElectronico,foto
     } = req.body;
 
     try {
 
         const representante = await Representante.create({tipo, nombre, apellido, edo_civil, edad, ced,telf,
-            direccion, ocupacion, trabajo, dire_trabajo, telf_trabajo, foto});
+            direccion, ocupacion, trabajo, dire_trabajo, telf_trabajo,correoElectronico, foto});
         res.status(201).json(representante)
         
     } catch (error) {

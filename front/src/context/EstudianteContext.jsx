@@ -47,7 +47,12 @@ export function EstudianteProvider({ children }) {
             navigate('/estudiantes'); 
         } catch (error) {
             console.error("Error creating estudiante:", error);
-            throw error; // Re-throw the error to be caught in the component
+            if (error.response && error.response.data && error.response.data.errors) {
+              // Throw validation errors to be caught in the component
+              throw error.response.data.errors;
+            } else {
+              throw [{ message: 'Error al crear estudiante' }];
+            }
         }
     };
 

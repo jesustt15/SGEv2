@@ -46,7 +46,6 @@ const crearEstudiante = async (req, res = response) => {
     edad,
     sexo,
     cedulaEscolar,
-    correoElectronico,
   } = req.body;
   const foto = req.file;
   const fotoPath = foto ? path.join('uploads', 'fotoEstudiante', foto.filename) : null;
@@ -63,13 +62,31 @@ const crearEstudiante = async (req, res = response) => {
       edad,
       sexo,
       cedulaEscolar,
-      correoElectronico,
       foto: fotoPath,
     });
 
     res.status(201).json(estudiante);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (error.name === 'SequelizeValidationError') {
+      // Collect all validation error messages
+      const validationErrors = error.errors.map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      res.status(400).json({ errors: validationErrors });
+    } else if (error.name === 'SequelizeUniqueConstraintError') {
+      // Handle unique constraint errors separately
+      const uniqueErrors = error.errors.map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      res.status(400).json({ errors: uniqueErrors });
+    } else {
+      console.error('Error al crear estudiante:', error);
+      res.status(500).json({ error: 'Error al crear estudiante' });
+    }
   }
 };
 
