@@ -1,0 +1,14 @@
+.welcome-header{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 10vh;
+}
+
+.estadisticas{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50%;
+    justify-content: space-around
+}

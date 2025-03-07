@@ -1,82 +1,120 @@
+/* Asegúrate de que html, body y #root ocupen el 100% del alto */
 html, body, #root {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-    
-.table-header .p-input-icon-left .search-input {
-  padding-left: 2rem; /* Espacio dentro del input para el icono */
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.table-header .p-input-icon-left .search-icon {
-  position: absolute;
-  left: 0.5rem; 
+/* Contenedor principal de la app */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-  .protected-layout {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  .sidebar {
-    width: 13rem;
-    display: flex;
-    flex-direction: column;
-    transition: width 0.3s ease-in-out; 
-  }
-  
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    transition: margin-left 0.3s;
-  }
-  
-  .main-content.expanded {
-    margin-left: 0;
-  }
-  
-  .header {
-    height: 60px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-  }
-  
-  .menu-toggle-button {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    margin-right: 1rem;
-  }
-  
-  .content-area {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-  }
-  
-  /* Estilos para el Sidebar */
-  .user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    color: #fff;
-  }
-  
-  .user-info p {
-    margin-top: 0.5rem;
-    font-weight: bold;
-  }
-  
-  .menu-content {
-    flex: 1;
-    overflow-y: auto;
-    transition: opacity 0.3s ease-in-out;
-  }
-  
+/* Header de la app (parte superior fija) */
+.header-app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #333;
+  padding: 0 1rem;
+  height: 15vh;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-app .logo img {
+  height: 8rem;
+}
+
+/* Menú de usuario en el header */
+.header-app .user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header-app .user-menu .user-details {
+  display: flex;
+  align-items: center;
+}
+
+.header-app .user-menu .user-details span {
+  margin: 0 0.5rem;
+}
+
+/* Área que contiene el sidebar y el contenido principal */
+.body-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar: aplica los estilos que ya tengas */
+/* Estilos base para el sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out;
+  border-top-left-radius: 2rem ;
+  border-top-right-radius: 2rem ;
+  background-color: #233255;
+  color: #fff;
+  overflow-x: hidden;
+  border: 1px solid #F6AD2B
+}
+
+/* Estado expandido: muestra textos e íconos */
+.sidebar.expanded {
+  width: 14rem;
+}
+
+/* Estado colapsado: solo se muestran los íconos */
+.sidebar.collapsed {
+  width: 4rem;
+}
+
+/* Estilos para el encabezado del sidebar */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #444;
+}
+
+/* Oculta los textos en estado colapsado */
+.sidebar.collapsed .sidebar-header p,
+.sidebar.collapsed .p-menuitem-text {
+  display: none !important;
+}
+
+/* Cuando está colapsado, centra el contenido en el header */
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+}
+
+.menu-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-link{
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  background-color: #233255;
+  color: white;
+}
+
+/* Contenido principal, adaptándose al espacio restante */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+
+/* (Opcional) Estilos para los menus de PanelMenu, si requieres más ajustes */
