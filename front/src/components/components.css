@@ -1,14 +1,94 @@
 .welcome-header{
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 80%;
-    height: 10vh;
+    height: 25vh;
+}
+.welcome-header h1 {
+    font-size: 35px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    width: 45%;
 }
 
-.estadisticas{
+/* Contenedor general para ambas estadísticas */
+.estadisticas {
+    display: flex;
+    gap: 40px;           /* Espacio entre los contenedores */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  /* Contenedor individual para cada estadística */
+  .estadistica-container {
+    text-align: center;
     display: flex;
     flex-direction: row;
+    width: 30%;
+    justify-content: space-evenly;
     align-items: center;
+  }
+  
+  /* Contenedor de la gráfica, posicionado de forma relativa para ubicar el overlay */
+  .chart-wrapper {
+    position: relative;
+    width: 6rem;  /* Puedes ajustar el tamaño según lo necesites */
+    height: 6rem;
+  }
+  
+  /* Capa superpuesta en el centro de la dona */
+  .chart-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;      /* Organiza ícono y número en columna */
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;        /* Permite interactuar con la gráfica sin interferencias */
+  }
+  
+  /* Estilo para el ícono */
+  .chart-overlay i {
+    font-size: 30px;
+    margin-bottom: 4px;
+  }
+  
+  /* Etiqueta debajo de cada gráfica */
+  .chart-label {
+    font-size: 20px;
+    display: flex;
+    font-weight: 600;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Welcome mid*/
+
+  .welcome-mid {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+  }
+
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 50%;
-    justify-content: space-around
-}
+    border: #333 1px solid;
+  }
+  
+  .graphic-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 31rem;
+    height: 20rem;
+  }

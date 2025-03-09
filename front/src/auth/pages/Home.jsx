@@ -1,4 +1,4 @@
-import { WelcomeHeader } from "../../components";
+import { RightSidebar, WelcomeHeader, WelcomeMid } from "../../components";
 
 
 export const Home = () => {
@@ -6,6 +6,8 @@ export const Home = () => {
     <>
 
          <WelcomeHeader />
+         <WelcomeMid />
+         <RightSidebar/>
     </>
   )
 }

@@ -3,11 +3,9 @@ import  { useState } from 'react';
 import { PanelMenu } from 'primereact/panelmenu';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context';
-import Vector from '/src/assets/Vector.svg';
-import { Dropdown } from 'primereact/dropdown';
 
 export const Sidebar = () => {
-  const { logout, name} = useAuth();
+  const {  name} = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   // Función para alternar el estado del sidebar

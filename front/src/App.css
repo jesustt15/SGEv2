@@ -19,12 +19,12 @@ html, body, #root {
   justify-content: space-between;
   color: #333;
   padding: 0 1rem;
-  height: 15vh;
+  height: 12vh;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .header-app .logo img {
-  height: 8rem;
+  height: 7rem;
 }
 
 /* Menú de usuario en el header */
@@ -113,8 +113,78 @@ html, body, #root {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-top: 1rem;
   overflow-y: auto;
+  border-right: 1px solid #7FBDE44D;
 }
 
 
 /* (Opcional) Estilos para los menus de PanelMenu, si requieres más ajustes */
+/* Contenedor principal del Sidebar: ocupará el 20% del ancho total */
+.right-sidebar {
+  width: 20%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* Para ocupar el alto completo de la pantalla, descomenta:
+  height: 100vh;
+  */
+}
+
+/* Estilos para la sección del calendario */
+.calendar-section {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.calendar-title {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Estilos para la sección de mini tareas */
+.mini-tasks-section {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.tasks-title {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tasks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+  margin-bottom: 5px;
+}
+
+.task-day {
+  display: block;
+  font-weight: bold;
+  color: #0ea5e9;
+}
+
+.task-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
