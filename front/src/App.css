@@ -6,10 +6,41 @@ html, body, #root {
 }
 
 /* Contenedor principal de la app */
+/* DashboardLayout.css */
+
 .app-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100vh; /* Para ocupar todo el alto de la pantalla si lo deseas */
+}
+
+.page-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+/* Ejemplo de Sidebar Izquierdo (puedes adaptarlo) */
+.sidebar {
+  width: 15%; /* O el ancho que desees para el menú de navegación */
+  border-right: 1px solid #ddd;
+}
+
+/* Contenido Principal: se expande según el espacio restante */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  width: 70%;
+  overflow-y: auto;
+}
+
+/* Sidebar Derecho: siempre 20% del ancho total */
+.right-sidebar {
+  width: 30%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
 /* Header de la app (parte superior fija) */
@@ -124,33 +155,30 @@ html, body, #root {
 .right-sidebar {
   width: 20%;
   padding: 10px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+/* RightSidebar.css */
+
+.right-sidebar {
+  padding: 10px;
   box-sizing: border-box;
   background-color: #f9f9f9;
   border-left: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  /* Para ocupar el alto completo de la pantalla, descomenta:
-  height: 100vh;
-  */
 }
 
-/* Estilos para la sección del calendario */
+/* Calendario */
 .calendar-section {
   background-color: #fff;
-  padding: 10px;
   border: 1px solid #ddd;
+  width: 100%;
   border-radius: 5px;
+  margin-bottom: 20px;
 }
 
-.calendar-title {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-/* Estilos para la sección de mini tareas */
+/* Mini tareas */
 .mini-tasks-section {
   background-color: #fff;
   padding: 10px;
@@ -160,9 +188,9 @@ html, body, #root {
 
 .tasks-title {
   text-align: center;
+  margin-bottom: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 10px;
 }
 
 .tasks-list {

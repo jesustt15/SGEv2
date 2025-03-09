@@ -15,7 +15,7 @@ import {
   
   export const WelcomeMid = () => {
     const lineData = {
-      labels: ['0-18', '19-30', '31-45', '46-60', '60+'],
+      labels: ['0', '2', '3', '4', '5'],
       datasets: [
         {
           label: 'Estadísticas por Edad',

@@ -17,7 +17,7 @@ export const WelcomeHeader = () => {
         datasets: [
           {
             data: [308, 1000 - 308], // Ejemplo: parte de 1000
-            backgroundColor: ['#0ea5e9', '#e2e8f0'], // Color principal y fondo
+            backgroundColor: ['#233255', '#F6AD2B'], // Color principal y fondo
             hoverBackgroundColor: ['#0284c7', '#cbd5e1'],
             borderWidth: 0,
           },
@@ -30,7 +30,7 @@ export const WelcomeHeader = () => {
         datasets: [
           {
             data: [100, 300 - 100], // Ejemplo: parte de 300
-            backgroundColor: ['#facc15', '#fef3c7'],
+            backgroundColor: ['#233255', '#F6AD2B'],
             hoverBackgroundColor: ['#eab308', '#fde68a'],
             borderWidth: 0,
           },
@@ -60,7 +60,7 @@ export const WelcomeHeader = () => {
                     </div>
                 </div>
                     <div className="chart-label">
-                        <span>Alumnos</span>
+                        <span>AlUMNOS</span>
                         <span>308</span>
                     </div>
                     
@@ -74,7 +74,7 @@ export const WelcomeHeader = () => {
                     </div>
                 </div>
                 <div className="chart-label">
-                    <span>Personal</span>
+                    <span>PERSONAL</span>
                     <span>100</span>
                 </div> 
             </div>
