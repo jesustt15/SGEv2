@@ -1,26 +1,34 @@
 import { useLocation } from 'react-router-dom';
-import { Calendar } from 'primereact/calendar';
-import 'primereact/resources/themes/saga-blue/theme.css'; // Tema de PrimeReact
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
-import '../App.css';
+import { RightSidebarCalendar } from './RightSidebarCalendar';
+import {  EstudianteDetails } from '../estudiantes';
+
+
+const selectedEstudiante = {
+  cedulaEscolar: '123456',
+  nombres: 'Juan',
+  apellidos: 'Pérez',
+  fechaNacimiento: '2000-01-01',
+  edad: 22,
+  sexo: 'M',
+};
+
 
 const RightSidebar = () => {
   const location = useLocation();
 
   let content;
-  // Ejemplo de contenido variable según la ruta actual
+  // Ejemplo sencillo para contenido variable según ruta
   if (location.pathname.includes('usuarios')) {
     content = <div>Contenido de Usuario: estadísticas o notificaciones.</div>;
   } else if (location.pathname.includes('estudiantes')) {
-    content = <div>Contenido de Estudiantes: tareas pendientes y recordatorios.</div>;
+    content =   <div className="estudiantes-detail-container">
+                  <EstudianteDetails estudiante={selectedEstudiante} />
+                </div>;
   } else {
-    // Contenido por defecto: mostraremos un calendario de PrimeReact y una lista de mini tareas
+    // Contenido por defecto: calendario y mini tareas
     content = (
       <>
-        <div className="calendar-section">
-          <Calendar inline />
-        </div>
+        <RightSidebarCalendar />
         <div className="mini-tasks-section">
           <h2 className="tasks-title">Mini Tareas</h2>
           <ul className="tasks-list">
@@ -54,5 +62,6 @@ const RightSidebar = () => {
 };
 
 export { RightSidebar };
+
 
 

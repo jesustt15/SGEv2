@@ -20,28 +20,6 @@ html, body, #root {
   width: 100%;
 }
 
-/* Ejemplo de Sidebar Izquierdo (puedes adaptarlo) */
-.sidebar {
-  width: 15%; /* O el ancho que desees para el menú de navegación */
-  border-right: 1px solid #ddd;
-}
-
-/* Contenido Principal: se expande según el espacio restante */
-.main-content {
-  flex: 1;
-  padding: 20px;
-  width: 70%;
-  overflow-y: auto;
-}
-
-/* Sidebar Derecho: siempre 20% del ancho total */
-.right-sidebar {
-  width: 30%;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-left: 1px solid #ddd;
-  box-sizing: border-box;
-}
 
 /* Header de la app (parte superior fija) */
 .header-app {
@@ -82,61 +60,110 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* Sidebar: aplica los estilos que ya tengas */
-/* Estilos base para el sidebar */
+/* Sidebar: contenedor principal fijo, con 80vh y anclado al fondo */
 .sidebar {
+  position: fixed;
+  bottom: 0;               /* Se ancla a la parte inferior */
+  left: 0;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease-in-out;
-  border-top-left-radius: 2rem ;
-  border-top-right-radius: 2rem ;
   background-color: #233255;
   color: #fff;
   overflow-x: hidden;
-  border: 1px solid #F6AD2B
+  border: 1px solid #F6AD2B;
+  height: 85vh;            /* Solo 80% del alto del viewport */
+  box-sizing: border-box;
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
 }
 
-/* Estado expandido: muestra textos e íconos */
+/* Estado expandido */
 .sidebar.expanded {
   width: 14rem;
 }
 
-/* Estado colapsado: solo se muestran los íconos */
+/* Estado colapsado */
 .sidebar.collapsed {
   width: 4rem;
 }
 
-/* Estilos para el encabezado del sidebar */
-.sidebar-header {
+/* Área superior (header) que sirve para togglear */
+.sidebar-toggle-area {
+  cursor: pointer;
+  padding: 1rem;
+  border-bottom: 1px solid #444;
+  text-align: center;
+}
+
+/* Área del menú: ocupa el espacio central del sidebar y permite scroll vertical */
+.menu-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.menu-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-content li a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  cursor: pointer;
-  border-bottom: 1px solid #444;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s;
 }
 
-/* Oculta los textos en estado colapsado */
-.sidebar.collapsed .sidebar-header p,
-.sidebar.collapsed .p-menuitem-text {
-  display: none !important;
+.menu-content li a.active {
+  color: #F6AD2B;
 }
 
-/* Cuando está colapsado, centra el contenido en el header */
-.sidebar.collapsed .sidebar-header {
+.menu-content li a:hover {
+  background: #F6AD2B;
+  color: #233255;
+}
+
+.menu-content li a i {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+/* Footer: zona inferior fija dentro del sidebar */
+.sidebar-footer {
+  border-top: 1px solid #444;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.sidebar-footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-footer li a {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s;
 }
 
-.menu-content {
-  flex: 1;
-  overflow-y: auto;
+.sidebar-footer li a.active,
+.sidebar-footer li a:hover {
+  background: #F6AD2B;
+  color: #233255;
 }
 
-.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-link{
-  padding: 1rem 1.25rem;
-  font-weight: 600;
-  background-color: #233255;
-  color: white;
+.sidebar-footer li a i {
+  font-size: 1.2rem;
 }
 
 /* Contenido principal, adaptándose al espacio restante */
@@ -145,38 +172,24 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   padding-top: 1rem;
+  padding-left: 4rem;
   overflow-y: auto;
   border-right: 1px solid #7FBDE44D;
 }
 
 
-/* (Opcional) Estilos para los menus de PanelMenu, si requieres más ajustes */
-/* Contenedor principal del Sidebar: ocupará el 20% del ancho total */
+/* Contenedor general del Sidebar derecho */
 .right-sidebar {
-  width: 20%;
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  height: 100vh;
   padding: 10px;
   background-color: #f9f9f9;
   border-left: 1px solid #ddd;
   box-sizing: border-box;
 }
 
-/* RightSidebar.css */
-
-.right-sidebar {
-  padding: 10px;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
-  border-left: 1px solid #ddd;
-}
-
-/* Calendario */
-.calendar-section {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  width: 100%;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
 
 /* Mini tareas */
 .mini-tasks-section {
@@ -184,6 +197,8 @@ html, body, #root {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  width: 100%;
+  height: 60%
 }
 
 .tasks-title {
@@ -216,3 +231,4 @@ html, body, #root {
   font-size: 0.9rem;
   color: #555;
 }
+

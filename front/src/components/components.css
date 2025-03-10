@@ -32,6 +32,10 @@
     width: 30%;
     justify-content: space-evenly;
     align-items: center;
+    padding: 10px 0px;
+    box-shadow: 0px 0px 10px 0px #23325517;
+    border-radius: 10px;
+
   }
   
   /* Contenedor de la gráfica, posicionado de forma relativa para ubicar el overlay */
@@ -82,6 +86,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 10px 0px;
+    box-shadow: 0px 0px 10px 0px #23325517;
     width: 50%;
   }
   
@@ -91,3 +97,111 @@
     width: 31rem;
     height: 20rem;
   }
+
+  /* Ajustes generales para react-calendar */
+  .react-calendar {
+    width: 350px;
+    max-width: 100%;
+    background: white;
+    border: none;
+    box-shadow: 0px 0px 10px 0px #23325517;
+    font-family: 'Archivo', sans-serif;
+    line-height: 1.125em;
+}
+
+/* Navegación (la parte superior que muestra el mes y las flechas) */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #7FBDE499;
+  cursor: pointer;
+}
+
+/* Encabezado de días de la semana */
+.react-calendar__month-view__weekdays {
+  font-family: Archivo;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-transform: capitalize;
+  color: #233255;  
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  color: #233255;
+}
+
+/* Estilos para las celdas de cada día */
+.react-calendar__tile {
+  max-width: initial !important;
+  padding: 0.8rem 0.3rem;
+  font-size: 0.85rem;
+  text-align: center;
+  position: relative;
+  border: 1px solid transparent;
+  transition: background-color 0.3s;
+  background: white;
+}
+
+/* Efecto hover en las celdas */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #a1a7af;
+  border-radius: 10%;
+  cursor: pointer;
+}
+
+/* Día actual resaltado con fondo azul (puedes ajustar el color) */
+.react-calendar__tile--now {
+  background: #88c3e799;
+  color: #fff;
+  box-shadow: 0px 0px 10px 0px #23325517;
+  border-radius: 10%;
+}
+
+
+/* Día seleccionado */
+.react-calendar__tile--active {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+/* Dot markers: los puntos de colores en las celdas */
+.react-calendar__tile .dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dot.green {
+  background-color: #28a745;   /* Verde */
+}
+
+.dot.red {
+  background-color: #dc3545;   /* Rojo */
+}
+
+/* Contenedor del calendario en el sidebar */
+.calendar-section {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: visible; /* Se asegura de mostrar todo el contenido */
+  padding: 10px;
+}
+
+/* Puedes ajustar la fuente o aplicar otros estilos al contenedor externo si lo deseas */

@@ -1,130 +1,68 @@
-// src/components/Sidebar.jsx
-import  { useState } from 'react';
-import { PanelMenu } from 'primereact/panelmenu';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../context';
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import "../App.css";
 
 export const Sidebar = () => {
-  const {  name} = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Función para alternar el estado del sidebar
-  const toggleSidebar = (e) => {
-    e.stopPropagation(); // Aseguramos que solo se active el click en la header del sidebar
+  // Alternar entre expandido y colapsado
+  const toggleSidebar = () => {
     setCollapsed((prev) => !prev);
   };
 
-  // Definición de los items del menú
-  const items = [
-    
-    // {
-    //   label: 'Usuarios',
-    //   icon: 'pi pi-users',
-    //   template: (item, options) => (
-    //         <NavLink to="/usuarios" className={options.className}>
-    //           <i className={options.iconClassName}></i>
-    //           {!collapsed && (
-    //             <span className={options.labelClassName}>{item.label}</span>
-    //           )}
-    //         </NavLink>
-    //       ),
-    //   },
-      {
-        label: 'Inicio',
-        icon: 'pi pi-objects-column',
-        template: (item, options) => (
-              <NavLink to="/" className={options.className}>
-                <i className={options.iconClassName}></i>
-                {!collapsed && (
-                  <span className={options.labelClassName}>{item.label}</span>
-                )}
-              </NavLink>
-            ),
-        },
-        {
-          label: 'Matriculas',
-          icon: 'pi pi-book', 
-          template: (item, options) => (
-            <NavLink to="/estudiantes" className={options.className}>
-              <i className={options.iconClassName}></i>
-              {!collapsed && (
-                <span className={options.labelClassName}>{item.label}</span>
-              )}
-            </NavLink>
-          ),
-        },        
-        {
-          label: 'Personal',
-          icon: 'pi pi-users',
-          template: (item, options) => (
-                <NavLink to="/usuarios" className={options.className}>
-                  <i className={options.iconClassName}></i>
-                  {!collapsed && (
-                    <span className={options.labelClassName}>{item.label}</span>
-                  )}
-                </NavLink>
-              ),
-          },
-          {
-            label: 'Calendario de Actividades',
-            icon: 'pi pi-calendar',
-            template: (item, options) => (
-                  <NavLink to="/usuarios" className={options.className}>
-                    <i className={options.iconClassName}></i>
-                    {!collapsed && (
-                      <span className={options.labelClassName}>{item.label}</span>
-                    )}
-                  </NavLink>
-                ),
-            },
-        {
-          label: 'Niveles',
-          icon: 'pi pi-users',
-          template: (item, options) => (
-                <NavLink to="/usuarios" className={options.className}>
-                  <i className={options.iconClassName}></i>
-                  {!collapsed && (
-                    <span className={options.labelClassName}>{item.label}</span>
-                  )}
-                </NavLink>
-              ),
-          },
-    ]
+  // Definición de las rutas principales
+  const menuItems = [
+    { label: "Inicio", to: "/", icon: "pi pi-objects-column" },
+    { label: "Matriculas", to: "/estudiantes", icon: "pi pi-book" },
+    { label: "Personal", to: "/usuarios", icon: "pi pi-users" },
+    { label: "Calendario de Actividades", to: "/calendario", icon: "pi pi-calendar" },
+    { label: "Niveles", to: "/niveles", icon: "pi pi-users" },
+  ];
+
+  // Enlaces en la parte inferior
+  const bottomItems = [
+    { label: "Gestión de Usuarios", to: "/usuarios", icon: "pi pi-cog" },
+  ];
 
   return (
-    <div className={`sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
-      {/* Encabezado del sidebar: al hacer clic se alterna el estado */}
-      <div className="sidebar-header" onClick={toggleSidebar}>
-        {!collapsed && <p>{name}</p>}
-        <i
-          className={`pi ${
-            collapsed ? 'pi-angle-right' : 'pi-angle-left'
-          }`}
-        ></i>
+    <div className={`sidebar ${collapsed ? "collapsed" : "expanded"}`}>
+      {/* Botón de toggle */}
+      <div className="sidebar-toggle-area" onClick={toggleSidebar}>
+        <i className={`toggle-icon ${collapsed ? "pi pi-angle-right" : "pi pi-angle-left"}`}></i>
       </div>
 
-      <div className="menu-content">
-        <PanelMenu model={items} className="w-full" />
-      </div>
+      {/* Área principal de enlaces */}
+      <nav className="menu-content" onClick={(e) => e.stopPropagation()}>
+        <ul>
+          {menuItems.map((item, i) => (
+            <li key={i}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <i className={item.icon}></i>
+                {!collapsed && <span>{item.label}</span>}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-      <div className="sign-out">
-        <PanelMenu
-          model={[
-            {
-              label: '  Gestion de Usuarios',
-              icon: 'pi pi-cog',
-              template: (item, options) => (
-                <NavLink to="/usuarios" className={options.className}>
-                  <i className={options.iconClassName}></i>
-                  {!collapsed && (
-                    <span className={options.labelClassName}>{item.label}</span>
-                  )}
-                </NavLink>
-              ),
-            },
-          ]}
-          className="w-full"
-        />
+      {/* Footer fijo */}
+      <div className="sidebar-footer" onClick={(e) => e.stopPropagation()}>
+        <ul>
+          {bottomItems.map((item, i) => (
+            <li key={i}>
+              <NavLink
+                to={item.to}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <i className={item.icon}></i>
+                {!collapsed && <span>{item.label}</span>}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
