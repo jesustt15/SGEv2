@@ -15,6 +15,9 @@ const {PORT} = process.env;
 
 const app = express();
 
+console.log('DB_PASSWORD:', process.env.DB_PASS, typeof process.env.DB_PASS);
+
+
 app.use(cors()); //usar el corss
 app.use(express.json()); // Middleware para parsear JSON
 app.use(bodyparser.json());

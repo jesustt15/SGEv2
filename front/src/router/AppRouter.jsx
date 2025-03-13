@@ -1,12 +1,17 @@
 
 import { Routes, Route } from 'react-router-dom';
 import {DashboardLayout }from './DashboardLayout';
-import { Home } from '../auth';
+import { Home, Login } from '../auth';
 import { Estudiantes, NewEstudiante } from '../estudiantes';
 import { Usuarios, NewUsuario } from '../usuarios';
 
 export const AppRouter = () => {
   return (
+
+    <>
+      <Routes>
+        <Route path="/auth" element={<Login />} />
+      </Routes>
     <Routes>
       <Route path="/" element={<DashboardLayout />}>
         <Route index element={<Home />} />
@@ -16,6 +21,8 @@ export const AppRouter = () => {
         <Route path="usuarios/new" element={<NewUsuario />} />
       </Route>
     </Routes>
+    </>
+    
   );
 };
 
