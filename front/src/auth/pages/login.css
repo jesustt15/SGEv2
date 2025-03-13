@@ -37,7 +37,7 @@
     color: #F6AD2B;
 }
 
-.p-component {
+.input-login {
   font-family: Archivo, sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -48,7 +48,7 @@
   margin-bottom: 3rem;
 }
 
-.p-component:focus{
+.input-login:focus{
   border: none;
   outline: none;
   box-shadow: none;
@@ -60,7 +60,7 @@
   border-top-right-radius: 6px;
 }
 
-.p-button {
+.btn-submit {
   width: 100%;
   border-radius: 6px;  
   background: #233255;

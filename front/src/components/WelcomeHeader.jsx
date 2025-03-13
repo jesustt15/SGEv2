@@ -2,6 +2,7 @@
 import {Chart as ChartJS, ArcElement, Legend, Tooltip } from 'chart.js';
 import './components.css';
 import { Doughnut } from 'react-chartjs-2';
+import { useAuth } from '../context';
 
 
 
@@ -11,6 +12,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 export const WelcomeHeader = () => {
+
+  const {name} = useAuth();
 
     const alumnosData = {
         labels: ['Alumnos', 'Restante'],
@@ -50,7 +53,7 @@ export const WelcomeHeader = () => {
 
   return (
     <div className='welcome-header'>
-        <h1>Bienvenido/a Msc Generico</h1>
+        <h1>Bienvenido/a Msc {name}</h1>
         <section className="estadisticas">
             <div className="estadistica-container">
                 <div className="chart-wrapper">

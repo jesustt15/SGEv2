@@ -3,7 +3,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import Logo from "../../assets/logo.png";
-import Fondo from "../../assets/fondo.png";
 import Profes from "../../assets/profes.png";
 import "./login.css";
 
@@ -38,7 +37,7 @@ export const Login = () => {
                   id="username"
                   type="text"
                   placeholder="Ingrese el usuario"
-                  className="w-full mb-3"
+                  className="input-login"
                   {...register("username", { required: true })}
                 />
                 <label htmlFor="password" className="block text-900 font-medium mb-2">
@@ -48,10 +47,10 @@ export const Login = () => {
                   id="password"
                   type="password"
                   placeholder="Ingrese su contraseña"
-                  className="w-full mb-3"
+                  className="input-login"
                   {...register("password", { required: true })}
                 />
-                <Button label="Ingresar"  type="submit" />
+                <Button label="Ingresar"  className="btn-submit" type="submit" />
               </form>
         </div>
       </div>
