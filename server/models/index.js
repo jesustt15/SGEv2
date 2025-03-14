@@ -2,6 +2,8 @@
 const Estudiante = require('./Estudiante');
 const Representante = require('./Representante');
 const Autorizado = require('./Autorizado');
+const Personal = require('./Personal');
+const Seccion = require('./Seccion');
 
 // Establecer asociaciones
 Estudiante.belongsToMany(Representante, {
@@ -22,6 +24,24 @@ Representante.belongsToMany(Estudiante, {
   otherKey: 'estudiante_id',
 });
 
+Estudiante.belongsToMany(Seccion, {
+  through: {
+    model: 'EstudianteSeccion', 
+  },
+  as: 'secciones',
+  foreignKey: 'estudiante_id',
+  otherKey: 'seccion_id',
+});
+
+Seccion.belongsToMany(Estudiante, {
+  through: {
+    model: 'EstudianteSeccion',
+  },
+  as: 'estudiantes',
+  foreignKey: 'seccion_id',
+  otherKey: 'estudiante_id',
+});
+
 // Otras asociaciones
 Estudiante.hasMany(Autorizado, {
   as: 'autorizados',
@@ -32,8 +52,19 @@ Autorizado.belongsTo(Estudiante, {
   foreignKey: 'estudiante_id',
 });
 
+Personal.hasOne(Seccion,{
+  as: 'secciones',
+  foreignKey: 'personal_id', 
+})
+
+Seccion.belongsTo(Personal,{
+  foreignKey: 'personal_id',
+})
+
 module.exports = {
   Estudiante,
   Representante,
   Autorizado,
+  Personal,
+  Seccion,
 };
