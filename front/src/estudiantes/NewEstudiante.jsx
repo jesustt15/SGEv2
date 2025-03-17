@@ -1,8 +1,9 @@
+// NewEstudiante.jsx
 import { Button } from "primereact/button";
 import { FloatLabel } from "primereact/floatlabel";
-import { Calendar } from 'primereact/calendar';
+import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
-import { addLocale } from 'primereact/api';
+import { addLocale } from "primereact/api";
 import { useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useEstudiante } from "../context";
@@ -11,19 +12,17 @@ import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 
-export const NewEstudiante = () => {
-
+export const NewEstudiante = ({ onStudentCreated }) => {
   const { createEstudiante } = useEstudiante();
   const { handleSubmit, control, formState: { errors }, setError } = useForm();
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
 
-
   const sexos = [
-    {name: 'Femenino', code:'Fem'},
-    {name: 'Masculino', code:'Msc'},
-  ]
+    { name: 'Femenino', code: 'Fem' },
+    { name: 'Masculino', code: 'Msc' },
+  ];
 
   const onUpload = (event) => {
     setFoto(event.files[0]);
@@ -31,9 +30,8 @@ export const NewEstudiante = () => {
   };
 
   const onInvalid = (errors) => {
-    console.log("Form validation errors:", errors);
+    console.log("Errores de validación:", errors);
   };
-  
 
   addLocale('es', {
     firstDayOfWeek: 1,
@@ -48,38 +46,44 @@ export const NewEstudiante = () => {
   });
 
   const createEstudianteSubmit = async (data) => {
-    try {
-      console.log("Form data:", data);
-      // Create FormData and append fields
-      const formData = new FormData();
-      for (let key in data) {
-        formData.append(key, data[key]);
-      }
-      // Append the photo if it exists
-      if (foto) {
-        formData.append('foto', foto);
-      }
-
-      await createEstudiante(formData);
-      toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Estudiante creado' });
-    }  catch (errors) {
-      console.log('Validation errors:', errors);
-      // Map errors to React Hook Form
-      errors.forEach(({ field, message }) => {
-        setError(field, { type: 'server', message });
-      });
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Revisa los campos marcados.' });
+ try {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key]);
+    });
+    if (foto) {
+      formData.append('foto', foto);
     }
+
+    // Se espera que createEstudiante retorne el estudiante creado
+    const createdStudent = await createEstudiante(formData);
+    toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Estudiante creado' });
+
+    // Verifica que se obtuvo el ID del estudiante
+    if (onStudentCreated && createdStudent && createdStudent.id) {
+      onStudentCreated(createdStudent.id);
+    } else {
+      console.error("Error: No se recibió el ID del estudiante creado.");
+    }
+  } catch (error) {
+    console.log("Error al crear estudiante:", error);
+    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Revisa los campos marcados.' });
+  }
   };
+  
 
   return (
     <div className="card">
-     <form onSubmit={handleSubmit(createEstudianteSubmit, onInvalid)}>
+      <div className="card-titles">
+        <span>Añadir Alumno</span>
+        <span>Datos Alumnos</span>
+      </div>
+      <form onSubmit={handleSubmit(createEstudianteSubmit, onInvalid)}>
         <Controller
           name="nombres"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "El nombre es requerido." }}
           render={({ field }) => (
             <FloatLabel>
               <InputText id="nombres" {...field} />
@@ -93,7 +97,7 @@ export const NewEstudiante = () => {
           name="apellidos"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "El apellido es requerido." }}
           render={({ field }) => (
             <FloatLabel>
               <InputText id="apellidos" {...field} />
@@ -107,20 +111,21 @@ export const NewEstudiante = () => {
           name="lugarNacimiento"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "El lugar de nacimiento es requerido." }}
           render={({ field }) => (
             <FloatLabel>
-              <InputText id="lugarNacimiento" rows={5} cols={30} {...field} />
+              <InputText id="lugarNacimiento" {...field} />
               <label htmlFor="lugarNacimiento">Lugar de Nacimiento</label>
             </FloatLabel>
-          )} />
-          {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
-          <br />
+          )}
+        />
+        {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
+        <br />
         <Controller
           name="fechaNacimiento"
           control={control}
           defaultValue={null}
-          rules={{ required: true }}
+          rules={{ required: "La fecha de nacimiento es requerida." }}
           render={({ field }) => (
             <FloatLabel>
               <Calendar inputId="fechaNacimiento" locale="es" {...field} />
@@ -134,7 +139,7 @@ export const NewEstudiante = () => {
           name="edad"
           control={control}
           defaultValue={null}
-          rules={{ required: true }}
+          rules={{ required: "La edad es requerida." }}
           render={({ field }) => (
             <FloatLabel>
               <InputText keyfilter="int" id="edad" {...field} />
@@ -142,34 +147,34 @@ export const NewEstudiante = () => {
             </FloatLabel>
           )}
         />
-        {errors.edad && <small className="p-error">{errors.edad.message}.</small>}
+        {errors.edad && <small className="p-error">{errors.edad.message}</small>}
         <br />
         <Controller
           name="sexo"
           control={control}
           defaultValue=""
-          rules={{ required: 'El sexo es requerido.' }}
+          rules={{ required: "El sexo es requerido." }}
           render={({ field }) => (
-              <Dropdown
-                id="sexo"
-                value={field.value}
-                onChange={(e) => field.onChange(e.value)}
-                options={sexos}
-                optionLabel="name"
-                placeholder="Seleccione el Sexo"
-                className={errors.sexo ? 'p-invalid' : ''}
-                  />
-              )}
+            <Dropdown
+              id="sexo"
+              value={field.value}
+              onChange={(e) => field.onChange(e.value)}
+              options={sexos}
+              optionLabel="name"
+              placeholder="Seleccione el Sexo"
+              className={errors.sexo ? 'p-invalid' : ''}
+            />
+          )}
         />
-          <br />
+        <br />
         <Controller
           name="direccionCompleta"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "La dirección es requerida." }}
           render={({ field }) => (
             <FloatLabel>
-              <InputTextarea id="direccionCompleta" rows={5} cols={30} {...field} />
+              <InputTextarea id="direccionCompleta" {...field} />
               <label htmlFor="direccionCompleta">Ingrese la dirección</label>
             </FloatLabel>
           )}
@@ -180,27 +185,29 @@ export const NewEstudiante = () => {
           name="cedulaEscolar"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "La cédula escolar es requerida." }}
           render={({ field }) => (
             <FloatLabel>
-              <InputText id="cedulaEscolar" rows={5} cols={30} {...field} />
-              <label htmlFor="cedulaEscolar">Cedula Escolar</label>
+              <InputText id="cedulaEscolar" {...field} />
+              <label htmlFor="cedulaEscolar">Cédula Escolar</label>
             </FloatLabel>
-          )} />
-          {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
-          <br />
-          <Controller
+          )}
+        />
+        {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
+        <br />
+        <Controller
           name="telefonoResidencial"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ required: "El teléfono residencial es requerido." }}
           render={({ field }) => (
             <FloatLabel>
-              <InputText keyfilter="int" id="telefonoResidencial" rows={5} cols={30} {...field} />
-              <label htmlFor="telefonoResidencial">Telefono Residencial</label>
+              <InputText keyfilter="int" id="telefonoResidencial" {...field} />
+              <label htmlFor="telefonoResidencial">Teléfono Residencial</label>
             </FloatLabel>
-          )} />
-          {errors.telefonoResidencial && <small className="p-error">{errors.telefonoResidencial.message}</small>}
+          )}
+        />
+        {errors.telefonoResidencial && <small className="p-error">{errors.telefonoResidencial.message}</small>}
         <Toast ref={toast} />
         <FileUpload
           mode="basic"

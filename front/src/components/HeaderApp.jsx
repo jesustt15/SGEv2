@@ -31,7 +31,7 @@ export const HeaderApp = () => {
           onClick={(e) => menuRef.current.toggle(e)}
         >
           <Avatar icon="pi pi-user" shape="circle" />
-          <span>{name || 'Usuario Genérico'}</span>
+          <span>{name}</span>
           <i className="pi pi-caret-down" style={{ marginLeft: '0.5rem' }}></i>
         </div>
         <Menu model={items} popup ref={menuRef} />

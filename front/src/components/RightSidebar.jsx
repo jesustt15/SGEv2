@@ -1,7 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
-import {  EstudianteDetails } from '../estudiantes';
-
+import { EstudianteDetails } from '../estudiantes';
 
 const selectedEstudiante = {
   cedulaEscolar: '123456',
@@ -12,20 +11,25 @@ const selectedEstudiante = {
   sexo: 'M',
 };
 
-
 const RightSidebar = () => {
   const location = useLocation();
 
+  // Si estamos en la ruta 'estudiantes/new', no renderizamos el sidebar
+  if (location.pathname.includes('estudiantes/new')) {
+    return null;
+  }
+
   let content;
-  // Ejemplo sencillo para contenido variable según ruta
+  // Contenido variable según la ruta
   if (location.pathname.includes('usuarios')) {
     content = <div>Contenido de Usuario: estadísticas o notificaciones.</div>;
   } else if (location.pathname.includes('estudiantes')) {
-    content =   <div className="estudiantes-detail-container">
-                  <EstudianteDetails estudiante={selectedEstudiante} />
-                </div>;
+    content = (
+      <div className="estudiantes-detail-container">
+        <EstudianteDetails estudiante={selectedEstudiante} />
+      </div>
+    );
   } else {
-    // Contenido por defecto: calendario y mini tareas
     content = (
       <>
         <RightSidebarCalendar />
@@ -62,6 +66,7 @@ const RightSidebar = () => {
 };
 
 export { RightSidebar };
+
 
 
 

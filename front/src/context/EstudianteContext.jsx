@@ -32,30 +32,37 @@ export function EstudianteProvider({ children }) {
 
     const createEstudiante = async (est) => {
         try {
-            const existingestudiante = estudiante.find(u => u.cedulaEscolar === est.cedulaEscolar);
-            if (existingestudiante) {
-                throw new Error('este Estudiante ya existe.');
-            }
-            await createEstudiantesRequest(est);
-            getEstudiantes();
-            toast.current.show({
-                severity: 'success',
-                summary: 'Registro Exitoso',
-                detail: 'Nuevo Estudiante agregado',
-                life: 3000,
-              }); 
-            navigate('/estudiantes'); 
+          const existingEstudiante = estudiante.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
+          if (existingEstudiante) {
+            throw new Error('Este estudiante ya existe.');
+          }
+          // Se asume que createEstudiantesRequest devuelve una respuesta con la data del estudiante creado
+          const res = await createEstudiantesRequest(est);
+          const createdEstudiante = res.data;  // Asegúrate de que este endpoint devuelve el objeto creado
+      
+          // Actualiza la lista de estudiantes
+          getEstudiantes();
+      
+          // Muestra el mensaje de éxito
+          toast.current.show({
+            severity: 'success',
+            summary: 'Registro Exitoso',
+            detail: 'Nuevo Estudiante agregado',
+            life: 3000,
+          });
+      
+          // Devuelve el estudiante creado (o al menos su ID)
+          return createdEstudiante;
         } catch (error) {
-            console.error("Error creating estudiante:", error);
-            if (error.response && error.response.data && error.response.data.errors) {
-              // Throw validation errors to be caught in the component
-              throw error.response.data.errors;
-            } else {
-              throw [{ message: 'Error al crear estudiante' }];
-            }
+          console.error("Error creating estudiante:", error);
+          if (error.response && error.response.data && error.response.data.errors) {
+            throw error.response.data.errors;
+          } else {
+            throw [{ message: 'Error al crear estudiante' }];
+          }
         }
-    };
-
+      };
+      
     const updateEstudiante = async (id, estudiante) => {
         try {
             await updateEstudianteRequest(id, estudiante);
