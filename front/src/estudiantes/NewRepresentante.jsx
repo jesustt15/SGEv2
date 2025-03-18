@@ -1,47 +1,60 @@
 // NewRepresentante.jsx
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toast } from "primereact/toast";
+import { useRepresentante } from "../context";
+import axios from "../api/config";
 
-export const NewRepresentante = ({ estudianteId, onRepresentanteCreated }) => {
-  // Supón que dispones de estas funciones en tu contexto o servicio API
-  const createRepresentante = async (data) => {
-    // Llama a la API para crear el representante
-    // Devuelve el objeto creado (incluyendo el id)
-    return { id: 101, ...data };
-  };
-  const asociarEstudianteRepresentante = async ({ estudiante_id, representante_id }) => {
-    // Llama a la API para asociar el representante al estudiante
-    return { message: "Representante asociado exitosamente" };
-  };
-
+export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
+  const {createRepresentante} = useRepresentante();
   const { handleSubmit, control, formState: { errors } } = useForm();
   const toast = useRef(null);
+
+
+
+  // Función para vincular el representante con el estudiante en la tabla EstudianteRepresentante.
+  const asociarEstudianteRepresentante = async ({ estudiante_id, representante_id }) => {
+    const response = await axios.post('/estudiantes/asociar', { 
+      estudiante_id, 
+      representante_id 
+    });
+    
+    return response.data;
+  };
+  
 
   const createRepresentanteSubmit = async (data) => {
     try {
       const createdRepresentante = await createRepresentante(data);
-      toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Representante creado' });
-      
-      // Asociamos automáticamente al estudiante
-      await asociarEstudianteRepresentante({
-        estudiante_id: estudianteId,
-        representante_id: createdRepresentante.id,
+      toast.current.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Representante creado'
       });
+      // Vincula automáticamente al estudiante con el representante creado.
+      console.log("Enviando payload:", { estudiante_id: studentId, representante_id: createdRepresentante.representante_id });
+  await asociarEstudianteRepresentante({
+  estudiante_id: studentId,
+  representante_id: createdRepresentante.representante_id,
+    });
+
       toast.current.show({
         severity: 'success',
         summary: 'Asociación exitosa',
-        detail: 'Representante vinculado al estudiante',
+        detail: 'Representante vinculado al estudiante'
       });
-      
       if (onRepresentanteCreated) {
         onRepresentanteCreated();
       }
     } catch (error) {
       console.log("Error al crear representante:", error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Revisa los campos.' });
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Revisa los campos.'
+      });
     }
   };
 
@@ -50,19 +63,84 @@ export const NewRepresentante = ({ estudianteId, onRepresentanteCreated }) => {
       <h2>Añadir Representante</h2>
       <form onSubmit={handleSubmit(createRepresentanteSubmit)}>
         <Controller
-          name="nombreRepresentante"
+          name="nombre"
           control={control}
           defaultValue=""
           rules={{ required: "El nombre es requerido." }}
           render={({ field }) => (
             <div>
-              <InputText id="nombreRepresentante" {...field} placeholder="Nombre del representante" />
+              <InputText id="nombre" {...field} placeholder="Nombres " />
             </div>
           )}
         />
-        {errors.nombreRepresentante && <small className="p-error">{errors.nombreRepresentante.message}</small>}
+        {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
         <br />
-        {/* Puedes agregar más campos según lo necesites */}
+        <Controller
+          name="apellido"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El apellido es requerido." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="apellido" {...field} placeholder="Apellidos" />
+            </div>
+          )}
+        />
+        {errors.apellido && <small className="p-error">{errors.apellido.message}</small>}
+        <br />
+        <Controller
+          name="ced"
+          control={control}
+          defaultValue=""
+          rules={{ required: "la cedula es requerida." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="ced" {...field} placeholder="Cedula" />
+            </div>
+          )}
+        />
+        {errors.ced && <small className="p-error">{errors.ced.message}</small>}
+        <br />
+        <Controller
+          name="direccion"
+          control={control}
+          defaultValue=""
+          rules={{ required: "La direccion es requerido." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="direccion" {...field} placeholder="Direccion" />
+            </div>
+          )}
+        />
+        {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
+        <br />
+        <Controller
+          name="tipo"
+          control={control}
+          defaultValue=""
+          rules={{ required: "tipo." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="tipo" {...field} placeholder="Tipo" />
+            </div>
+          )}
+        />
+        {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
+        <br />
+        <Controller
+          name="telf"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El telf es requerido." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="telf" {...field} placeholder="telf" />
+            </div>
+          )}
+        />
+        {errors.telf && <small className="p-error">{errors.telf.message}</small>}
+        <br />
+        
         <Toast ref={toast} />
         <Button label="Guardar Representante" type="submit" />
       </form>

@@ -33,7 +33,7 @@ const Autorizado = sequelize.define('autorizados', {
     unique: true,
     validate: {
       isNumeric: {msg: 'tiene que ser numeros'},
-      len: [4,7]
+      len: [8,10]
     }
   },
   direccion: {

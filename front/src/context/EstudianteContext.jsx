@@ -52,6 +52,7 @@ export function EstudianteProvider({ children }) {
           });
       
           // Devuelve el estudiante creado (o al menos su ID)
+          console.log(createdEstudiante);
           return createdEstudiante;
         } catch (error) {
           console.error("Error creating estudiante:", error);

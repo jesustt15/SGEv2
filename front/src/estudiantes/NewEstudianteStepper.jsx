@@ -1,58 +1,41 @@
-// NewEstudianteStepper.jsx
+// NewStudentProcess.jsx
 import React, { useState } from 'react';
-import { Steps } from 'primereact/steps';
+import { useNavigate } from 'react-router-dom';
 import { NewEstudiante } from './NewEstudiante';
 import { NewRepresentante } from './NewRepresentante';
 import { NewAutorizado } from './NewAutorizado';
 
 export const NewEstudianteStepper = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [estudianteId, setEstudianteId] = useState(null);
+  const [step, setStep] = useState(1);
+  const [studentId, setStudentId] = useState(null);
+  const navigate = useNavigate();
 
-  const steps = [
-    { label: 'Estudiante' },
-    { label: 'Representante' },
-    { label: 'Autorizado' },
-  ];
-
-  const onStudentCreated = (id) => {
-    // Guarda el ID del estudiante y avanza al formulario de representante
-    console.log("Estudiante creado con ID: ", id);
-    setEstudianteId(id);
-    setActiveIndex(1);
+  // Al crear el estudiante, guardamos el ID y avanzamos al formulario de representante.
+  const handleStudentCreated = (id) => {
+    setStudentId(id);
+    setStep(2);
   };
 
-  const onRepresentanteCreated = () => {
-    // Avanza al siguiente paso (por ejemplo, para agregar al autorizado)
-    setActiveIndex(2);
+  // Luego de agregar el representante y asociarlo al estudiante, avanzamos al siguiente paso.
+  const handleRepresentanteCreated = () => {
+    setStep(3);
   };
 
-  const onAutorizadoCreated = () => {
-    console.log("Proceso completado, representante y autorizado vinculados.");
-    // Aquí puedes limpiar el formulario o mostrar un mensaje final sin redirigir
+  // Finalmente, tras crear y asociar el autorizado, regresamos a la lista de estudiantes.
+  const handleAutorizadoCreated = () => {
+    // Redirigir o actualizar la vista a la tabla de estudiantes
+    navigate('/estudiantes');
   };
 
   return (
     <div>
-      <Steps model={steps} activeIndex={activeIndex} />
-      <div className="steps-content" style={{ marginTop: '2rem' }}>
-        {activeIndex === 0 && <NewEstudiante onStudentCreated={onStudentCreated} />}
-        {activeIndex === 1 && (
-          <NewRepresentante 
-            estudianteId={estudianteId}
-            onRepresentanteCreated={onRepresentanteCreated} 
-          />
-        )}
-        {activeIndex === 2 && (
-          <NewAutorizado 
-            estudianteId={estudianteId}
-            onAutorizadoCreated={onAutorizadoCreated} 
-          />
-        )}
-      </div>
+      {step === 1 && <NewEstudiante onStudentCreated={handleStudentCreated} />}
+      {step === 2 && <NewRepresentante studentId={studentId} onRepresentanteCreated={handleRepresentanteCreated} />}
+      {step === 3 && <NewAutorizado studentId={studentId} onAutorizadoCreated={handleAutorizadoCreated} />}
     </div>
   );
 };
+
 
 
 

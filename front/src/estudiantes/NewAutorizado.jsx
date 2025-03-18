@@ -1,38 +1,26 @@
 // NewAutorizado.jsx
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toast } from "primereact/toast";
-import { useRef } from "react";
+import { useAutorizado } from "../context";
 
-export const NewAutorizado = ({ estudianteId, onAutorizadoCreated }) => {
-  // Supón que tienes estas funciones
-  const createAutorizado = async (data) => {
-    // Llama a la API para crear el autorizado
-    return { id: 201, ...data };
-  };
-  const vincularAutorizadoEstudiante = async ({ estudiante_id, autorizado_id }) => {
-    // Llama a la API para asociar al autorizado con el estudiante
-    return { message: "Autorizado vinculado exitosamente" };
-  };
-
+export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
+  const { createAutorizado } = useAutorizado();
   const { handleSubmit, control, formState: { errors } } = useForm();
   const toast = useRef(null);
 
   const createAutorizadoSubmit = async (data) => {
     try {
-      const createdAutorizado = await createAutorizado(data);
-      toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Autorizado creado' });
-      
-      // Vinculamos automáticamente al estudiante
-      await vincularAutorizadoEstudiante({
-        estudiante_id: estudianteId,
-        autorizado_id: createdAutorizado.id,
-      });
+      // Agregamos automáticamente el id del estudiante al objeto que enviamos
+      const payload = { ...data, estudiante_id: studentId };
+
+      const createdAutorizado = await createAutorizado(payload);
       toast.current.show({
         severity: 'success',
-        summary: 'Asociación exitosa',
-        detail: 'Autorizado vinculado al estudiante',
+        summary: 'Éxito',
+        detail: 'Autorizado creado y vinculado al estudiante'
       });
       
       if (onAutorizadoCreated) {
@@ -40,7 +28,11 @@ export const NewAutorizado = ({ estudianteId, onAutorizadoCreated }) => {
       }
     } catch (error) {
       console.log("Error al crear autorizado:", error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Verifica los datos.' });
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Verifica los datos.'
+      });
     }
   };
 
@@ -49,17 +41,69 @@ export const NewAutorizado = ({ estudianteId, onAutorizadoCreated }) => {
       <h2>Añadir Autorizado</h2>
       <form onSubmit={handleSubmit(createAutorizadoSubmit)}>
         <Controller
-          name="nombreAutorizado"
+          name="nombre"
           control={control}
           defaultValue=""
           rules={{ required: "El nombre es requerido." }}
           render={({ field }) => (
             <div>
-              <InputText id="nombreAutorizado" {...field} placeholder="Nombre del autorizado" />
+              <InputText id="nombre" {...field} placeholder="Nombre del autorizado" />
             </div>
           )}
         />
-        {errors.nombreAutorizado && <small className="p-error">{errors.nombreAutorizado.message}</small>}
+        {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
+        <br />
+        <Controller
+          name="apellido"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El apellido es requerido." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="apellido" {...field} placeholder="Apellido del autorizado" />
+            </div>
+          )}
+        />
+        {errors.apellido && <small className="p-error">{errors.apellido.message}</small>}
+        <br />
+        <Controller
+          name="ced"
+          control={control}
+          defaultValue=""
+          rules={{ required: "La cédula es requerida." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="ced" {...field} placeholder="Cédula" />
+            </div>
+          )}
+        />
+        {errors.ced && <small className="p-error">{errors.ced.message}</small>}
+        <br />
+        <Controller
+          name="direccion"
+          control={control}
+          defaultValue=""
+          rules={{ required: "La dirección es requerida." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="direccion" {...field} placeholder="Dirección" />
+            </div>
+          )}
+        />
+        {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
+        <br />
+        <Controller
+          name="telf"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El teléfono es requerido." }}
+          render={({ field }) => (
+            <div>
+              <InputText id="telf" {...field} placeholder="Teléfono" />
+            </div>
+          )}
+        />
+        {errors.telf && <small className="p-error">{errors.telf.message}</small>}
         <br />
         <Toast ref={toast} />
         <Button label="Guardar Autorizado" type="submit" />

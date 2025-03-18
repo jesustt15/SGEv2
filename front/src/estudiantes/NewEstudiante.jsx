@@ -46,29 +46,34 @@ export const NewEstudiante = ({ onStudentCreated }) => {
   });
 
   const createEstudianteSubmit = async (data) => {
- try {
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key]);
-    });
-    if (foto) {
-      formData.append('foto', foto);
+    try {
+      const formData = new FormData();
+      Object.keys(data).forEach(key => formData.append(key, data[key]));
+      if (foto) {
+        formData.append('foto', foto);
+      }
+      // Llamamos a la función del contexto para crear el estudiante
+      const createdStudent = await createEstudiante(formData);
+      toast.current.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Estudiante creado'
+      });
+      
+      // Si obtenemos el ID del estudiante, llamamos al callback para avanzar
+      if (onStudentCreated && createdStudent && createdStudent.estudiante_id) {
+        onStudentCreated(createdStudent.estudiante_id);
+      } else {
+        console.error("Error: No se recibió el ID del estudiante creado.");
+      }
+    } catch (error) {
+      console.log("Error al crear estudiante:", error);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Revisa los campos marcados.'
+      });
     }
-
-    // Se espera que createEstudiante retorne el estudiante creado
-    const createdStudent = await createEstudiante(formData);
-    toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Estudiante creado' });
-
-    // Verifica que se obtuvo el ID del estudiante
-    if (onStudentCreated && createdStudent && createdStudent.id) {
-      onStudentCreated(createdStudent.id);
-    } else {
-      console.error("Error: No se recibió el ID del estudiante creado.");
-    }
-  } catch (error) {
-    console.log("Error al crear estudiante:", error);
-    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Revisa los campos marcados.' });
-  }
   };
   
 

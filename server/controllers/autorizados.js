@@ -1,5 +1,5 @@
 const {response} = require("express");
-const Autorizado = require("../models/index");
+const Autorizado = require("../models/Autorizado");
 
 
 const getAutorizados = async(req, res = response) => {
@@ -33,11 +33,11 @@ const getOneAutorizado = async(req, res = response) => {
 
 const crearAutorizado = async(req, res = response) => {
 
-    const {nombre, apellido, ced, direccion, parentesco ,telf, foto} = req.body;
+    const {nombre, apellido, ced, direccion, parentesco ,telf, foto, estudiante_id} = req.body;
 
     try {
 
-        const autorizado = await Autorizado.create({nombre, apellido, ced, direccion, parentesco ,telf, foto});
+        const autorizado = await Autorizado.create({nombre, apellido, ced, direccion, parentesco ,telf, foto, estudiante_id});
         res.status(201).json(autorizado)
         
     } catch (error) {
