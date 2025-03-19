@@ -39,7 +39,7 @@ const Representante = sequelize.define('representantes', {
     unique: true,
     validate: {
       isNumeric:{msg: 'tienen que ser numeros'},
-      len: [4,9]
+      len: [6, 9]
     }
   },
   direccion: {
@@ -53,7 +53,7 @@ const Representante = sequelize.define('representantes', {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      len: [12,14]
+      len: [10,12]
     }
   },
   ocupacion: DataTypes.STRING,

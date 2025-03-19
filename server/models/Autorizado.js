@@ -47,7 +47,7 @@ const Autorizado = sequelize.define('autorizados', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [12,14]
+      len: [10,13]
     }
   },
   

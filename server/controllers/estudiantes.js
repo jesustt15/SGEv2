@@ -1,6 +1,5 @@
 const {response} = require("express");
-const Estudiante = require("../models/Estudiante");
-const Representante = require("../models/Representante");
+const { Estudiante, Representante } = require('../models');
 const path = require('path');
 
 
@@ -142,22 +141,28 @@ const eliminarEstudiante = async(req, res = response) => {
 }
 
 const asociarEstudianteRepresentante = async(req , res = response) => {
-  const { estudiante_id, representante_id } = req.body;
+  const {estudiante_id, representante_id} = req.body;
+
+  
   try {
-    if (!estudiante_id || !representante_id) {
-       return res.status(400).json({ message: 'estudiante_id o representante_id no son válidos.' });
-    }
-    // Si tus asociaciones están definidas correctamente con Sequelize, por ejemplo:
-    const estudiante = await Estudiante.findByPk(estudiante_id);
-    const representante = await Representante.findByPk(representante_id);
-    if (!estudiante || !representante) {
-       return res.status(404).json({ message: 'Estudiante o representante no encontrados.' });
-    }
-    await estudiante.addRepresentante(representante);
-    res.status(200).json({ message: 'Representante asociado exitosamente.' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+    const estudiante = await Estudiante.findByPk(estudiante_id, {
+      include: [{ model: Representante, as: 'representantes' }],
+    });
+console.log("Alias disponibles en Estudiante:", Object.keys(Estudiante.associations));
+console.log("Métodos disponibles en estudiante:", Object.keys(estudiante.__proto__));
+
+    console.log("Métodos disponibles en Estudiante:", Object.keys(estudiante.__proto__));
+      const representante = await Representante.findByPk(representante_id);
+  
+      if (estudiante && representante) {
+        await estudiante.addRepresentante(representante);
+        res.status(200).json({ message: 'Representante asociado al estudiante exitosamente.' });
+      } else {
+        res.status(404).json({ message: 'Estudiante o Representante no encontrados.' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+      }
 }
 const getRepresentantesDeAlumno = async (req, res = response) => {
   const { id } = req.params;
