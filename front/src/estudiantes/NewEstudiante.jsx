@@ -14,7 +14,7 @@ import { Dropdown } from "primereact/dropdown";
 
 export const NewEstudiante = ({ onStudentCreated }) => {
   const { createEstudiante } = useEstudiante();
-  const { handleSubmit, control, formState: { errors }, setError } = useForm();
+  const { handleSubmit, control, formState: { errors }} = useForm();
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
@@ -161,14 +161,14 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           rules={{ required: "El sexo es requerido." }}
           render={({ field }) => (
             <Dropdown
-              id="sexo"
-              value={field.value}
-              onChange={(e) => field.onChange(e.value)}
-              options={sexos}
-              optionLabel="name"
-              placeholder="Seleccione el Sexo"
-              className={errors.sexo ? 'p-invalid' : ''}
-            />
+            id="sexo"
+            value={field.value}
+            onChange={(e) => field.onChange(e.value.name)}
+            options={sexos}
+            optionLabel="name"
+            placeholder="Seleccione el Sexo"
+            className={errors.sexo ? 'p-invalid' : ''}
+          />
           )}
         />
         <br />

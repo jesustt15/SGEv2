@@ -18,6 +18,7 @@ export const useEstudiante = () => {
 
 export function EstudianteProvider({ children }) {
     const [estudiante, setEstudiante] = useState([]);
+    const [selectedEstudiante, setSelectedEstudiante] = useState(null);
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
@@ -95,6 +96,8 @@ export function EstudianteProvider({ children }) {
     return (
         <EstudianteContext.Provider value={{
             estudiante,
+            selectedEstudiante,
+            setSelectedEstudiante,
             createEstudiante,
             getEstudiantes,
             deleteEstudiante,

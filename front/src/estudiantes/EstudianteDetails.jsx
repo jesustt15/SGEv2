@@ -14,24 +14,35 @@ export const EstudianteDetails = ({ estudiante }) => {
     <div className="estudiante-detail">
       <h3>Detalles del Estudiante</h3>
       <p>
-        <strong>Cédula Escolar:</strong> {estudiante.cedulaEscolar}
+        <strong>Cédula Escolar</strong> {estudiante.cedulaEscolar}
       </p>
       <p>
-        <strong>Nombres:</strong> {estudiante.nombres}
+        <strong>NOMBRES</strong> {estudiante.nombres}
       </p>
       <p>
-        <strong>Apellidos:</strong> {estudiante.apellidos}
+        <strong>APELLIDOS</strong> {estudiante.apellidos}
       </p>
       <p>
-        <strong>Fecha de Nacimiento:</strong> {estudiante.fechaNacimiento}
+        <strong>FECHA DE NACIMIENTO</strong> {estudiante.fechaNacimiento}
       </p>
       <p>
-        <strong>Edad:</strong> {estudiante.edad}
+        <strong>EDAD</strong> {estudiante.edad}
       </p>
       <p>
-        <strong>Sexo:</strong> {estudiante.sexo}
+        <strong>SEXO</strong> {estudiante.sexo}
       </p>
-      {/* Agrega aquí más detalles si lo deseas */}
+      <p>
+        <strong>LUGAR DE NACIMIENTO</strong> {estudiante.lugarNacimiento}
+      </p>
+      <p>
+        <strong>DIRECCIÓN COMPLETA</strong> {estudiante.direccionCompleta}
+      </p>
+      <p>
+        <strong>TELEFONO</strong> {estudiante.telf}
+      </p>
+      <p>
+        <strong>CORREO ELECTRÓNICO</strong> {estudiante.sexo}
+      </p>
     </div>
   );
 };

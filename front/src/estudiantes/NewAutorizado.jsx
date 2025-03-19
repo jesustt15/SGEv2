@@ -15,8 +15,9 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
     try {
       // Agregamos automáticamente el id del estudiante al objeto que enviamos
       const payload = { ...data, estudiante_id: studentId };
+      console.log(payload);
 
-      const createdAutorizado = await createAutorizado(payload);
+      await createAutorizado(payload);
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',

@@ -1,18 +1,13 @@
 import { useLocation } from 'react-router-dom';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
 import { EstudianteDetails } from '../estudiantes';
+import { useEstudiante } from '../context';
 
-const selectedEstudiante = {
-  cedulaEscolar: '123456',
-  nombres: 'Juan',
-  apellidos: 'Pérez',
-  fechaNacimiento: '2000-01-01',
-  edad: 22,
-  sexo: 'M',
-};
+
 
 const RightSidebar = () => {
   const location = useLocation();
+  const { selectedEstudiante } = useEstudiante();
 
   // Si estamos en la ruta 'estudiantes/new', no renderizamos el sidebar
   if (location.pathname.includes('estudiantes/new')) {
