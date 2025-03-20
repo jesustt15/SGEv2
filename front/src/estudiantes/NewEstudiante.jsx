@@ -7,7 +7,6 @@ import { addLocale } from "primereact/api";
 import { useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useEstudiante } from "../context";
-import { InputTextarea } from "primereact/inputtextarea";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
@@ -75,15 +74,13 @@ export const NewEstudiante = ({ onStudentCreated }) => {
       });
     }
   };
-  
-
   return (
     <div className="card">
       <div className="card-titles">
-        <span>Añadir Alumno</span>
         <span>Datos Alumnos</span>
       </div>
       <form onSubmit={handleSubmit(createEstudianteSubmit, onInvalid)}>
+        <div className="form-columnone">
         <Controller
           name="nombres"
           control={control}
@@ -97,35 +94,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           )}
         />
         {errors.nombres && <small className="p-error">{errors.nombres.message}</small>}
-        <br />
-        <Controller
-          name="apellidos"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El apellido es requerido." }}
-          render={({ field }) => (
-            <FloatLabel>
-              <InputText id="apellidos" {...field} />
-              <label htmlFor="apellidos">Apellidos</label>
-            </FloatLabel>
-          )}
-        />
-        {errors.apellidos && <small className="p-error">{errors.apellidos.message}</small>}
-        <br />
-        <Controller
-          name="lugarNacimiento"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El lugar de nacimiento es requerido." }}
-          render={({ field }) => (
-            <FloatLabel>
-              <InputText id="lugarNacimiento" {...field} />
-              <label htmlFor="lugarNacimiento">Lugar de Nacimiento</label>
-            </FloatLabel>
-          )}
-        />
-        {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
-        <br />
         <Controller
           name="fechaNacimiento"
           control={control}
@@ -139,7 +107,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           )}
         />
         {errors.fechaNacimiento && <small className="p-error">{errors.fechaNacimiento.message}</small>}
-        <br />
         <Controller
           name="edad"
           control={control}
@@ -153,7 +120,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           )}
         />
         {errors.edad && <small className="p-error">{errors.edad.message}</small>}
-        <br />
         <Controller
           name="sexo"
           control={control}
@@ -171,21 +137,35 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           />
           )}
         />
-        <br />
+        </div>
+        {/* columna dos */}
+        <div className="form-columntwo">
         <Controller
-          name="direccionCompleta"
+          name="apellidos"
           control={control}
           defaultValue=""
-          rules={{ required: "La dirección es requerida." }}
+          rules={{ required: "El apellido es requerido." }}
           render={({ field }) => (
             <FloatLabel>
-              <InputTextarea id="direccionCompleta" {...field} />
-              <label htmlFor="direccionCompleta">Ingrese la dirección</label>
+              <InputText id="apellidos" {...field} />
+              <label htmlFor="apellidos">Apellidos</label>
             </FloatLabel>
           )}
         />
-        {errors.direccionCompleta && <small className="p-error">{errors.direccionCompleta.message}</small>}
-        <br />
+        {errors.apellidos && <small className="p-error">{errors.apellidos.message}</small>}
+        <Controller
+          name="lugarNacimiento"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El lugar de nacimiento es requerido." }}
+          render={({ field }) => (
+            <FloatLabel>
+              <InputText id="lugarNacimiento" {...field} />
+              <label htmlFor="lugarNacimiento">Lugar de Nacimiento</label>
+            </FloatLabel>
+          )}
+        />
+        {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
         <Controller
           name="cedulaEscolar"
           control={control}
@@ -199,21 +179,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           )}
         />
         {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
-        <br />
-        <Controller
-          name="telefonoResidencial"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El teléfono residencial es requerido." }}
-          render={({ field }) => (
-            <FloatLabel>
-              <InputText keyfilter="int" id="telefonoResidencial" {...field} />
-              <label htmlFor="telefonoResidencial">Teléfono Residencial</label>
-            </FloatLabel>
-          )}
-        />
-        {errors.telefonoResidencial && <small className="p-error">{errors.telefonoResidencial.message}</small>}
-        <Toast ref={toast} />
         <FileUpload
           mode="basic"
           name="foto"
@@ -222,7 +187,8 @@ export const NewEstudiante = ({ onStudentCreated }) => {
           customUpload
           uploadHandler={onUpload}
         />
-        <br />
+        </div>
+        <Toast ref={toast} />
         <Button label="Añadir" type="submit" />
       </form>
     </div>

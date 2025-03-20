@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { Button } from "primereact/button";
 import "../App.css";
 
 export const EstudianteDetails = ({ estudiante }) => {
@@ -12,37 +13,53 @@ export const EstudianteDetails = ({ estudiante }) => {
 
   return (
     <div className="estudiante-detail">
-      <h3>Detalles del Estudiante</h3>
+      <h3>Detalles del Alumno</h3>
       <p>
-        <strong>Cédula Escolar</strong> {estudiante.cedulaEscolar}
+        CEDULA ESCOLAR 
+        <div>{estudiante.cedulaEscolar}</div>
       </p>
       <p>
-        <strong>NOMBRES</strong> {estudiante.nombres}
+        NOMBRES
+        <div>{estudiante.nombres}</div>
       </p>
       <p>
-        <strong>APELLIDOS</strong> {estudiante.apellidos}
+        APELLIDOS 
+        <div>{estudiante.apellidos}</div>
       </p>
       <p>
-        <strong>FECHA DE NACIMIENTO</strong> {estudiante.fechaNacimiento}
+        FECHA DE NACIMIENTO
+        <div>{estudiante.fechaNacimiento}</div>
       </p>
       <p>
-        <strong>EDAD</strong> {estudiante.edad}
+        EDAD
+        <div>{estudiante.edad}</div>
       </p>
       <p>
-        <strong>SEXO</strong> {estudiante.sexo}
+        SEXO
+        <div>{estudiante.sexo}</div>
       </p>
       <p>
-        <strong>LUGAR DE NACIMIENTO</strong> {estudiante.lugarNacimiento}
+        LUGAR DE NACIMIENTO
+        <div>{estudiante.lugarNacimiento}</div>
       </p>
       <p>
-        <strong>DIRECCIÓN COMPLETA</strong> {estudiante.direccionCompleta}
+        DIRECCIÓN COMPLETA
+        <div>{estudiante.direccionCompleta}</div>
       </p>
       <p>
-        <strong>TELEFONO</strong> {estudiante.telf}
+        TELEFONO
+        <div>{estudiante.telf}</div>
       </p>
       <p>
-        <strong>CORREO ELECTRÓNICO</strong> {estudiante.sexo}
+        CORREO ELECTRÓNICO
+        <div>{estudiante.sexo}</div>
       </p>
+      <div className="btn-section">
+      <Button className="btn-outline" icon="pi pi-pen-to-square" />
+      <Button className="btn-outline" icon="pi pi-trash" />
+      <Button label="Ver Más" className="more" severity="secondary" outlined />
+      </div>
     </div>
+    
   );
 };
