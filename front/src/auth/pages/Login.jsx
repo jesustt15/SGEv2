@@ -29,7 +29,7 @@ export const Login = () => {
           <h2>Bienvenido al Sistema De Gestion Escolar del Colegio<span> C.E.I.B Tumeremo</span> </h2>
         </div>
         <div className="form-container">
-              <form onSubmit={handleSubmit(loginSubmit)}>
+              <form className="form-submit" onSubmit={handleSubmit(loginSubmit)}>
                 <label htmlFor="username" className="block text-900 font-medium mb-2">
                   Usuario
                 </label>

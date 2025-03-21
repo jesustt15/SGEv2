@@ -84,6 +84,11 @@
   width: 60%;
 }
 
+.form-submit{
+  display: flex;
+  flex-direction: column;
+}
+
 .img-container {
   position: relative;
   width: 40%; /* Establece el contenedor como referencia para los elementos absolutos */

@@ -105,17 +105,65 @@ p div {
     color: #233255;
 }
 
-form {
-    width: 100%;
+.card-titles{
+    border-top: 1px solid #2332551A;
+    border-bottom: 1px solid #2332551A;
+}
+h4 {
+    font-family: Archivo,sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 100%;
+    letter-spacing: 4%;
+    text-transform: uppercase;
+    color: #233255E5;
+}
+
+.form-alumno {
+    width: 80%;
     display: flex;
     flex-direction: row;
+    margin-left: 5%;
+}
+
+label {
+    font-family: Archivo, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #233255;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
 }
 
 .form-columnone{
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 49%;
+    height: 90vh;
+    justify-content: flex-start;
+    margin-right: 6%;
 }
+
+.group{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: space-between;
+}
+.group-item{
+    display: flex;
+    flex-direction:column;
+    width: 48%;
+}
+
+.dropdown {
+    width: 36%;
+}
+.input-ced {
+    width: 100%;
+}
+
+
 
 .form-columntwo {
     display: flex;
