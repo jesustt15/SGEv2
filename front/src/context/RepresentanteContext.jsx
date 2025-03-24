@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useRef, useState } from "react";
 import { createRepresentantesRequest, deleteRepresentanteRequest, getRepresentantesRequest, getOneRepresentanteRequest, updateRepresentanteRequest } from "../api";
-import { useNavigate } from "react-router-dom";
 import { Toast } from 'primereact/toast';
 
 
@@ -19,7 +18,7 @@ export const useRepresentante = () => {
 export function RepresentanteProvider({ children }) {
     const [representante, setRepresentante] = useState([]);
     const toast = useRef(null); // Referencia para el Toast
-    const navigate = useNavigate();
+
 
     const getRepresentantes = async () => {
         try {
@@ -31,6 +30,8 @@ export function RepresentanteProvider({ children }) {
     };
 
     const createRepresentante = async (repre) => {
+        
+        console.log(repre);
         try {
         //   const existingRepresentante = Representante.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
         //   if (existingRepresentante) {
@@ -38,7 +39,8 @@ export function RepresentanteProvider({ children }) {
         //   }
           // Se asume que createRepresentantesRequest devuelve una respuesta con la data del Representante creado
           const res = await createRepresentantesRequest(repre);
-          const createdRepresentante = res.data;  // Asegúrate de qurepree endpoint devuelve el objeto creado
+          const createdRepresentante = res.data;
+          console.log("Context:",createdRepresentante);  // Asegúrate de qurepree endpoint devuelve el objeto creado
       
           // Actualiza la lista de Representantes
           getRepresentantes();

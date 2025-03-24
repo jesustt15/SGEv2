@@ -1,18 +1,27 @@
-// NewRepresentante.jsx
+/* eslint-disable react/prop-types */
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toast } from "primereact/toast";
 import { useRepresentante } from "../context";
 import axios from "../api/config";
+import "./estudiantes.css";
+import { Dropdown } from "primereact/dropdown";
+import { RadioButton } from "primereact/radiobutton";
+import { FileUpload } from "primereact/fileupload";
+import { tiposCedula, prefijosTelf, tipoEdoCivil } from "../helpers/dropdownOptions";
 
 export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   const {createRepresentante} = useRepresentante();
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const { handleSubmit, control, formState: { errors }, watch } = useForm();
   const toast = useRef(null);
+  const [foto, setFoto] = useState(null);
 
-
+  const onUpload = (event) => {
+    setFoto(event.files[0]);
+    toast.current.show({ severity: 'info', summary: 'Éxito', detail: 'Foto cargada' });
+  };
 
   // Función para vincular el representante con el estudiante en la tabla EstudianteRepresentante.
   const asociarEstudianteRepresentante = async ({ estudiante_id, representante_id }) => {
@@ -24,10 +33,37 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
     return response.data;
   };
   
-
   const createRepresentanteSubmit = async (data) => {
+    console.log("Datos del formulario:", data);
+    
     try {
-      const createdRepresentante = await createRepresentante(data);
+
+      const formData = new FormData();
+      
+      const cedulaCompleta = `${data.tipoCedula}${data.ced}`;
+      data.ced = cedulaCompleta;
+
+      const telfCompleto = `${data.prefijo.code}${data.telf}`;
+      data.telf = telfCompleto;
+
+      const telfTrabajoCompleto = `${data.prefijo}${data.telf_trabajo}`;
+      data.telf_trabajo = telfTrabajoCompleto;
+
+      if (watch("trabajaOption") === "No") {
+        data.trabajo = "";
+     }
+
+      Object.keys(data).forEach(key => formData.append(key, data[key]));
+      if (foto) {
+        formData.append('foto', foto);
+      }
+
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      
+      const createdRepresentante = await createRepresentante(formData);
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',
@@ -35,9 +71,9 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
       });
       // Vincula automáticamente al estudiante con el representante creado.
       console.log("Enviando payload:", { estudiante_id: studentId, representante_id: createdRepresentante.representante_id });
-  await asociarEstudianteRepresentante({
-  estudiante_id: studentId,
-  representante_id: createdRepresentante.representante_id,
+      await asociarEstudianteRepresentante({
+      estudiante_id: studentId,
+      representante_id: createdRepresentante.representante_id,
     });
 
       toast.current.show({
@@ -60,90 +96,282 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
 
   return (
     <div className="card">
-      <h2>Añadir Representante</h2>
-      <form onSubmit={handleSubmit(createRepresentanteSubmit)}>
-        <Controller
-          name="nombre"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El nombre es requerido." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="nombre" {...field} placeholder="Nombres " />
+      <h2>datos de padres</h2>
+      <form className="form-alumno" onSubmit={handleSubmit(createRepresentanteSubmit)}>
+        <div className="form-columnone">
+          <Controller
+              name="nombre"
+              control={control}
+              defaultValue=""
+              rules={{ required: "El nombre es requerido." }}
+              render={({ field }) => (
+                <>
+                  <label htmlFor="nombre">Nombres</label>
+                  <InputText id="nombre" {...field} placeholder="Nombres " />
+                </>
+              )}
+            />
+            {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
+             <div className="group">
+              <div className="group-item">
+                <Controller
+                      name="edo_civil"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: "es requerido." }}
+                      render={({ field }) => (
+                        <>
+                          <label htmlFor="edo_civil">edo. civil</label>
+                          <Dropdown
+                            id="edo_civil"
+                            value={field.value}
+                            onChange={(e) => field.onChange(e.value.name)}
+                            options={tipoEdoCivil}
+                            optionLabel="name"
+                            placeholder="SOLTERO/A"
+                            className={errors.edo_civil ? 'p-invalid' : ''}
+                          />
+                        </>
+                      )}
+                    />
+              </div>
+              <div className="group-item">
+                <Controller
+                      name="edad"
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: "La edad es requerida." }}
+                      render={({ field }) => (
+                        <>
+                          <label htmlFor="edad">Edad</label>
+                          <InputText type="number" id="edad" {...field} placeholder="Edad" />
+                        </>
+                      )}
+                    />
+             </div>
+             </div>
+             <label htmlFor="cedula">CEDULA</label>
+            <div className="group">
+              <Controller
+                name="tipoCedula"
+                control={control}
+                defaultValue="V-"
+                rules={{ required: "El tipo de cédula es requerido." }}
+                render={({ field }) => (
+                  <>
+                    <Dropdown
+                      id="tipoCedula"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.value)}
+                      options={tiposCedula}
+                      optionLabel="name"
+                      placeholder="V-"
+                      className={errors.tipoCedula ? 'p-invalid' : 'dropdown'}
+                    />
+                  </>
+                )}
+              />
+              {errors.tipoCedula && <small className="p-error">{errors.tipoCedula.message}</small>}
+              <Controller
+                name="ced"
+                control={control}
+                defaultValue=""
+                rules={{ required: "La cédula escolar es requerida." }}
+                render={({ field }) => (
+                  <>
+                    <InputText placeholder="Ingresa la cedula escolar" className="input-ced" id="ced" {...field} />
+                  </>
+                )}
+              />
+              {errors.ced && <small className="p-error">{errors.ced.message}</small>}
             </div>
-          )}
-        />
-        {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
-        <br />
-        <Controller
-          name="apellido"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El apellido es requerido." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="apellido" {...field} placeholder="Apellidos" />
+            <label>¿TRABAJA?</label>
+          <div className="group">
+            <div className="p-field-radiobutton">
+              <Controller
+                name="trabajaOption"
+                control={control}
+                defaultValue="No"
+                render={({ field }) => (
+                  <>
+                    <RadioButton 
+                      inputId="trabajaNo" 
+                      name="trabajaOption" 
+                      value="No" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "No"} />
+                    <label htmlFor="trabajaNo" className="ml-2">No</label>
+                    <RadioButton 
+                      inputId="trabajaSi" 
+                      name="trabajaOption" 
+                      value="Si" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "Si"} 
+                      className="ml-4" />
+                    <label htmlFor="trabajaSi" className="ml-2">Sí</label>
+                  </>
+                )}
+              />
             </div>
-          )}
-        />
-        {errors.apellido && <small className="p-error">{errors.apellido.message}</small>}
-        <br />
+            <Controller
+              name="dire_trabajo"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <InputText 
+                  placeholder="Ingrese dirección de trabajo" 
+                  id="dire_trabajo" 
+                  className="input-radio-button-t"
+                  disabled={watch("trabajaOption") === "No"} 
+                  {...field} 
+                />
+              )}
+            />
+            {errors.dire_trabajo && <small className="p-error">{errors.dire_trabajo.message}</small>}
+          </div>
+          <Controller
+            name="correoElectronico"
+            control={control}
+            defaultValue=""
+            rules={{ required: "La correoElectronico es requerida." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="correoElectronico">correo Electrónico</label>
+                <InputText type="email" id="correoElectronico" {...field} placeholder="Ingrese correo Electronico" />
+              </>
+            )}
+          />
+        </div>
+
+        <div className="form-columntwo">
+          <Controller
+            name="apellido"
+            control={control}
+            defaultValue=""
+            rules={{ required: "El apellido es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="apellido">Apellidos</label>
+                <InputText id="apellido" {...field} placeholder="Apellidos" />
+              </>
+            )}
+          />
+          {errors.apellido && <small className="p-error">{errors.apellido.message}</small>}
+            <Controller
+            name="direccion"
+            control={control}
+            defaultValue=""
+            rules={{ required: "La direccion es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="direccion">Direccion</label>
+                <InputText id="direccion" {...field} placeholder="Direccion" />
+              </>
+            )}
+          />
+          {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
+          <label htmlFor="cedula">Teléfono</label>
+            <div className="group">
+                <Controller
+                  name="prefijo"
+                  control={control}
+                  defaultValue="V-"
+                  rules={{ required: "Seleccione un prefijo." }}
+                  render={({ field }) => (
+                    <>
+                      <Dropdown
+                        id="prefijo"
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
+                        options={prefijosTelf}
+                        optionLabel="name"
+                        placeholder="0414"
+                        className={errors.prefijo ? 'p-invalid' : 'dropdown-phone'}
+                      />
+                    </>
+                  )}
+                />
+                <Controller
+                  name="telf"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Ingrese el nro telefónico" }}
+                  render={({ field }) => (
+                    <>
+                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                    </>
+                  )}
+                />
+                {errors.telf && <small className="p-error">{errors.telf.message}</small>}
+          </div>
+        <label htmlFor="telf_trabajo">Teléfono del Trabajo</label>
+            <div className="group">
+                <Controller
+                  name="prefijo"
+                  control={control}
+                  defaultValue="0414"
+                  rules={{ required: "Seleccione un prefijo." }}
+                  render={({ field }) => (
+                    <>
+                      <Dropdown
+                        id="prefijo"
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
+                        options={prefijosTelf}
+                        optionLabel="name"
+                        placeholder="0414"
+                        className={errors.prefijo ? 'p-invalid' : 'dropdown-phone'}
+                      />
+                    </>
+                  )}
+                />
+                <Controller
+                  name="telf_trabajo"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Ingrese el nro telefónico" }}
+                  render={({ field }) => (
+                    <>
+                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf_trabajo" {...field} />
+                    </>
+                  )}
+                />
+                {errors.telf_trabajo && <small className="p-error">{errors.telf_trabajo.message}</small>}
+                </div>
+                          
+        <label htmlFor="foto">FOTO</label>
+          <FileUpload
+            mode="basic"
+            name="foto"
+            accept="image/*"
+            maxFileSize={1000000}
+            customUpload
+            uploadHandler={onUpload}
+          />
         <Controller
-          name="ced"
-          control={control}
-          defaultValue=""
-          rules={{ required: "la cedula es requerida." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="ced" {...field} placeholder="Cedula" />
-            </div>
-          )}
-        />
-        {errors.ced && <small className="p-error">{errors.ced.message}</small>}
-        <br />
-        <Controller
-          name="direccion"
-          control={control}
-          defaultValue=""
-          rules={{ required: "La direccion es requerido." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="direccion" {...field} placeholder="Direccion" />
-            </div>
-          )}
-        />
-        {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
-        <br />
-        <Controller
-          name="tipo"
-          control={control}
-          defaultValue=""
-          rules={{ required: "tipo." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="tipo" {...field} placeholder="Tipo" />
-            </div>
-          )}
-        />
-        {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
-        <br />
-        <Controller
-          name="telf"
-          control={control}
-          defaultValue=""
-          rules={{ required: "El telf es requerido." }}
-          render={({ field }) => (
-            <div>
-              <InputText id="telf" {...field} placeholder="telf" />
-            </div>
-          )}
-        />
-        {errors.telf && <small className="p-error">{errors.telf.message}</small>}
-        <br />
-        
+        name="tipo"
+        control={control}
+        defaultValue=""
+        rules={{ required: "tipo." }}
+        render={({ field }) => (
+          <div>
+            <InputText id="tipo" {...field} placeholder="Tipo" />
+          </div>
+        )}
+      />
+      {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
+
+        </div>
+
+
         <Toast ref={toast} />
-        <Button label="Guardar Representante" type="submit" />
+        <button type="submit" className="btn-next">Siguiente</button>
       </form>
     </div>
   );
 };
+
+
+ 
+
+      

@@ -43,10 +43,6 @@ export const EstudianteDetails = ({ estudiante }) => {
         <div>{estudiante.lugarNacimiento}</div>
       </p>
       <p>
-        DIRECCIÓN COMPLETA
-        <div>{estudiante.direccionCompleta}</div>
-      </p>
-      <p>
         TELEFONO
         <div>{estudiante.telf}</div>
       </p>

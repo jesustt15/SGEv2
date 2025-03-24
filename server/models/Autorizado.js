@@ -43,6 +43,7 @@ const Autorizado = sequelize.define('autorizados', {
       len: [4,100]
     }
   },
+  observaciones: DataTypes.STRING,
   telf: {
     type: DataTypes.STRING,
     allowNull: false,

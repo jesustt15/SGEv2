@@ -1,4 +1,4 @@
-import { Button } from "primereact/button";
+/* eslint-disable react/prop-types */
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
 import { addLocale } from "primereact/api";
@@ -8,25 +8,16 @@ import { useEstudiante } from "../context";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
+import { RadioButton } from "primereact/radiobutton";
+import { tiposCedula, sexos } from "../helpers/dropdownOptions";
 
 export const NewEstudiante = ({ onStudentCreated }) => {
   const { createEstudiante } = useEstudiante();
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const { handleSubmit, control, formState: { errors }, watch } = useForm();
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
 
-  const sexos = [
-    { name: 'Femenino', code: 'Fem' },
-    { name: 'Masculino', code: 'Msc' },
-  ];
-
-  // Opciones para el tipo de cédula (prefijo)
-  const tiposCedula = [
-    { name: 'V-', code: 'V' },
-    { name: 'J-', code: 'J' },
-    { name: 'E-', code: 'E' }
-  ];
 
   const onUpload = (event) => {
     setFoto(event.files[0]);
@@ -53,11 +44,16 @@ export const NewEstudiante = ({ onStudentCreated }) => {
     try {
       const formData = new FormData();
       
-      // Combina el tipo de cédula con la cédula numérica
       const cedulaCompleta = `${data.tipoCedula}${data.cedulaEscolar}`;
-      data.cedulaEscolar = cedulaCompleta; // Sobreescribimos el valor para enviarlo correctamente
+      data.cedulaEscolar = cedulaCompleta;
+      
+      if (watch("alergiaOption") === "No") {
+        data.alergias = "";
+     }
+     if (watch("condicionOption") === "No") {
+        data.condicion = "";
+     }
 
-      // Agrega los demás campos al formData
       Object.keys(data).forEach(key => formData.append(key, data[key]));
       if (foto) {
         formData.append('foto', foto);
@@ -140,10 +136,8 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               {errors.edad && <small className="p-error">{errors.edad.message}</small>}
             </div>
           </div>
-
-          {/* Agrupamos el dropdown para tipo de cédula y el input de cédula */}
+          <label htmlFor="cedula">Cedula escolar</label>
           <div className="group">
-            <div className="group-item">
               <Controller
                 name="tipoCedula"
                 control={control}
@@ -151,22 +145,19 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                 rules={{ required: "El tipo de cédula es requerido." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="tipoCedula">Tipo</label>
                     <Dropdown
                       id="tipoCedula"
                       value={field.value}
                       onChange={(e) => field.onChange(e.value)}
                       options={tiposCedula}
                       optionLabel="name"
-                      placeholder="Seleccione el tipo"
+                      placeholder="V-"
                       className={errors.tipoCedula ? 'p-invalid' : 'dropdown'}
                     />
                   </>
                 )}
               />
               {errors.tipoCedula && <small className="p-error">{errors.tipoCedula.message}</small>}
-            </div>
-            <div className="group-item">
               <Controller
                 name="cedulaEscolar"
                 control={control}
@@ -174,45 +165,56 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                 rules={{ required: "La cédula escolar es requerida." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="cedulaEscolar">Cédula Escolar</label>
-                    <InputText placeholder="Ingresa cédula escolar" className="input-ced" id="cedulaEscolar" {...field} />
+                    <InputText placeholder="Ingresa la cedula escolar" className="input-ced" id="cedulaEscolar" {...field} />
                   </>
                 )}
               />
               {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
-            </div>
           </div>
-          <div className="group-item">
+          <label htmlFor="alergias">Alergias</label>
+          <div className="group">
+            <div className="p-field-radiobutton">
+              <Controller
+                name="alergiaOption"
+                control={control}
+                defaultValue="No"
+                render={({ field }) => (
+                  <>
+                    <RadioButton 
+                      inputId="alergiaNo" 
+                      name="alergiaOption" 
+                      value="No" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "No"} />
+                    <label htmlFor="alergiaNo" className="ml-2">No</label>
+
+                    <RadioButton 
+                      inputId="alergiaSi" 
+                      name="alergiaOption" 
+                      value="Si" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "Si"} 
+                      className="ml-4" />
+                    <label htmlFor="alergiaSi" className="ml-2">Sí</label>
+                  </>
+                )}
+              />
+            </div>
             <Controller
-              name="sexo"
+              name="alergias"
               control={control}
               defaultValue=""
-              rules={{ required: "El sexo es requerido." }}
               render={({ field }) => (
-                <>
-                  <label htmlFor="sexo">Sexo</label>
-                  <Dropdown
-                    id="sexo"
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.value.name)}
-                    options={sexos}
-                    optionLabel="name"
-                    placeholder="Seleccione el Sexo"
-                    className={errors.sexo ? 'p-invalid' : ''}
-                  />
-                </>
+                <InputText 
+                  placeholder="Ingresa alergia" 
+                  className="input-radio-button"
+                  disabled={watch("alergiaOption") === "No"} 
+                  {...field} 
+                />
               )}
             />
-          <label htmlFor="foto">FOTO</label>
-          <FileUpload
-            mode="basic"
-            name="foto"
-            accept="image/*"
-            maxFileSize={1000000}
-            customUpload
-            uploadHandler={onUpload}
-          />
           </div>
+          {errors.alergias && <small className="p-error">{errors.alergias.message}</small>}
         </div>
         {/* Columna dos */}
         <div className="form-columntwo">
@@ -242,21 +244,88 @@ export const NewEstudiante = ({ onStudentCreated }) => {
             )}
           />
           {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
-          <Controller
-            name="condicion"
-            control={control}
-            defaultValue=""
-            rules={{ required: "La condición especial es requerida." }}
-            render={({ field }) => (
-              <>
-                <label htmlFor="condicion">Condición especial</label>
-                <InputText placeholder="Ingresa condición especial" id="condicion" {...field} />
-              </>
-            )}
-          />
+          <label>Condición especial</label>
+          <div className="group">
+            <div className="p-field-radiobutton">
+              <Controller
+                name="condicionOption"
+                control={control}
+                defaultValue="No"
+                render={({ field }) => (
+                  <>
+                    <RadioButton 
+                      inputId="condicionNo" 
+                      name="condicionOption" 
+                      value="No" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "No"} />
+                    <label htmlFor="condicionNo" className="ml-2">No</label>
+
+                    <RadioButton 
+                      inputId="condicionSi" 
+                      name="condicionOption" 
+                      value="Si" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "Si"} 
+                      className="ml-4" />
+                    <label htmlFor="condicionSi" className="ml-2">Sí</label>
+                  </>
+                )}
+              />
+            </div>
+            <Controller
+              name="condicion"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <InputText 
+                  placeholder="Ingresa condición especial" 
+                  id="condicion" 
+                  className="input-radio-button"
+                  disabled={watch("condicionOption") === "No"} 
+                  {...field} 
+                />
+              )}
+            />
+          </div>
           {errors.condicion && <small className="p-error">{errors.condicion.message}</small>}
+          <div className="group">
+              <div className="group-item">
+                  <Controller
+                    name="sexo"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "El sexo es requerido." }}
+                    render={({ field }) => (
+                      <>
+                        <label htmlFor="sexo">Sexo</label>
+                        <Dropdown
+                          id="sexo"
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.value.name)}
+                          options={sexos}
+                          optionLabel="name"
+                          placeholder="Seleccione el Sexo"
+                          className={errors.sexo ? 'p-invalid' : ''}
+                        />
+                      </>
+                    )}
+                  />
+              </div>
+              <div className="group-item">
+                <label htmlFor="foto">FOTO</label>
+                <FileUpload
+                  mode="basic"
+                  name="foto"
+                  accept="image/*"
+                  maxFileSize={1000000}
+                  customUpload
+                  uploadHandler={onUpload}
+                />
+              </div>
+          </div>
           <Toast ref={toast} />
-          <Button label="Añadir" type="submit" />
+          <button type="submit" className="btn-next">SIGUIENTE</button>
         </div>
       </form>
     </div>

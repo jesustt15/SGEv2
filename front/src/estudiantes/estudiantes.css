@@ -132,13 +132,15 @@ label {
     font-weight: 600;
     color: #233255;
     text-transform: uppercase;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.8rem;
 }
+
 
 .form-columnone{
     display: flex;
     flex-direction: column;
-    width: 49%;
+    width: 52%;
     height: 90vh;
     justify-content: flex-start;
     margin-right: 6%;
@@ -148,7 +150,8 @@ label {
     display: flex;
     flex-direction: row;
     width: 100%;
-    align-items: space-between;
+    align-content: space-around;
+
 }
 .group-item{
     display: flex;
@@ -157,16 +160,55 @@ label {
 }
 
 .dropdown {
-    width: 36%;
+    width: 20%;
+    margin-right: 1rem;
+}
+
+.dropdown-phone{
+    width: 30%;
+    margin-right: 1rem;
 }
 .input-ced {
     width: 100%;
 }
 
+.p-field-radiobutton{
+    width: 25%;
+}
 
+
+
+.input-radio-button {
+    width: 70%;
+    margin-left: 1rem;
+}
+
+.input-radio-button-t{
+    width: 65%;
+}
 
 .form-columntwo {
     display: flex;
     flex-direction: column;
     width: 50%;
+}
+
+.btn-next {
+    background-color: #EFF7FC;
+    color: #4F5B77;
+    border: 0.5px solid #4F5B77;
+    font-family: Archivo, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem;
+    width: 40%;
+    border-radius: 6px;
+    margin-top: 5rem;
+    align-self: flex-end;
+}
+
+.btn-next:hover {
+    background-color: #4F5B77;
+    color: white;
+    cursor: pointer;
 }

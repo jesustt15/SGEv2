@@ -38,13 +38,13 @@ const crearEstudiante = async (req, res = response) => {
   const {
     nombres,
     apellidos,
-    direccionCompleta,
-    telefonoResidencial,
     fechaNacimiento,
     lugarNacimiento,
     edad,
     sexo,
     cedulaEscolar,
+    condicion,
+    alergias,
   } = req.body;
   const foto = req.file;
   const fotoPath = foto ? path.join('uploads', 'fotoEstudiante', foto.filename) : null;
@@ -54,13 +54,13 @@ const crearEstudiante = async (req, res = response) => {
     const estudiante = await Estudiante.create({
       nombres,
       apellidos,
-      direccionCompleta,
-      telefonoResidencial,
       fechaNacimiento,
       lugarNacimiento,
       edad,
       sexo,
       cedulaEscolar,
+      condicion,
+      alergias,
       foto: fotoPath,
     });
 

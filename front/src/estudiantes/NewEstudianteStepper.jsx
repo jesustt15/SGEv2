@@ -1,5 +1,4 @@
-// NewStudentProcess.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NewEstudiante } from './NewEstudiante';
 import { NewRepresentante } from './NewRepresentante';
@@ -12,9 +11,9 @@ export const NewEstudianteStepper = () => {
   const navigate = useNavigate();
 
   const stepsModel = [
-    { label: 'Student' },
-    { label: 'Representative' },
-    { label: 'Authorized' },
+    { label: 'Estudiante' },
+    { label: 'Representantes' },
+    { label: 'Autorizado' },
   ];
 
   // Al crear el estudiante, guardamos el ID y avanzamos al formulario de representante.

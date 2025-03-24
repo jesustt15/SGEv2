@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useRef, useState } from "react";
 import { createEstudiantesRequest, deleteEstudianteRequest, getEstudiantesRequest, getOneEstudianteRequest, updateEstudianteRequest } from "../api";
-import { useNavigate } from "react-router-dom";
 import { Toast } from 'primereact/toast';
 
 
@@ -20,7 +19,6 @@ export function EstudianteProvider({ children }) {
     const [estudiante, setEstudiante] = useState([]);
     const [selectedEstudiante, setSelectedEstudiante] = useState(null);
     const toast = useRef(null); // Referencia para el Toast
-    const navigate = useNavigate();
 
     const getEstudiantes = async () => {
         try {

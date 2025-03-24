@@ -43,21 +43,12 @@ const Estudiante = sequelize.define('estudiantes', {
   },
   edad: DataTypes.INTEGER,
   sexo: DataTypes.STRING,
-  direccionCompleta: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  telefonoResidencial: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   cedulaEscolar: {
    type:  DataTypes.STRING,
    unique: true,
-  validate: {
-    isAlphanumeric: {msg: 'Tiene que ser alfanumeirco'}
-  }
   },
+  alergias: DataTypes.STRING,
+  condicion: DataTypes.STRING,
   foto: DataTypes.STRING,
   
   
