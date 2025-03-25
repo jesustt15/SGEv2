@@ -19,6 +19,15 @@ export const tiposCedula = [
     { name: '0426', code: '0426' }
   ];
 
+  export const prefijosTrabajo = [
+    { name: '0286', code: '0286' },
+    { name: '0412', code: '0286' },
+    { name: '0414', code: '0414' },
+    { name: '0424', code: '0424' },
+    { name: '0416', code: '0416' },
+    { name: '0426', code: '0426' }
+  ];
+
   export const sexos = [
     { name: 'Femenino', code: 'Fem' },
     { name: 'Masculino', code: 'Msc' },

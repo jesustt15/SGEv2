@@ -105,10 +105,18 @@ p div {
     color: #233255;
 }
 
-.card-titles{
-    border-top: 1px solid #2332551A;
-    border-bottom: 1px solid #2332551A;
+.card{
+    display: flex;
+    flex-direction: column;
+    width: 96%;
+
 }
+
+.stepper{
+    height: 12vh;
+}
+
+
 h4 {
     font-family: Archivo,sans-serif;
     font-weight: 700;
@@ -120,10 +128,11 @@ h4 {
 }
 
 .form-alumno {
-    width: 80%;
+    width: 95%;
     display: flex;
     flex-direction: row;
     margin-left: 5%;
+    height: 60vh;
 }
 
 label {

@@ -56,7 +56,7 @@ const Representante = sequelize.define('representantes', {
     }
   },
   ocupacion: DataTypes.STRING,
-  trabajo: DataTypes.BOOLEAN,
+  trabajo: DataTypes.STRING,
   dire_trabajo: DataTypes.STRING,
   telf_trabajo: DataTypes.STRING,
   correoElectronico: {

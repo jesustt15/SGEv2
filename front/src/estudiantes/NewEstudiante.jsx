@@ -42,9 +42,14 @@ export const NewEstudiante = ({ onStudentCreated }) => {
 
   const createEstudianteSubmit = async (data) => {
     try {
+
+
+      if (data.sexo && typeof data.sexo === 'object') {
+        data.sexo = data.sexo.name;
+      }
       const formData = new FormData();
       
-      const cedulaCompleta = `${data.tipoCedula}${data.cedulaEscolar}`;
+      const cedulaCompleta = `${data.tipoCedula.name}${data.cedulaEscolar}`;
       data.cedulaEscolar = cedulaCompleta;
       
       if (watch("alergiaOption") === "No") {
@@ -85,9 +90,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
 
   return (
     <div className="card">
-      <div className="card-titles">
         <h4>Datos Alumnos</h4>
-      </div>
       <form className="form-alumno" onSubmit={handleSubmit(createEstudianteSubmit, onInvalid)}>
         <div className="form-columnone">
           <Controller
@@ -141,7 +144,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               <Controller
                 name="tipoCedula"
                 control={control}
-                defaultValue="V-"
+                defaultValue={tiposCedula[0]}
                 rules={{ required: "El tipo de cédula es requerido." }}
                 render={({ field }) => (
                   <>
@@ -302,7 +305,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                         <Dropdown
                           id="sexo"
                           value={field.value}
-                          onChange={(e) => field.onChange(e.value.name)}
+                          onChange={(e) => field.onChange(e.value)}
                           options={sexos}
                           optionLabel="name"
                           placeholder="Seleccione el Sexo"

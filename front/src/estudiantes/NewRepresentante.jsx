@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -10,7 +9,7 @@ import "./estudiantes.css";
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
 import { FileUpload } from "primereact/fileupload";
-import { tiposCedula, prefijosTelf, tipoEdoCivil } from "../helpers/dropdownOptions";
+import { tiposCedula, prefijosTelf, tipoEdoCivil, prefijosTrabajo } from "../helpers/dropdownOptions";
 
 export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   const {createRepresentante} = useRepresentante();
@@ -38,15 +37,19 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
     
     try {
 
+      if (data.edo_civil && typeof data.edo_civil === 'object') {
+        data.edo_civil = data.edo_civil.name;
+      }
+
       const formData = new FormData();
       
-      const cedulaCompleta = `${data.tipoCedula}${data.ced}`;
+      const cedulaCompleta = `${data.tipoCedula.name}${data.ced}`;
       data.ced = cedulaCompleta;
 
-      const telfCompleto = `${data.prefijo.code}${data.telf}`;
+      const telfCompleto = `${data.prefijoTelf.code}${data.telf}`;
       data.telf = telfCompleto;
 
-      const telfTrabajoCompleto = `${data.prefijo}${data.telf_trabajo}`;
+      const telfTrabajoCompleto = `${data.prefijoTrabajo.code}${data.telf_trabajo}`;
       data.telf_trabajo = telfTrabajoCompleto;
 
       if (watch("trabajaOption") === "No") {
@@ -125,7 +128,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                           <Dropdown
                             id="edo_civil"
                             value={field.value}
-                            onChange={(e) => field.onChange(e.value.name)}
+                            onChange={(e) => field.onChange(e.value)}
                             options={tipoEdoCivil}
                             optionLabel="name"
                             placeholder="SOLTERO/A"
@@ -155,7 +158,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
               <Controller
                 name="tipoCedula"
                 control={control}
-                defaultValue="V-"
+                defaultValue={tiposCedula[0]}
                 rules={{ required: "El tipo de cédula es requerido." }}
                 render={({ field }) => (
                   <>
@@ -273,14 +276,14 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
           <label htmlFor="cedula">Teléfono</label>
             <div className="group">
                 <Controller
-                  name="prefijo"
+                  name="prefijoTelf"
                   control={control}
-                  defaultValue="V-"
+                  defaultValue={prefijosTelf[0]}
                   rules={{ required: "Seleccione un prefijo." }}
                   render={({ field }) => (
                     <>
                       <Dropdown
-                        id="prefijo"
+                        id="prefijoTelf"
                         value={field.value}
                         onChange={(e) => field.onChange(e.value)}
                         options={prefijosTelf}
@@ -307,19 +310,19 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
         <label htmlFor="telf_trabajo">Teléfono del Trabajo</label>
             <div className="group">
                 <Controller
-                  name="prefijo"
+                  name="prefijoTrabajo"
                   control={control}
-                  defaultValue="0414"
+                  defaultValue={prefijosTrabajo[0]}
                   rules={{ required: "Seleccione un prefijo." }}
                   render={({ field }) => (
                     <>
                       <Dropdown
-                        id="prefijo"
+                        id="prefijoTrabajo"
                         value={field.value}
                         onChange={(e) => field.onChange(e.value)}
-                        options={prefijosTelf}
+                        options={prefijosTrabajo}
                         optionLabel="name"
-                        placeholder="0414"
+                        placeholder="0286"
                         className={errors.prefijo ? 'p-invalid' : 'dropdown-phone'}
                       />
                     </>

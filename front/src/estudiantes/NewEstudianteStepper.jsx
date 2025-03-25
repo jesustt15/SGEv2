@@ -33,7 +33,7 @@ export const NewEstudianteStepper = () => {
   };
 
   return (
-    <div>
+    <div className='stepper'>
       <Steps model={stepsModel} activeIndex={step - 1} style={{ marginBottom: '1rem' }} />
       {step === 1 && <NewEstudiante onStudentCreated={handleStudentCreated} />}
       {step === 2 && <NewRepresentante studentId={studentId} onRepresentanteCreated={handleRepresentanteCreated} />}
