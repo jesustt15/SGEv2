@@ -273,7 +273,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             )}
           />
           {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
-          <label htmlFor="cedula">Teléfono</label>
+          <label htmlFor="telefono">Teléfono</label>
             <div className="group">
                 <Controller
                   name="prefijoTelf"

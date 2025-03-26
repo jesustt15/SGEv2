@@ -1,5 +1,6 @@
 const {response} = require("express");
 const Representante = require("../models/Representante");
+const path = require('path');
 
 
 const getRepresentantes = async(req, res = response) => {
@@ -32,15 +33,16 @@ const getOneRepresentante = async(req, res = response) => {
 }
 
 const crearRepresentante = async(req, res = response) => {
-    console.log("campos received : ", req.body);
     const {tipo, nombre, apellido, edo_civil, edad, ced,telf,
-            direccion, trabajo, dire_trabajo, telf_trabajo, correoElectronico,foto
+            direccion, trabajo, dire_trabajo, telf_trabajo, correoElectronico,
     } = req.body;
+    const foto = req.file;
+    const fotoPath = foto ? path.join('uploads', 'fotoRepresentante', foto.filename) : null;
 
     try {
 
         const representante = await Representante.create({tipo, nombre, apellido, edo_civil, edad, ced,telf,
-            direccion, trabajo, dire_trabajo, telf_trabajo,correoElectronico, foto});
+            direccion, trabajo, dire_trabajo, telf_trabajo,correoElectronico, foto:fotoPath});
         res.status(201).json(representante)
         
     } catch (error) {

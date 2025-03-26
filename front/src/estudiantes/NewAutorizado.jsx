@@ -1,25 +1,56 @@
 /* eslint-disable react/prop-types */
 import { InputText } from "primereact/inputtext";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toast } from "primereact/toast";
 import { useAutorizado } from "../context";
 import { Dropdown } from "primereact/dropdown";
-import { tiposCedula } from "../helpers/dropdownOptions";
+import { prefijosTelf, tiposCedula } from "../helpers/dropdownOptions";
 import "./estudiantes.css"
+import { FileUpload } from "primereact/fileupload";
 
 export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
   const { createAutorizado } = useAutorizado();
   const { handleSubmit, control, formState: { errors } } = useForm();
+
+  const [foto, setFoto] = useState(null);
   const toast = useRef(null);
+
+
+
+  const onUpload = (event) => {
+    setFoto(event.files[0]);
+    toast.current.show({ severity: 'info', summary: 'Éxito', detail: 'Foto cargada' });
+  };
 
   const createAutorizadoSubmit = async (data) => {
     try {
-      // Agregamos automáticamente el id del estudiante al objeto que enviamos
-      const payload = { ...data, estudiante_id: studentId };
-      console.log(payload);
+      // Agregamos el ID del estudiante para vincular al autorizado
+      data.estudiante_id = studentId;
 
-      await createAutorizado(payload);
+
+      const cedulaCompleta = `${data.tipoCedula.name}${data.ced}`;
+      data.ced = cedulaCompleta;
+
+      const telfCompleto = `${data.prefijoTelf.code}${data.telf}`;
+      data.telf = telfCompleto;
+
+      const formData = new FormData();
+      
+      // Recorremos cada propiedad de data y la añadimos a formData
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+      
+      // Si existe la foto del autorizado (asegúrate de gestionar correctamente su estado o valor)
+      if (foto) {
+        formData.append('foto', foto);
+      }
+      
+      // Llamamos a la función para crear el autorizado, la cual ahora debe esperar un FormData
+      const createdAuthorized = await createAutorizado(formData);
+      console.log(createdAuthorized);
+      
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',
@@ -30,7 +61,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
         onAutorizadoCreated();
       }
     } catch (error) {
-      console.log("Error al crear autorizado:", error);
+      console.error("Error al crear autorizado:", error);
       toast.current.show({
         severity: 'error',
         summary: 'Error',
@@ -38,6 +69,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
       });
     }
   };
+  ;
 
   return (
     <div className="card">
@@ -109,7 +141,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             name="observaciones"
             control={control}
             defaultValue=""
-            rules={{ required: "El teléfono es requerido." }}
+            rules={{ required: "Coloque unas observaciones." }}
             render={({ field }) => (
               <>
                 <label htmlFor="observaciones">Observaciones</label>
@@ -146,19 +178,49 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             )}
           />
           {errors.parentesco && <small className="p-error">{errors.parentesco.message}</small>}
-            <Controller
-            name="telf"
-            control={control}
-            defaultValue=""
-            rules={{ required: "El teléfono es requerido." }}
-            render={({ field }) => (
-              <>
-                <label htmlFor="telf">Telefóno</label>
-                <InputText id="telf" {...field} placeholder="Teléfono" />
-              </>
-            )}
-          />
-          {errors.telf && <small className="p-error">{errors.telf.message}</small>}
+          <label htmlFor="telefono">Teléfono</label>
+            <div className="group">
+                <Controller
+                  name="prefijoTelf"
+                  control={control}
+                  defaultValue={prefijosTelf[0]}
+                  rules={{ required: "Seleccione un prefijo." }}
+                  render={({ field }) => (
+                    <>
+                      <Dropdown
+                        id="prefijoTelf"
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.value)}
+                        options={prefijosTelf}
+                        optionLabel="name"
+                        placeholder="0414"
+                        className={errors.prefijo ? 'p-invalid' : 'dropdown-phone'}
+                      />
+                    </>
+                  )}
+                />
+                <Controller
+                  name="telf"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Ingrese el nro telefónico" }}
+                  render={({ field }) => (
+                    <>
+                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                    </>
+                  )}
+                />
+                {errors.telf && <small className="p-error">{errors.telf.message}</small>}
+              </div>
+            <label htmlFor="foto">FOTO</label>
+                  <FileUpload
+                    mode="basic"
+                    name="foto"
+                    accept="image/*"
+                    maxFileSize={1000000}
+                    customUpload
+                    uploadHandler={onUpload}
+                  />
         </div>
  
         <Toast ref={toast} />

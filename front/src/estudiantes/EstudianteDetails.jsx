@@ -11,6 +11,7 @@ export const EstudianteDetails = ({ estudiante }) => {
     );
   }
 
+ 
   return (
     <div className="estudiante-detail">
       <h3>Detalles del Alumno</h3>
@@ -53,7 +54,7 @@ export const EstudianteDetails = ({ estudiante }) => {
       <div className="btn-section">
       <Button className="btn-outline" icon="pi pi-pen-to-square" />
       <Button className="btn-outline" icon="pi pi-trash" />
-      <Button label="Ver Más" className="more" severity="secondary" outlined />
+      <Button label="Ver Más" className="more" severity="secondary" outlined  onClick={goToMore()} />
       </div>
     </div>
     

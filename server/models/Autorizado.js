@@ -32,7 +32,6 @@ const Autorizado = sequelize.define('autorizados', {
     allowNull: false,
     unique: true,
     validate: {
-      isNumeric: {msg: 'tiene que ser numeros'},
       len: [7,11]
     }
   },
@@ -51,6 +50,7 @@ const Autorizado = sequelize.define('autorizados', {
       len: [10,13]
     }
   },
+  foto: DataTypes.STRING,
   
 });
 

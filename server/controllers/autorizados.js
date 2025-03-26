@@ -1,5 +1,6 @@
 const {response} = require("express");
 const Autorizado = require("../models/Autorizado");
+const path = require('path');
 
 
 const getAutorizados = async(req, res = response) => {
@@ -33,11 +34,14 @@ const getOneAutorizado = async(req, res = response) => {
 
 const crearAutorizado = async(req, res = response) => {
 
-    const {nombre, apellido, ced, direccion, parentesco ,telf, foto, estudiante_id} = req.body;
+    const {nombre, apellido, ced, direccion, parentesco ,telf, estudiante_id} = req.body;
+    const foto = req.file;
+    const fotoPath = foto ? path.join('uploads', 'fotoAutorizado', foto.filename) : null;
 
     try {
 
-        const autorizado = await Autorizado.create({nombre, apellido, ced, direccion, parentesco ,telf, foto, estudiante_id});
+        const autorizado = await Autorizado.create({nombre, apellido, ced, direccion, 
+            parentesco ,telf, foto:fotoPath, estudiante_id});
         res.status(201).json(autorizado)
         
     } catch (error) {
