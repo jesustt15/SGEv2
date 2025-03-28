@@ -204,4 +204,40 @@
   padding: 10px;
 }
 
-/* Puedes ajustar la fuente o aplicar otros estilos al contenedor externo si lo deseas */
+.header-edit{
+  display: flex;
+  width: 100%;
+  height: 4rem;
+  padding: 0.5rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.encabezado{
+  font-family: Archivo;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  width: 40%;
+}
+
+.loguito img {
+  height: 5rem;
+}
+
+.foto-edit {
+  width: 136px;
+  height: 172px;
+  border-radius: 6px;
+  border-width: 3px;
+  
+}
+
+.foto-edit img {
+  width: 100%;          /* La imagen ocupará todo el contenedor */
+  height: 100%;         
+  object-fit: cover;    /* Recorta la imagen manteniendo su proporción */
+}

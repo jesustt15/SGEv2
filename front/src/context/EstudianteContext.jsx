@@ -95,6 +95,7 @@ export function EstudianteProvider({ children }) {
         <EstudianteContext.Provider value={{
             estudiante,
             selectedEstudiante,
+            setEstudiante,
             setSelectedEstudiante,
             createEstudiante,
             getEstudiantes,

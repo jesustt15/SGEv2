@@ -1,9 +1,8 @@
-import { useLocation } from 'react-router-dom';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useLocation, useMatch } from 'react-router-dom';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
 import { EstudianteDetails } from '../estudiantes';
 import { useEstudiante } from '../context';
-
-
 
 const RightSidebar = () => {
   const location = useLocation();
@@ -14,8 +13,14 @@ const RightSidebar = () => {
     return null;
   }
 
+  // Usamos useMatch para detectar rutas del tipo /estudiantes/:id
+  const matchEstudianteDetalle = useMatch('/estudiantes/:id');
+  if (matchEstudianteDetalle) {
+    return null;
+  }
+
   let content;
-  // Contenido variable según la ruta
+  // Contenido variable según la rutah
   if (location.pathname.includes('usuarios')) {
     content = <div>Contenido de Usuario: estadísticas o notificaciones.</div>;
   } else if (location.pathname.includes('estudiantes')) {

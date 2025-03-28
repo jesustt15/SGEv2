@@ -1,8 +1,14 @@
 /* eslint-disable react/prop-types */
 import { Button } from "primereact/button";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
 
 export const EstudianteDetails = ({ estudiante }) => {
+  
+  const navigate = useNavigate();
+  
+  
+  
   if (!estudiante) {
     return (
       <div className="estudiante-detail no-selection">
@@ -54,7 +60,7 @@ export const EstudianteDetails = ({ estudiante }) => {
       <div className="btn-section">
       <Button className="btn-outline" icon="pi pi-pen-to-square" />
       <Button className="btn-outline" icon="pi pi-trash" />
-      <Button label="Ver Más" className="more" severity="secondary" outlined  onClick={goToMore()} />
+      <Button label="Ver Más" className="more" severity="secondary" outlined  onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}`)} />
       </div>
     </div>
     
