@@ -87,17 +87,16 @@ export const EstudiantePage = ({ initialData, updateEstudiante, toast, onEstudia
     <>
       <HeaderEdit />
       <form onSubmit={handleSubmit(onSubmit)} className='form-alumno-edit' encType="multipart/form-data">
-      <EstudianteFoto  estudiante={estudiante}/>
+        <EstudianteFoto  estudiante={estudiante}/>
         <div className="form-columone">
-        </div>
           <label>Nombre:</label>
-          <input
-            type="text"
-            {...register("nombres")}
-            placeholder="Ingresa el nombre"
-          />
-          {errors.nombre && <span>El nombre es requerido.</span>}
-        </div>
+            <input
+              type="text"
+              {...register("nombres")}
+              placeholder="Ingresa el nombre"
+            />
+            {errors.nombre && <span>El nombre es requerido.</span>}
+          </div>   
         <div>
           <label>Apellido:</label>
           <input
