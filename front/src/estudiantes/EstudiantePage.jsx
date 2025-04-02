@@ -1,116 +1,194 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEstudiante } from '../context';
-import { EstudianteFoto, HeaderEdit } from '../components';
+import { EstudianteFoto, HeaderEdit, HeaderOptions } from '../components';
 
-
-
-export const EstudiantePage = ({ initialData, updateEstudiante, toast, onEstudianteUpdated }) => {
+export const EstudiantePage = () => {
   const { id } = useParams();
-
   const { estudiante, setEstudiante, getOneEstudiante } = useEstudiante();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    watch, 
-    setValue,
-    formState: { errors },
-  } = useForm({ defaultValues: initialData });
-  
-  const [foto, setFoto] = useState(null);
-  
-  const alergiaOption = watch("alergiaOption");
-  const condicionOption = watch("condicionOption");
 
-  const handleFotoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFoto(e.target.files[0]);
-    }
-  };
-
-  // Carga el estudiante y actualiza el formulario
   useEffect(() => {
     const loadEstudiante = async () => {
       if (id) {
         const fetchedEstudiante = await getOneEstudiante(id);
         setEstudiante(fetchedEstudiante);
-        setValue('nombres', fetchedEstudiante.nombres)
       }
     };
     loadEstudiante();
   }, [id, getOneEstudiante, setEstudiante]);
 
-  useEffect(() => {
-    console.log('useEffect - Estudiante actualizado:', estudiante);
-  }, [estudiante]);
+  if (!estudiante) {
+    return <div>Cargando estudiante...</div>;
+  }
 
-  const onSubmit = async (data) => {
-    try {
-      if (data.sexo && typeof data.sexo === 'object') {
-        data.sexo = data.sexo.name;
-      }
-
-      const formData = new FormData();
-      const cedulaCompleta = `${data.tipoCedula.name}${data.cedulaEscolar}`;
-      data.cedulaEscolar = cedulaCompleta;
-
-      if (alergiaOption === "No") data.alergias = "";
-      if (condicionOption === "No") data.condicion = "";
-
-      Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-
-      if (foto) formData.append('foto', foto);
-
-      const response = await updateEstudiante(formData);
-      toast.current.show({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Estudiante actualizado',
-      });
-      if (onEstudianteUpdated) onEstudianteUpdated(response);
-    } catch (error) {
-      console.error("Error al editar estudiante:", error);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Revisa los campos marcados.',
-      });
-    }
-  };
+  const representantePadre = estudiante.representantes?.find(rep => rep.tipo === 'Padre');
+  const representanteMadre = estudiante.representantes?.find(rep => rep.tipo === 'Madre');
+  const autorizado = estudiante.autorizados?.[0];
 
   return (
     <>
-      <HeaderEdit />
-      <form onSubmit={handleSubmit(onSubmit)} className='form-alumno-edit' encType="multipart/form-data">
-        <EstudianteFoto  estudiante={estudiante}/>
-        <div className="form-columone">
-          <label>Nombre:</label>
-            <input
-              type="text"
-              {...register("nombres")}
-              placeholder="Ingresa el nombre"
-            />
-            {errors.nombre && <span>El nombre es requerido.</span>}
-          </div>   
-        <div>
-          <label>Apellido:</label>
-          <input
-            type="text"
-            {...register("apellidos")}
-            placeholder="Ingresa el apellido"
-          />
-          {errors.apellido && <span>El apellido es requerido.</span>}
+      <HeaderOptions id={estudiante.estudiante_id}
+         studentName={`${estudiante.apellidos}${estudiante.nombres}`}
+      />
+      <div className="pdfContent">
+        <HeaderEdit />
+        <EstudianteFoto estudiante={estudiante} />
+        <div className="page-section">
+          <div className="form-columnone">
+            <label>Nombres</label>
+            <h5>{estudiante.nombres}</h5>
+            <div className="group-label">
+              <div className="group-item">
+                <label>Fecha de Nacimiento</label>
+              </div>
+              <div className="group-item">
+                <label>Edad</label>
+              </div>
+            </div>
+            <div className='group'>
+              <div className="group-item">
+                <h5>{estudiante.fechaNacimiento}</h5>
+              </div>
+              <div className="group-item">
+                <h5>{estudiante.edad}</h5>
+              </div>
+            </div>
+            <label>Sexo</label>
+            <h5>{estudiante.sexo}</h5>
+          </div>
+          <div className="form-columntwo">
+            <label>Apellidos</label>
+            <h5>{estudiante.apellidos}</h5>
+            <label>Lugar de Nacimiento</label>
+            <h5>{estudiante.lugarNacimiento}</h5>
+            <label>Condición Especial</label>
+            <h5>{estudiante.condicion}</h5>
+          </div>
         </div>
-        {/* ...otros campos... */}
-        <button type="submit">Actualizar Estudiante</button>
-      </form>
+            {representantePadre ? (
+              <>
+                <h4 className="parent-type">Padre</h4>
+                <EstudianteFoto estudiante={representantePadre} />
+                <div className="page-section">
+                  <div className="form-columnone">
+                    <label>Nombres</label>
+                    <h5>{representantePadre.nombre}</h5>
+                    <div className="group-label">
+                      <div className="group-item">
+                        <label>Edo. Civil</label>
+                      </div>
+                      <div className="group-item">
+                        <label>Edad</label>
+                      </div>
+                    </div>
+                    <div className="group">
+                      <div className="group-item">
+                        <h5>{representantePadre.edo_civil}/A</h5>
+                      </div>
+                      <div className="group-item">
+                        <h5>{representantePadre.edad}</h5>
+                      </div>
+                    </div>
+                    <label>Cédula</label>
+                    <h5>{representantePadre.ced}</h5>
+                    <label>¿trabaja?</label>
+                    <h5>{representantePadre.trabajo}</h5>
+                    <label>correo electrónico</label>
+                    <h5>{representantePadre.correoElectronico}</h5>
+                  </div>
+                  <div className="form-columntwo">
+                    <label>Apellidos</label>
+                    <h5>{representantePadre.apellido}</h5>
+                    <label>dirección</label>
+                    <h5>{representantePadre.direccion}</h5>
+                    <label>Teléfono</label>
+                    <h5>{representantePadre.telf}</h5>
+                    <label>Telefono del trabajo</label>
+                    <h5>{representantePadre.telfTrabajo}</h5>
+                  </div>
+                </div>
+            </>
+            ) : (
+              <br />
+            )}
+            {representanteMadre ? (
+              <>
+                <h4 className="parent-type">Madre</h4>
+                <EstudianteFoto estudiante={representanteMadre} />
+                <div className="page-section">
+                  <div className="form-columnone">
+                    <label>Nombres</label>
+                    <h5>{representanteMadre.nombre}</h5>
+                    <div className="group-label">
+                      <div className="group-item">
+                        <label>Edo. Civil</label>
+                      </div>
+                      <div className="group-item">
+                        <label>Edad</label>
+                      </div>
+                    </div>
+                    <div className="group">
+                      <div className="group-item">
+                        <h5>{representanteMadre.edo_civil}/A</h5>
+                      </div>
+                      <div className="group-item">
+                        <h5>{representanteMadre.edad}</h5>
+                      </div>
+                    </div>
+                    <label>Cédula</label>
+                    <h5>{representanteMadre.ced}</h5>
+                    <label>¿trabaja?</label>
+                    <h5>{representanteMadre.trabajo}</h5>
+                    <label>correo electrónico</label>
+                    <h5>{representanteMadre.correoElectronico}</h5>
+                  </div>
+                  <div className="form-columntwo">
+                    <label>Apellidos</label>
+                    <h5>{representanteMadre.apellido}</h5>
+                    <label>dirección</label>
+                    <h5>{representanteMadre.direccion}</h5>
+                    <label>Teléfono</label>
+                    <h5>{representanteMadre.telf}</h5>
+                    <label>Telefono del trabajo</label>
+                    <h5>{representanteMadre.telfTrabajo}</h5>
+                  </div>
+                </div>
+              </>
+
+            ) : (
+              <p>No hay representante registrado como madre.</p>
+            )}
+            
+            {autorizado ? (
+            <>
+              <h4 className="parent-type">AUTORIZADO</h4>
+              <EstudianteFoto estudiante={autorizado} />
+              <div className='page-section'>
+                <div className="form-columnone">
+                  <label>Nombres</label>
+                  <h5>{autorizado.nombre}</h5>
+                  <label>cédula</label>
+                  <h5>{autorizado.ced}</h5>
+                  <label>dirección</label>
+                  <h5>{autorizado.direccion}</h5>
+                  <label>observación</label>
+                  <h5>{autorizado.observacion}</h5>
+                </div>
+                <div className="form-columntwo">
+                  <label>Apellidos</label>
+                  <h5>{autorizado.apellido}</h5>
+                  <label>Parentesco</label>
+                  <h5>{autorizado.parentesco}</h5>
+                  <label>Teléfono</label>
+                  <h5>{autorizado.telf}</h5>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p>No hay autorizado registrado para este estudiante.</p>
+          )}
+      </div>
+      
     </>
   );
 };
-
-

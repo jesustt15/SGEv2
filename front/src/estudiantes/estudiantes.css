@@ -168,11 +168,18 @@ label {
     align-content: space-around;
 
 }
+.group-label {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-content: space-around;
+}
 .group-item{
     display: flex;
     flex-direction:column;
     width: 48%;
 }
+
 
 .dropdown {
     width: 20%;
@@ -226,4 +233,28 @@ label {
     background-color: #4F5B77;
     color: white;
     cursor: pointer;
+}
+
+.page-section {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
+    align-items: baseline;
+    justify-content: space-between;
+    max-height: 60vh;
+}
+
+.parent-type{
+    margin-left: 5%;
+}
+
+h5{
+    font-family: Archivo;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    margin-top: 12px;
+    text-transform: uppercase;
 }

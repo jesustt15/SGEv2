@@ -3,6 +3,7 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { createEstudiantesRequest, deleteEstudianteRequest, getEstudiantesRequest, getOneEstudianteRequest, updateEstudianteRequest } from "../api";
 import { Toast } from 'primereact/toast';
+import { useNavigate } from "react-router-dom";
 
 
 const EstudianteContext = createContext();
@@ -18,6 +19,7 @@ export const useEstudiante = () => {
 export function EstudianteProvider({ children }) {
     const [estudiante, setEstudiante] = useState([]);
     const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+    const navigate = useNavigate();
     const toast = useRef(null); // Referencia para el Toast
 
     const getEstudiantes = async () => {
@@ -64,9 +66,11 @@ export function EstudianteProvider({ children }) {
       };
       
     const updateEstudiante = async (id, estudiante) => {
+        console.log('Estduainte en el context:' , estudiante);
         try {
             await updateEstudianteRequest(id, estudiante);
             getEstudiantes();
+            navigate('/estudiantes');
         } catch (error) {
             console.error("Error updating estudiante:", error);
         }

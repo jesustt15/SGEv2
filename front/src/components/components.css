@@ -233,7 +233,7 @@
   height: 172px;
   border-radius: 6px;
   border-width: 3px;
-  
+  margin-left: 5%;
 }
 
 .foto-edit img {
@@ -241,3 +241,13 @@
   height: 100%;         
   object-fit: cover;    /* Recorta la imagen manteniendo su proporción */
 }
+
+.header-options {
+  display: flex;
+  height: 15vh;
+  flex-direction: row;
+  justify-items: center;
+  justify-content: space-between;
+  align-items: center;
+}
+

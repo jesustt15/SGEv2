@@ -58,9 +58,12 @@ export const EstudianteDetails = ({ estudiante }) => {
         <div>{estudiante.sexo}</div>
       </p>
       <div className="btn-section">
-      <Button className="btn-outline" icon="pi pi-pen-to-square" />
+      <Button className="btn-outline" icon="pi pi-pen-to-square"
+        onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}`)}
+      />
       <Button className="btn-outline" icon="pi pi-trash" />
-      <Button label="Ver Más" className="more" severity="secondary" outlined  onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}`)} />
+      <Button label="Ver Más" className="more" severity="secondary" outlined  
+      onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}/more`)} />
       </div>
     </div>
     

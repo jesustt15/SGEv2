@@ -1,5 +1,5 @@
 const {response} = require("express");
-const { Estudiante, Representante } = require('../models');
+const { Estudiante, Representante, Autorizado } = require('../models');
 const path = require('path');
 
 
@@ -19,20 +19,32 @@ const getEstudiantes = async(req, res = response) => {
 
 }
 
-const getOneEstudiante = async(req, res = response) => {
+const getOneEstudiante = async (req, res = response) => {
+  try {
+    const estudiante = await Estudiante.findOne({
+      where: { estudiante_id: req.params.id },
+      include: [
+        {
+          model: Representante,
+          as: 'representantes' // Usa el alias definido en la asociación
+        },
+        {
+          model: Autorizado,
+          as: 'autorizados'
+        }
+      ]
+    });
 
-    try {
+    if (!estudiante) {
+      return res.status(404).json({ message: "Estudiante no encontrado" });
+    }
+    return res.json(estudiante);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
-        const estudiante = await Estudiante.findOne({where: {estudiante_id: req.params.id}});
-        if (!estudiante) return res.status(404).json({ message: "estudiante not found" });
-        return res.json(estudiante);
 
-      } catch (error) {
-
-        return res.status(500).json({ message: error.message });
-      }
-
-}
 
 const crearEstudiante = async (req, res = response) => {
   const {
@@ -148,11 +160,7 @@ const asociarEstudianteRepresentante = async(req , res = response) => {
     const estudiante = await Estudiante.findByPk(estudiante_id, {
       include: [{ model: Representante, as: 'representantes' }],
     });
-console.log("Alias disponibles en Estudiante:", Object.keys(Estudiante.associations));
-console.log("Métodos disponibles en estudiante:", Object.keys(estudiante.__proto__));
 
-    console.log("Métodos disponibles en Estudiante:", Object.keys(estudiante.__proto__));
-      const representante = await Representante.findByPk(representante_id);
   
       if (estudiante && representante) {
         await estudiante.addRepresentante(representante);

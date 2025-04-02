@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from './DashboardLayout';
 import { Home, Login } from '../auth';
-import { Estudiantes, NewEstudianteStepper, EstudiantePage } from '../estudiantes';
+import { Estudiantes, NewEstudianteStepper, EstudiantePage, EstudianteEdit } from '../estudiantes';
 import { Usuarios, NewUsuario } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
 
@@ -18,7 +18,8 @@ export const AppRouter = () => {
           <Route index element={<Home />} />
           <Route path="estudiantes" element={<Estudiantes />} />
           <Route path="estudiantes/new" element={<NewEstudianteStepper />} />
-          <Route path="estudiantes/:id" element={<EstudiantePage />} />
+          <Route path="estudiantes/:id/more" element={<EstudiantePage />} />
+          <Route path="estudiantes/:id" element={<EstudianteEdit />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
         </Route>

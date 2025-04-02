@@ -5,3 +5,4 @@ export * from './NewAutorizado';
 export * from './NewRepresentante';
 export * from './NewEstudianteStepper';
 export * from './EstudiantePage';
+export * from './EstudianteEdit';
