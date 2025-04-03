@@ -24,12 +24,14 @@ export function EstudianteProvider({ children }) {
 
     const getEstudiantes = async () => {
         try {
-            const res = await getEstudiantesRequest();
-            setEstudiante(res.data);
+          const res = await getEstudiantesRequest();
+          console.log('Tipo de res.data:', typeof res.data, Array.isArray(res.data)); // Confirma si es un array
+          setEstudiante(res.data);
         } catch (error) {
-            console.error("Error fetching Estudiante:", error);
+          console.error("Error fetching Estudiante:", error);
         }
-    };
+      };
+      
 
     const createEstudiante = async (est) => {
         try {
@@ -37,14 +39,12 @@ export function EstudianteProvider({ children }) {
           if (existingEstudiante) {
             throw new Error('Este estudiante ya existe.');
           }
-          // Se asume que createEstudiantesRequest devuelve una respuesta con la data del estudiante creado
+        
           const res = await createEstudiantesRequest(est);
           const createdEstudiante = res.data;  // Asegúrate de que este endpoint devuelve el objeto creado
       
-          // Actualiza la lista de estudiantes
           getEstudiantes();
       
-          // Muestra el mensaje de éxito
           toast.current.show({
             severity: 'success',
             summary: 'Registro Exitoso',
@@ -66,10 +66,18 @@ export function EstudianteProvider({ children }) {
       };
       
     const updateEstudiante = async (id, estudiante) => {
-        console.log('Estduainte en el context:' , estudiante);
         try {
+
             await updateEstudianteRequest(id, estudiante);
             getEstudiantes();
+           
+            toast.current.show({
+                severity: 'success',
+                summary: 'Actualización Exitosa',
+                detail: 'Estudiante actualizado',
+                life: 2000,
+              });
+
             navigate('/estudiantes');
         } catch (error) {
             console.error("Error updating estudiante:", error);

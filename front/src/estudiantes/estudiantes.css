@@ -69,7 +69,7 @@ p {
 
 }
 
-p div {
+.after-p {
     font-family: Inter, sans-serif;
     font-weight: 550;
     font-size: 15px;

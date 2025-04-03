@@ -21,42 +21,24 @@ export const EstudianteDetails = ({ estudiante }) => {
   return (
     <div className="estudiante-detail">
       <h3>Detalles del Alumno</h3>
-      <p>
-        CEDULA ESCOLAR 
-        <div>{estudiante.cedulaEscolar}</div>
-      </p>
-      <p>
-        NOMBRES
-        <div>{estudiante.nombres}</div>
-      </p>
-      <p>
-        APELLIDOS 
-        <div>{estudiante.apellidos}</div>
-      </p>
-      <p>
-        FECHA DE NACIMIENTO
-        <div>{estudiante.fechaNacimiento}</div>
-      </p>
-      <p>
-        EDAD
-        <div>{estudiante.edad}</div>
-      </p>
-      <p>
-        SEXO
-        <div>{estudiante.sexo}</div>
-      </p>
-      <p>
-        LUGAR DE NACIMIENTO
-        <div>{estudiante.lugarNacimiento}</div>
-      </p>
-      <p>
-        TELEFONO
-        <div>{estudiante.telf}</div>
-      </p>
-      <p>
-        CORREO ELECTRÓNICO
-        <div>{estudiante.sexo}</div>
-      </p>
+      <p>CEDULA ESCOLAR</p> 
+      <div className="after-p">{estudiante.cedulaEscolar}</div>
+      <p>NOMBRES</p>
+      <div className="after-p">{estudiante.nombres}</div>
+      <p>APELLIDOS</p> 
+      <div className="after-p">{estudiante.apellidos}</div>
+      <p>FECHA DE NACIMIENTO</p>
+      <div className="after-p">{estudiante.fechaNacimiento}</div>
+      <p>EDAD</p>
+      <div className="after-p">{estudiante.edad}</div>
+      <p>SEXO</p>
+      <div className="after-p">{estudiante.sexo}</div>
+      <p>LUGAR DE NACIMIENTO</p>
+      <div className="after-p">{estudiante.lugarNacimiento}</div>
+      <p>TELEFONO</p>
+      <div className="after-p">{estudiante.telf}</div>
+      <p>CORREO ELECTRÓNICO</p>
+      <div className="after-p">{estudiante.sexo}</div>
       <div className="btn-section">
       <Button className="btn-outline" icon="pi pi-pen-to-square"
         onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}`)}

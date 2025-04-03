@@ -5,16 +5,22 @@ import { useEstudiante } from '../context';
 import { EstudianteFoto, HeaderEdit } from '../components';
 import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
+import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
+import { sexos, parseEstudianteData, tiposCedula } from '../helpers';
+import { RadioButton } from 'primereact/radiobutton';
+import { AutorizadoEdit } from '../components/AutorizadoEdit';
 
 export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const { id } = useParams();
   const { estudiante, setEstudiante, getOneEstudiante, updateEstudiante } = useEstudiante();
-  
-  // Si no se recibe la referencia Toast desde un padre, usar una interna.
+
   const toast = toastRef || useRef(null);
 
+  const autorizado = estudiante.autorizados?.[0];
+
   const {
-    register, 
+    watch,
     handleSubmit, 
     control,
     reset,
@@ -29,25 +35,13 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
       setFoto(e.target.files[0]);
     }
   };
-
   useEffect(() => {
     const loadEstudiante = async () => {
       if (id) {
         const fetchedEstudiante = await getOneEstudiante(id);
         setEstudiante(fetchedEstudiante);
-        const fechaNacimiento = fetchedEstudiante.fechaNacimiento
-          ? new Date(fetchedEstudiante.fechaNacimiento)
-          : null;
-        reset({
-          nombres: fetchedEstudiante.nombres || '',
-          apellidos: fetchedEstudiante.apellidos || '',
-          fechaNacimiento: fechaNacimiento,
-          edad: fetchedEstudiante.edad || '',
-          sexo: fetchedEstudiante.sexo || '',
-          lugarNacimiento: fetchedEstudiante.lugarNacimiento || '',
-          cedulaEscolar: fetchedEstudiante.cedulaEscolar || '',
-          condicion: fetchedEstudiante.condicion || '',
-        });
+        const defaultValues = parseEstudianteData(fetchedEstudiante, tiposCedula, sexos);
+        reset(defaultValues);
         setFormInitialized(true);
       }
     };
@@ -55,7 +49,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
     if (!formInitialized) {
       loadEstudiante();
     }
-  }, [id, formInitialized, reset, getOneEstudiante, setEstudiante]);
+  }, [id, formInitialized, reset, getOneEstudiante, tiposCedula, sexos]);
 
   const onSubmit = async (data) => {
     try {
@@ -75,7 +69,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
         formData.append('foto', foto);
       }
 
-      const response = await updateEstudiante(formData);
+      const response = await updateEstudiante(id, formData);
       
       if (toast?.current) {
         toast.current.show({
@@ -105,14 +99,19 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
       <EstudianteFoto estudiante={estudiante} />
       <form onSubmit={handleSubmit(onSubmit)} className='form-alumno' encType="multipart/form-data">
         <div className="form-columnone">
-          <label>Nombres</label>
-          <input
-            type="text"
-            placeholder="Ingresa el nombre"
-            {...register("nombres", { required: true })}
-          />
+          <Controller
+            name="nombres"
+            control={control}
+            defaultValue=""
+            rules={{ required: "El nombre es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="nombres">Nombres</label>
+                <InputText placeholder="Ingrese nombres" id="nombres" {...field} />
+              </>
+            )}
+            />
           {errors.nombres && <span>El nombre es requerido.</span>}
-          
           <div className="group-label">
             <div className="group-item">
               <label>Fecha de Nacimiento</label>
@@ -138,51 +137,154 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
               {errors.fechaNacimiento && <span>La fecha es requerida.</span>}
             </div>
             <div className="group-item">
-              <input 
-                type="text" 
-                placeholder="Ingresa la edad"
-                {...register('edad', { required: true })}
-              />
-              {errors.edad && <span>La edad es requerida.</span>}
-            </div>
+              <Controller
+                  name="edad"
+                  control={control}
+                  defaultValue={null}
+                  rules={{ required: "La edad es requerida." }}
+                  render={({ field }) => (
+                      <InputText placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
+                  )}
+                />
+                {errors.edad && <small className="p-error">{errors.edad.message}</small>}
+              </div>
           </div>
-          <label>Sexo</label>
-          <input
-            type="text" 
-            placeholder="Ingresa el sexo"
-            {...register('sexo', { required: true })}
-          />
+          <label htmlFor="cedula">Cedula escolar</label>
+                <div className="group">
+                  <Controller
+                    name="tipoCedula"
+                    control={control}
+                    defaultValue={tiposCedula[0]}
+                    rules={{ required: "El tipo de cédula es requerido." }}
+                    render={({ field }) => (
+                      <>
+                        <Dropdown
+                          id="tipoCedula"
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.value)}
+                          options={tiposCedula}
+                          optionLabel="name"
+                          placeholder="V-"
+                          className={errors.tipoCedula ? 'p-invalid' : 'dropdown'}
+                        />
+                      </>
+                    )}
+                  />
+                {errors.tipoCedula && <small className="p-error">{errors.tipoCedula.message}</small>}
+                <Controller
+                  name="cedulaEscolar"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "La cédula escolar es requerida." }}
+                  render={({ field }) => (
+                    <>
+                      <InputText placeholder="Ingresa la cedula escolar" className="input-ced" id="cedulaEscolar" {...field} />
+                    </>
+                  )}
+                />
+                {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
+            </div>
+            <Controller
+              name="sexo"
+              control={control}
+              defaultValue=""
+              rules={{ required: "El sexo es requerido." }}
+              render={({ field }) => (
+                <>
+                  <label htmlFor="sexo">Sexo</label>
+                  <Dropdown
+                    id="sexo"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.value)}
+                    options={sexos}
+                    optionLabel="name"
+                    placeholder="Seleccione el Sexo"
+                    className={errors.sexo ? 'p-invalid' : ''}
+                  />
+                </>
+              )}
+            />
+
           <label>Cambiar foto:</label>
           <input type="file" accept="image/*" onChange={handleFotoChange} />
         </div>
         
         <div className="form-columntwo">
-          <label>Apellidos</label>
-          <input
-            type="text"
-            placeholder="Ingresa el apellido"
-            {...register("apellidos", { required: true })}
+            <Controller
+            name="apellidos"
+            control={control}
+            defaultValue=""
+            rules={{ required: "El nombre es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="apellidos">apellidos</label>
+                <InputText placeholder="Ingrese apellidos" id="apellidos" {...field} />
+              </>
+            )}
+            />
+          {errors.apellidos && <span>El nombre es requerido.</span>}
+          <Controller
+            name="lugarNacimiento"
+            control={control}
+            defaultValue=""
+            rules={{ required: "El lugar de nacimiento es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="lugarNacimiento">Lugar de Nacimiento</label>
+                <InputText placeholder="Ingresa lugar de nacimiento" id="lugarNacimiento" {...field} />
+              </>
+            )}
           />
-          {errors.apellidos && <span>El apellido es requerido.</span>}
-          
-          <label>Lugar de Nacimiento</label>
-          <input
-            type="text"
-            placeholder="Ingresa el lugar de nacimiento"
-            {...register("lugarNacimiento", { required: true })}
-          />
-          {errors.lugarNacimiento && <span>El lugar de nacimiento es requerido.</span>}
-          
-          <label>Condición</label>
-          <input
-            type="text"
-            placeholder="Ingresa condición especial"
-            {...register("condicion", { required: true })}
-          />
-          {errors.condicion && <span>La condición es requerida.</span>}
-          <button type="submit">Actualizar Estudiante</button>
+          {errors.lugarNacimiento && <small className="p-error">{errors.lugarNacimiento.message}</small>}
+         <label>Condición especial</label>
+          <div className="group">
+            <div className="p-field-radiobutton">
+              <Controller
+                name="condicionOption"
+                control={control}
+                defaultValue="No"
+                render={({ field }) => (
+                  <>
+                    <RadioButton 
+                      inputId="condicionNo" 
+                      name="condicionOption" 
+                      value="No" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "No"} />
+                    <label htmlFor="condicionNo" className="ml-2">No</label>
+
+                    <RadioButton 
+                      inputId="condicionSi" 
+                      name="condicionOption" 
+                      value="Si" 
+                      onChange={(e) => field.onChange(e.value)} 
+                      checked={field.value === "Si"} 
+                      className="ml-4" />
+                    <label htmlFor="condicionSi" className="ml-2">Sí</label>
+                  </>
+                )}
+              />
+            </div>
+            <Controller
+              name="condicion"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <InputText 
+                  placeholder="Ingresa condición especial" 
+                  id="condicion" 
+                  className="input-radio-button"
+                  disabled={watch("condicionOption") === "No"} 
+                  {...field} 
+                />
+              )}
+            />
+          </div>
+          {errors.condicion && <small className="p-error">{errors.condicion.message}</small>}
+          <button className='btn-next' type="submit">Guardar Cambios</button>
         </div>
       </form>
+      <AutorizadoEdit initialData={autorizado} />
     </>
   );
 };
