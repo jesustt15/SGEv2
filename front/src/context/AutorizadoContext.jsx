@@ -65,15 +65,18 @@ export function AutorizadoProvider({ children }) {
         }
       };
       
-    const updateAutorizado = async (id, autorizado) => {
+      const updateAutorizado = async (id, autorizado) => {
         try {
-            await updateAutorizadoRequest(id, autorizado);
-            getAutorizados();
+            console.log('context:',autorizado, id)
+          const response = await updateAutorizadoRequest(id, autorizado);
+          getAutorizados();
+          return response; 
         } catch (error) {
-            console.error("Error updating Autorizado:", error);
+          console.error("Error updating Autorizado:", error);
         }
-    };
-
+      };
+      
+      
     const deleteAutorizado = async (id) => {
         try {
             const res = await deleteAutorizadoRequest(id);

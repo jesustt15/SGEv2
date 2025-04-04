@@ -25,8 +25,7 @@ export function EstudianteProvider({ children }) {
     const getEstudiantes = async () => {
         try {
           const res = await getEstudiantesRequest();
-          console.log('Tipo de res.data:', typeof res.data, Array.isArray(res.data)); // Confirma si es un array
-          setEstudiante(res.data);
+          setEstudiante(Array.isArray(res.data) ? res.data : []);
         } catch (error) {
           console.error("Error fetching Estudiante:", error);
         }
@@ -52,8 +51,7 @@ export function EstudianteProvider({ children }) {
             life: 3000,
           });
       
-          // Devuelve el estudiante creado (o al menos su ID)
-          console.log(createdEstudiante);
+
           return createdEstudiante;
         } catch (error) {
           console.error("Error creating estudiante:", error);

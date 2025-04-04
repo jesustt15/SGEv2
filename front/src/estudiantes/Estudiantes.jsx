@@ -32,7 +32,7 @@ export const Estudiantes = () => {
     setFilters(_filters);
     setGlobalFilter(value);
   };
-
+  console.log('Valor de estudiante:', estudiante);
   // Reiniciar los filtros
   const resetFilters = () => {
     setFilters({
@@ -147,17 +147,18 @@ export const Estudiantes = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <DataTable
-          value={estudiante}
-          paginator
-          rows={10}
-          header={renderHeader()}
-          filters={filters}
-          globalFilterFields={['nombres', 'apellidos']}
-          emptyMessage="No se encontraron Estudiantes."
-          selectionMode="single"
-          selection={selectedEstudiante}
-          onSelectionChange={onRowSelect}
-        >
+            value={Array.isArray(estudiante) ? estudiante : []}
+            paginator
+            rows={10}
+            header={renderHeader()}
+            filters={filters}
+            globalFilterFields={['nombres', 'apellidos']}
+            emptyMessage="No se encontraron Estudiantes."
+            selectionMode="single"
+            selection={selectedEstudiante}
+            onSelectionChange={onRowSelect}
+          >
+
           <Column field="cedulaEscolar" header="CED" sortable />
           <Column field="nombres" header="NOMBRES" sortable />
           <Column field="apellidos" header="APELLIDOS" sortable />

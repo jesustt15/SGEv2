@@ -18,7 +18,6 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const toast = toastRef || useRef(null);
 
   const autorizado = estudiante.autorizados?.[0];
-
   const {
     watch,
     handleSubmit, 
@@ -284,7 +283,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
           <button className='btn-next' type="submit">Guardar Cambios</button>
         </div>
       </form>
-      <AutorizadoEdit initialData={autorizado} />
+      <AutorizadoEdit initialData={autorizado}  />
     </>
   );
 };

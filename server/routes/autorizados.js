@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/', authenticate, authorize(['admin', 'user']) ,getAutorizados);
 router.post('/', authenticate, authorize(['admin']) ,uploadMiddleware.uploadAutorizado.single('foto') ,crearAutorizado);
-router.put('/:id', authenticate, authorize(['admin']), editarAutorizado);
+router.put('/:id', authenticate, authorize(['admin']),uploadMiddleware.uploadAutorizado.single('foto'), editarAutorizado);
 router.delete('/:id', authenticate, authorize(['admin']) ,eliminarAutorizado);
 router.get('/:id', authenticate, authorize(['admin', 'user']) ,getOneAutorizado)
 

@@ -51,33 +51,36 @@ const crearAutorizado = async(req, res = response) => {
 
 }
 
-const editarAutorizado = async(req, res = response) => {
-
+const editarAutorizado = async (req, res = response) => {
     try {
-
-        const autorizado = await Autorizado.update(req.body ,{
-           where: {autorizado_id: req.params.id}
+      console.log("Datos recibidos en req.body:", req.body);
+      // Ahora req.body debería tener los campos enviados desde el FormData
+      const [numRows, updatedRows] = await Autorizado.update(req.body, {
+        where: { autorizado_id: req.params.id },
+        returning: true  // Si tu BD lo soporta
+      });
+      if (numRows > 0) {
+        return res.status(201).json({
+          ok: true,
+          data: updatedRows[0],
+          msg: 'El autorizado ha sido actualizado'
         });
-
-        if(autorizado){
-           return res.status(201).json({
-              ok: false,
-              name: autorizado.nombre,
-              msg: 'el autorizado ha sido actualizado'
-           })
-        }
-
-     } catch (error) {
-
-        if (error.name === 'SequelizeValidationError') {
-           res.status(400).json({ error: error.message });
-        }else {
-           console.log(error);
-           res.status(500).json({error});
-        }
-     }
-
-}
+      } else {
+        return res.status(404).json({
+          ok: false,
+          msg: 'No se encontró el autorizado o no se realizaron cambios'
+        });
+      }
+    } catch (error) {
+      if (error.name === 'SequelizeValidationError') {
+        return res.status(400).json({ error: error.message });
+      } else {
+        console.error(error);
+        return res.status(500).json({ error });
+      }
+    }
+  };
+  
 
 const eliminarAutorizado = async(req, res = response) => {
 

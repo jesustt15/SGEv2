@@ -1,4 +1,5 @@
 
+
 export function parseEstudianteData(fetchedEstudiante, tiposCedula = [], sexos = []) {
     // Extraer la cédula completa y separar el tipo y el número.
     const cedulaCompleta = fetchedEstudiante.cedulaEscolar || "";
@@ -12,8 +13,6 @@ export function parseEstudianteData(fetchedEstudiante, tiposCedula = [], sexos =
         cedulaEscolarDefault = cedulaCompleta.substring(tipo.name.length);
       }
     });
-  
-    // Manejo de la condición especial: se supone que si existe un valor, la opción es "Si".
     const condicionOptionDefault = fetchedEstudiante.condicion ? "Si" : "No";
   
     // Buscar el objeto de sexo que coincide con el valor del estudiante.
@@ -36,4 +35,47 @@ export function parseEstudianteData(fetchedEstudiante, tiposCedula = [], sexos =
       condicionOption: condicionOptionDefault,
     };
   }
+
+
+  export function parseAutorizadoData(fetchedAutorizado, tiposCedula = [], prefijosTelf = []) {
+
+    const cedCompleta = fetchedAutorizado.ced || "";
+    let tipoCedulaDefault = tiposCedula.length > 0 ? tiposCedula[0] : { name: "" };
+    let cedDefault = "";
+    
+    tiposCedula.forEach(tipo => {
+      if (cedCompleta.startsWith(tipo.name)) {
+        tipoCedulaDefault = tipo;
+        cedDefault = cedCompleta.substring(tipo.name.length);
+      }
+    });
+    
+    // PARSEO DE TELÉFONO:
+    // Obtenemos el teléfono completo y separamos en prefijo y número.
+    const telfCompleta = fetchedAutorizado.telf || "";
+    let phonePrefixDefault = prefijosTelf.length > 0 ? prefijosTelf[0] : { name: "" };
+    let telfDefault = "";
+    
+    prefijosTelf.forEach(prefix => {
+      if (telfCompleta.startsWith(prefix.name)) {
+        phonePrefixDefault = prefix;
+        telfDefault = telfCompleta.substring(prefix.name.length);
+      }
+    });
+    
+    return {
+      nombre: fetchedAutorizado.nombre || "",
+      apellido: fetchedAutorizado.apellido || "",
+      parentesco: fetchedAutorizado.parentesco || "",
+      // Para la cédula separamos el número del prefijo.
+      ced: cedDefault,
+      tipoCedula: tipoCedulaDefault,
+      direccion: fetchedAutorizado.direccion || "",
+      observacion: fetchedAutorizado.observacion || "",
+      // Para el teléfono separa el número del prefijo.
+      telf: telfDefault,
+      prefijosTelf: phonePrefixDefault,
+    };
+  }
+  
   
