@@ -4,6 +4,7 @@ import { Home, Login } from '../auth';
 import { Estudiantes, NewEstudianteStepper, EstudiantePage, EstudianteEdit } from '../estudiantes';
 import { Usuarios, NewUsuario } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
+import { Personal, NewPersonal } from '../personals';
 
 export const AppRouter = () => {
   return (
@@ -20,6 +21,8 @@ export const AppRouter = () => {
           <Route path="estudiantes/new" element={<NewEstudianteStepper />} />
           <Route path="estudiantes/:id/more" element={<EstudiantePage />} />
           <Route path="estudiantes/:id" element={<EstudianteEdit />} />
+          <Route path='personals' element={<Personal />} />
+          <Route path='personals/new' element={<NewPersonal />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
         </Route>

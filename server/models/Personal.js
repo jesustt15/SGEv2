@@ -22,7 +22,12 @@ const Personal = sequelize.define('personals', {
   },
   cod: DataTypes.STRING,
   telf: DataTypes.STRING,
-  cargo: DataTypes.STRING
+  cargo:{
+    type: DataTypes.ENUM('Director(a)', 'Sub Director(a)','Coordinador(a) Pedagogia'
+      , 'Docente', 'Auxiliar', 'Secretaria', 'Obrero(a)', 'Ccocinero(a)'),
+      allowNull: false,
+  } ,
+  foto: DataTypes.STRING,
   
   
 });

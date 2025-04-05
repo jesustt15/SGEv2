@@ -1,5 +1,7 @@
 const {response} = require("express");
 const Personal = require("../models/Personal");
+const fs =  require("fs");
+const path = require("path");
 
 
 const getPersonals = async(req, res = response) => {
@@ -34,10 +36,11 @@ const getOnePersonal = async(req, res = response) => {
 const crearPersonal = async(req, res = response) => {
 
     const {nombres, apellidos,ced, cod, telf, cargo} = req.body;
-    console.log(req.body);
+    const foto = req.file;
+    const fotoPath = foto ? path.join('uploads', 'fotoPersonal', foto.filename) : null;
     try {
 
-        const personal = await Personal.create({nombres, apellidos,ced, cod, telf, cargo});
+        const personal = await Personal.create({nombres, apellidos,ced, cod, telf, cargo, foto:fotoPath});
         res.status(201).json(personal)
         
     } catch (error) {
@@ -50,6 +53,27 @@ const crearPersonal = async(req, res = response) => {
 const editarPersonal = async(req, res = response) => {
 
     try {
+
+
+        const personalcheck = await Personal.findOne({
+            where: { personal_id: req.params.id }
+          });
+          if (!personalcheck) {
+            return res.status(404).json({
+              ok: false,
+              msg: 'personal no encontrado'
+            });
+          }
+      
+          if (req.file) {
+            if (personalcheck.foto) { 
+              const oldPhotoPath = path.join(__dirname, '..', 'uploads', 'fotoPersonal', personalcheck.foto);
+              if (fs.existsSync(oldPhotoPath)) {
+                fs.unlinkSync(oldPhotoPath);
+              }
+            }
+            req.body.foto = path.join('uploads', 'fotoPersonal', req.file.filename);
+          }
 
         const personal = await Personal.update(req.body ,{
            where: {personal_id: req.params.id}

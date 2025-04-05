@@ -24,9 +24,11 @@ function createMulterStorage(subfolder) {
 const uploadEstudiante = multer({ storage: createMulterStorage('fotoEstudiante') });
 const uploadRepresentante = multer({ storage: createMulterStorage('fotoRepresentante') });
 const uploadAutorizado = multer({ storage: createMulterStorage('fotoAutorizado') });
+const uploadPersonal = multer({ storage: createMulterStorage('fotoPersonal') });
 
 module.exports = {
   uploadEstudiante,
   uploadRepresentante,
   uploadAutorizado,
+  uploadPersonal
 };
