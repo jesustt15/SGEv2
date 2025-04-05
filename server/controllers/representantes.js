@@ -1,5 +1,6 @@
 const {response} = require("express");
 const Representante = require("../models/Representante");
+const fs = require('fs');
 const path = require('path');
 
 
@@ -55,6 +56,26 @@ const crearRepresentante = async(req, res = response) => {
 const editarRepresentante = async(req, res = response) => {
 
     try {
+
+        const representantecheck = await Representante.findOne({
+            where: { representante_id: req.params.id }
+          });
+          if (!representantecheck) {
+            return res.status(404).json({
+              ok: false,
+              msg: 'representante no encontrado'
+            });
+          }
+      
+          if (req.file) {
+            if (representantecheck.foto) { 
+              const oldPhotoPath = path.join(__dirname, '..', 'uploads', 'fotoRepresentante', representantecheck.foto);
+              if (fs.existsSync(oldPhotoPath)) {
+                fs.unlinkSync(oldPhotoPath);
+              }
+            }
+            req.body.foto = path.join('uploads', 'fotoRepresentante', req.file.filename);
+          }
 
         const representante = await Representante.update(req.body ,{
            where: {representante_id: req.params.id}

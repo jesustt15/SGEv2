@@ -2,14 +2,14 @@ import { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useEstudiante } from '../context';
-import { EstudianteFoto, HeaderEdit } from '../components';
+import { AutorizadoEdit, EstudianteFoto, HeaderEdit, RepresentantesEdit } from '../components';
 import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { sexos, parseEstudianteData, tiposCedula } from '../helpers';
 import { RadioButton } from 'primereact/radiobutton';
-import { AutorizadoEdit } from '../components/AutorizadoEdit';
+import { FileUpload } from 'primereact/fileupload';
 
 export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const { id } = useParams();
@@ -18,6 +18,8 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const toast = toastRef || useRef(null);
 
   const autorizado = estudiante.autorizados?.[0];
+  const representantePadre = estudiante.representantes?.find(rep => rep.tipo === 'Padre');
+  const representanteMadre = estudiante.representantes?.find(rep => rep.tipo === 'Madre');
   const {
     watch,
     handleSubmit, 
@@ -204,8 +206,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
               )}
             />
 
-          <label>Cambiar foto:</label>
-          <input type="file" accept="image/*" onChange={handleFotoChange} />
+          
         </div>
         
         <div className="form-columntwo">
@@ -264,25 +265,46 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
                 )}
               />
             </div>
-            <Controller
-              name="condicion"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <InputText 
-                  placeholder="Ingresa condición especial" 
-                  id="condicion" 
-                  className="input-radio-button"
-                  disabled={watch("condicionOption") === "No"} 
-                  {...field} 
-                />
-              )}
-            />
+              <Controller
+                name="condicion"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <InputText 
+                    placeholder="Ingresa condición especial" 
+                    id="condicion" 
+                    className="input-radio-button"
+                    disabled={watch("condicionOption") === "No"} 
+                    {...field} 
+                  />
+                )}
+              />
           </div>
           {errors.condicion && <small className="p-error">{errors.condicion.message}</small>}
+          <label>Cambiar foto:</label>
+           <FileUpload
+              mode="basic"
+              name="foto"
+              accept="image/*"
+              auto
+              chooseLabel='Adjuntar Archivos .JPG'
+              maxFileSize={1000000}
+              customUpload
+              uploadHandler={handleFotoChange}
+            />
           <button className='btn-next' type="submit">Guardar Cambios</button>
         </div>
       </form>
+      {representanteMadre ? (
+          <RepresentantesEdit initialData={representanteMadre}/>
+      ):(
+          <br />
+      )}
+      {representantePadre ? (
+          <RepresentantesEdit initialData={representantePadre}/>
+      ):(
+          <br />
+      )}
       <AutorizadoEdit initialData={autorizado}  />
     </>
   );

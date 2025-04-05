@@ -66,14 +66,19 @@ export function RepresentanteProvider({ children }) {
         }
       };
       
-    const updateRepresentante = async (id, representante) => {
+      const updateRepresentante = async (id, representante) => {
         try {
-            await updateRepresentanteRequest(id, representante);
-            getRepresentantes();
+          console.log("Actualizando representante con id:", id);
+          // Si deseas ver que se está enviando al backend, puedes inspeccionar el objeto 'representante'
+          console.log("Datos enviados a la API:", representante);
+          await updateRepresentanteRequest(id, representante);
+          console.log("Representante actualizado exitosamente.");
+          getRepresentantes();
         } catch (error) {
-            console.error("Error updating Representante:", error);
+          console.error("Error updating Representante:", error);
         }
-    };
+      };
+      
 
     const deleteRepresentante = async (id) => {
         try {

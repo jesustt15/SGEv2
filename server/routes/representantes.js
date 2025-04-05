@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/', authenticate, authorize(['admin', 'user']) ,getRepresentantes);
 router.post('/', authenticate, authorize(['admin']) ,uploadMiddleware.uploadRepresentante.single('foto'),crearRepresentante);
-router.put('/:id', authenticate, authorize(['admin']), editarRepresentante);
+router.put('/:id', authenticate, authorize(['admin']), uploadMiddleware.uploadRepresentante.single('foto'),editarRepresentante);
 router.delete('/:id', authenticate, authorize(['admin']) ,eliminarRepresentante);
 router.get('/:id', authenticate, authorize(['admin', 'user']) ,getOneRepresentante)
 

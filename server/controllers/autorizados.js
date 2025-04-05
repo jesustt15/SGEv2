@@ -1,5 +1,6 @@
 const {response} = require("express");
 const Autorizado = require("../models/Autorizado");
+const fs = require('fs');
 const path = require('path');
 
 
@@ -53,8 +54,28 @@ const crearAutorizado = async(req, res = response) => {
 
 const editarAutorizado = async (req, res = response) => {
     try {
-      console.log("Datos recibidos en req.body:", req.body);
-      // Ahora req.body debería tener los campos enviados desde el FormData
+
+      const autorizado = await Autorizado.findOne({
+        where: { autorizado_id: req.params.id }
+      });
+      if (!autorizado) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'autorizado no encontrado'
+        });
+      }
+  
+      if (req.file) {
+        if (autorizado.foto) { 
+          const oldPhotoPath = path.join(__dirname, '..', 'uploads', 'fotoAutorizado', autorizado.foto);
+          if (fs.existsSync(oldPhotoPath)) {
+            fs.unlinkSync(oldPhotoPath);
+          }
+        }
+        req.body.foto = path.join('uploads', 'fotoAutorizado', req.file.filename);
+      }
+
+
       const [numRows, updatedRows] = await Autorizado.update(req.body, {
         where: { autorizado_id: req.params.id },
         returning: true  // Si tu BD lo soporta

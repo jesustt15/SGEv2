@@ -1,5 +1,6 @@
 const {response} = require("express");
 const { Estudiante, Representante, Autorizado } = require('../models');
+const fs = require('fs');
 const path = require('path');
 
 
@@ -102,33 +103,49 @@ const crearEstudiante = async (req, res = response) => {
 };
 
 
-const editarEstudiante = async(req, res = response) => {
+const editarEstudiante = async (req, res = response) => {
+  try {
+    const estudiante = await Estudiante.findOne({
+      where: { estudiante_id: req.params.id }
+    });
+    if (!estudiante) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Estudiante no encontrado'
+      });
+    }
 
-    try {
-
-        const estudiante = await Estudiante.update(req.body ,{
-           where: {estudiante_id: req.params.id}
-        });
-
-        if(estudiante){
-           return res.status(201).json({
-              ok: false,
-              name: estudiante.nombres,
-              msg: 'el estudiante ha sido actualizado'
-           })
+    if (req.file) {
+      if (estudiante.foto) { 
+        const oldPhotoPath = path.join(__dirname, '..', 'uploads', 'fotoEstudiante', estudiante.foto);
+        if (fs.existsSync(oldPhotoPath)) {
+          fs.unlinkSync(oldPhotoPath);
+          console.log("Foto antigua borrada:", oldPhotoPath);
         }
+      }
+      req.body.foto = path.join('uploads', 'fotoEstudiante', req.file.filename);
+    }
 
-     } catch (error) {
+    const updated = await Estudiante.update(req.body, {
+      where: { estudiante_id: req.params.id }
+    });
 
-        if (error.name === 'SequelizeValidationError') {
-           res.status(400).json({ error: error.message });
-        }else {
-           console.log(error);
-           res.status(500).json({error});
-        }
-     }
+    if (updated) {
+      return res.status(200).json({
+        ok: true,
+        msg: 'El estudiante ha sido actualizado'
+      });
+    }
+  } catch (error) {
+    if (error.name === 'SequelizeValidationError') {
+      return res.status(400).json({ error: error.message });
+    } else {
+      console.error("Error en editarEstudiante:", error);
+      return res.status(500).json({ error });
+    }
+  }
+};
 
-}
 
 const eliminarEstudiante = async(req, res = response) => {
 

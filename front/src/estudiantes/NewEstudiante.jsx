@@ -323,6 +323,8 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                   accept="image/*"
                   maxFileSize={1000000}
                   customUpload
+                  auto
+                  chooseLabel='Adjuntar Archivo .JPG'
                   uploadHandler={onUpload}
                 />
               </div>

@@ -32,7 +32,7 @@ export const Estudiantes = () => {
     setFilters(_filters);
     setGlobalFilter(value);
   };
-  console.log('Valor de estudiante:', estudiante);
+
   // Reiniciar los filtros
   const resetFilters = () => {
     setFilters({

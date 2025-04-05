@@ -5,12 +5,14 @@ import { useAutorizado } from '../context';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { parseAutorizadoData, prefijosTelf, tiposCedula } from '../helpers';
+import { EstudianteFoto } from './EstudianteFoto';
+import { FileUpload } from 'primereact/fileupload';
 
 export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) => {
   const { updateAutorizado } = useAutorizado();
   const toast = toastRef || useRef(null);
 
-  const { handleSubmit, reset, register, control, formState: { errors } } = useForm({
+  const { handleSubmit, reset, control, formState: { errors } } = useForm({
     defaultValues: {
       nombre: '',
       apellido: '',
@@ -32,7 +34,6 @@ export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) 
     }
   }, [initialData, reset, tiposCedula, prefijosTelf]);
 
-  // Si requieres subir una foto similar al estudiante, implementa el estado correspondiente.
   const [foto, setFoto] = useState(null);
   const handleFotoChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -94,8 +95,9 @@ export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) 
 
   return (
     <>
-      <Toast ref={(el) => { toast.current = el; }} />
+    <Toast ref={(el) => { toast.current = el; }} />
     <h3>Datos del Autorizado</h3>
+    <EstudianteFoto estudiante={initialData}/>
     <form onSubmit={handleSubmit(onSubmit)} className="form-alumno" encType='multipart/form-data'>
       <div className="form-columnone">
         <Controller
@@ -229,7 +231,18 @@ export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) 
                 />
                 {errors.telf && <small className="p-error">{errors.telf.message}</small>}
             </div>
-            <button type="submit">Guardar Autorizado</button>
+            <label>Cambiar foto:</label>
+            <FileUpload
+              mode="basic"
+              name="foto"
+              accept="image/*"
+              maxFileSize={1000000}
+              customUpload
+              auto
+              uploadHandler={handleFotoChange}
+              chooseLabel='Adjuntar Archivos .JPG'
+            />
+            <button type="submit" className='btn-next'>Guardar Autorizado</button>
         </div>        
       </form>
     </>
