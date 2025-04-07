@@ -5,6 +5,7 @@ import { Estudiantes, NewEstudianteStepper, EstudiantePage, EstudianteEdit } fro
 import { Usuarios, NewUsuario } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
 import { Personal, NewPersonal, PersonalPage, PersonalEdit } from '../personals';
+import CalendarWithModal from '../calendar/CalendarModal';
 
 export const AppRouter = () => {
   return (
@@ -27,6 +28,7 @@ export const AppRouter = () => {
           <Route path="personals/:id" element={<PersonalEdit />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
+          <Route path="calendar" element={<CalendarWithModal />} />
         </Route>
       </Route>
 
