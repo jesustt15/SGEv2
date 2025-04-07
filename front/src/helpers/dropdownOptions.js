@@ -32,3 +32,16 @@ export const tiposCedula = [
     { name: 'Femenino', code: 'Fem' },
     { name: 'Masculino', code: 'Msc' },
   ];
+
+  export const cargos = [
+    { name: 'Director(a)', code: 'dir' },
+    { name: 'Sub Director(a)', code: 'subdir' },
+    { name:'Coordinador(a) Pedagogia', code: 'coop' },
+    { name: 'Docente', code: 'doc' },
+    { name: 'Auxiliar',code: 'aux' },
+    { name:  'Secretaria', code: 'sec' },
+    { name:  'Obrero(a)', code: 'obr' },
+    { name:  'Cocinero(a)' ,code: 'coc' },
+    
+  ]
+

@@ -18,6 +18,7 @@ export const usePersonal = () => {
 
 export function PersonalProvider({ children }) {
     const [personal, setPersonal] = useState([]);
+    const [selectedPersonal, setSelectedPersonal] = useState(null);
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
@@ -32,10 +33,10 @@ export function PersonalProvider({ children }) {
 
     const createPersonal = async (auto) => {
         try {
-        //   const existingPersonal = Personal.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
-        //   if (existingPersonal) {
-        //     throw new Error('Este Personal ya existe.');
-        //   }
+          const existingPersonal = personal.find(u => u.ced === auto.get('ced'));
+          if (existingPersonal) {
+            throw new Error('Este Personal ya existe.');
+          }
           // Se asume que createPersonalsRequest devuelve una respuesta con la data del Personal creado
           const res = await createPersonalsRequest(auto);
           const createdPersonal = res.data;  // Asegúrate de qurepree endpoint devuelve el objeto creado
@@ -50,10 +51,6 @@ export function PersonalProvider({ children }) {
             detail: 'Nuevo Personal agregado',
             life: 3000,
           });
-      
-          // Devuelve el Personal creado (o al menos su ID)
-          
-          return createdPersonal;
           navigate('/personals');
         } catch (error) {
           console.error("Error creating Personal:", error);
@@ -70,7 +67,8 @@ export function PersonalProvider({ children }) {
             console.log('context:',personal, id)
           const response = await updatePersonalRequest(id, personal);
           getPersonals();
-          return response; 
+          navigate('/personals');
+          return response;
         } catch (error) {
           console.error("Error updating Personal:", error);
         }
@@ -99,6 +97,9 @@ export function PersonalProvider({ children }) {
     return (
         <PersonalContext.Provider value={{
             personal,
+            selectedPersonal,
+            setSelectedPersonal,
+            setPersonal,
             createPersonal,
             getPersonals,
             deletePersonal,

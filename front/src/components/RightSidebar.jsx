@@ -2,20 +2,23 @@
 import { useLocation, useMatch } from 'react-router-dom';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
 import { EstudianteDetails } from '../estudiantes';
-import { useEstudiante } from '../context';
+import {PersonalDetails} from '../personals';
+import { useEstudiante, usePersonal } from '../context';
 
 const RightSidebar = () => {
   const location = useLocation();
   const { selectedEstudiante } = useEstudiante();
+  const { selectedPersonal } = usePersonal();
 
   // Si estamos en la ruta 'estudiantes/new', no renderizamos el sidebar
-  if (location.pathname.includes('estudiantes/new')) {
+  if (location.pathname.includes('estudiantes/new' ) || location.pathname.includes('personals/new' )  ) {
     return null;
   }
 
   // Usamos useMatch para detectar rutas del tipo /estudiantes/:id
   const matchEstudianteDetalle = useMatch('/estudiantes/:id');
-  if (matchEstudianteDetalle) {
+  const matchPersonalDetalle = useMatch('/personals/:id');
+  if (matchEstudianteDetalle || matchPersonalDetalle) {
     return null;
   }
 
@@ -29,7 +32,17 @@ const RightSidebar = () => {
         <EstudianteDetails estudiante={selectedEstudiante} />
       </div>
     );
-  } else {
+  } else if (location.pathname.includes('personals')){
+    content = (
+      <div className="estudiantes-detail-container">
+        <PersonalDetails personal={selectedPersonal} />
+      </div>
+    )
+  }
+  
+  
+  
+  else {
     content = (
       <>
         <RightSidebarCalendar />

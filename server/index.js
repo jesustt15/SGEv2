@@ -28,7 +28,7 @@ app.use('/sge/users', require('./routes/users'));
 app.use('/sge/estudiantes', require('./routes/estudiantes'));
 app.use('/sge/representantes', require('./routes/representantes'));
 app.use('/sge/autorizados', require('./routes/autorizados'));
-app.use('/sge/personals', require('./routes/personals'));
+app.use('/sge/personals', require('./routes/personal'));
 
 
 sequelize.sync({ force: false }) // Asegúrate de usar { force: false } en producción

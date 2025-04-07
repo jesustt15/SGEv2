@@ -56,9 +56,7 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
   };
 
   const onSubmit = async (data) => {
-    
-    console.log("Datos recibidos en onSubmit:", data);
-    console.log("Valor del apellido:", data.apellido);
+
     try {
 
       const representante_id = initialData && initialData.representante_id;

@@ -137,6 +137,51 @@ export function parseEstudianteData(fetchedEstudiante, tiposCedula = [], sexos =
       edad: fetchedRepresentante.edad || ""
     };
   }
+
+  export function parsePersonalData (
+    fetchedPersonal,
+    tiposCedula = [],
+    prefijosTelf = [],
+    cargos = []
+  ) {
+
+    const cedCompleta = fetchedPersonal.ced || "";
+    let tipoCedulaDefault = tiposCedula.length > 0 ? tiposCedula[0] : { name: "" };
+    let cedDefault = "";
+    
+    tiposCedula.forEach(tipo => {
+      if (cedCompleta.startsWith(tipo.name)) {
+        tipoCedulaDefault = tipo;
+        cedDefault = cedCompleta.substring(tipo.name.length);
+      }
+    });
+  
+    const telfCompleta = fetchedPersonal.telf || "";
+    let phonePrefixDefault = prefijosTelf.length > 0 ? prefijosTelf[0] : { name: "" };
+    let telfDefault = "";
+    
+    prefijosTelf.forEach(prefix => {
+      if (telfCompleta.startsWith(prefix.name)) {
+        phonePrefixDefault = prefix;
+        telfDefault = telfCompleta.substring(prefix.name.length);
+      }
+    });
+
+    const cargoDefault = cargos.find(option => option.name === fetchedPersonal.cargo) || "";
+
+    return {
+      nombres: fetchedPersonal.nombres || "",
+      apellidos: fetchedPersonal.apellidos || "",
+      ced: cedDefault,
+      tipoCedula: tipoCedulaDefault,
+      telf: telfDefault,
+      prefijosTelf: phonePrefixDefault,
+      cargo: cargoDefault,
+      cod: fetchedPersonal.cod || ""
+    }
+  
+
+  }
   
   
   

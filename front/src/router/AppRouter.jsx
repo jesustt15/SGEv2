@@ -4,7 +4,7 @@ import { Home, Login } from '../auth';
 import { Estudiantes, NewEstudianteStepper, EstudiantePage, EstudianteEdit } from '../estudiantes';
 import { Usuarios, NewUsuario } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
-import { Personal, NewPersonal } from '../personals';
+import { Personal, NewPersonal, PersonalPage, PersonalEdit } from '../personals';
 
 export const AppRouter = () => {
   return (
@@ -23,6 +23,8 @@ export const AppRouter = () => {
           <Route path="estudiantes/:id" element={<EstudianteEdit />} />
           <Route path='personals' element={<Personal />} />
           <Route path='personals/new' element={<NewPersonal />} />
+          <Route path="personals/:id/more" element={<PersonalPage />} />
+          <Route path="personals/:id" element={<PersonalEdit />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
         </Route>

@@ -17,14 +17,14 @@ const Personal = sequelize.define('personals', {
     allowNull: false,
   },
   ced: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   cod: DataTypes.STRING,
   telf: DataTypes.STRING,
   cargo:{
     type: DataTypes.ENUM('Director(a)', 'Sub Director(a)','Coordinador(a) Pedagogia'
-      , 'Docente', 'Auxiliar', 'Secretaria', 'Obrero(a)', 'Ccocinero(a)'),
+      , 'Docente', 'Auxiliar', 'Secretaria', 'Obrero(a)', 'Cocinero(a)'),
       allowNull: false,
   } ,
   foto: DataTypes.STRING,
