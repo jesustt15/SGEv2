@@ -179,8 +179,8 @@ const asociarEstudianteRepresentante = async(req , res = response) => {
     });
 
   
-      if (estudiante && representante) {
-        await estudiante.addRepresentante(representante);
+      if (estudiante && representante_id) {
+        await estudiante.addRepresentante(representante_id);
         res.status(200).json({ message: 'Representante asociado al estudiante exitosamente.' });
       } else {
         res.status(404).json({ message: 'Estudiante o Representante no encontrados.' });
