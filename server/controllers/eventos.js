@@ -51,14 +51,14 @@ const editarEvento = async(req, res = response) => {
 
     try {
 
-        const Evento = await Evento.update(req.body ,{
-           where: {Evento_id: req.params.id}
+        const evento = await Evento.update(req.body ,{
+           where: {evento_id: req.params.id}
         });
 
-        if(Evento){
+        if(evento){
            return res.status(201).json({
               ok: false,
-              name: Evento.nombre,
+              name: evento.title,
               msg: 'el Evento ha sido actualizado'
            })
         }
@@ -79,12 +79,12 @@ const eliminarEvento = async(req, res = response) => {
 
     try {
 
-        const Evento = await Evento.destroy({where: {Evento_id: req.params.id}});
-        if(Evento){
+        const evento = await Evento.destroy({where: {evento_id: req.params.id}});
+        if(evento){
 
            return res.status(204).json({
               ok: false,
-              name: Evento.nombre,
+              name: evento.title,
               msg: 'El estudiante ha sido eliminado'
            })
         }

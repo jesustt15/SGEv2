@@ -1,16 +1,16 @@
 const {Router} = require('express');
 const router = Router();
 const { authenticate , authorize } = require('../middlewares/auth');
-const { getEventos, editEvento, crearEvento, deleteEvento } = require('../controllers/users');
+const { getEventos, crearEvento, editarEvento, eliminarEvento } = require('../controllers/eventos');
 
 
 
-router.get('/', geEventos);
+router.get('/', getEventos);
   
-router.post('/new', crearUser);
+router.post('/new', crearEvento);
   
-router.put('/:id', authenticate, authorize(['admin']), ediEvento);
+router.put('/:id', authenticate, authorize(['admin']), editarEvento);
 
-router.delete('/:id', authenticate, authorize(['admin']), deleteUser);
+router.delete('/:id', authenticate, authorize(['admin']), eliminarEvento);
 
 module.exports = router;
