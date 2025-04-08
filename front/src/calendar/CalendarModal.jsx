@@ -5,18 +5,16 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// Configuramos el localizador para react-big-calendar
+
 const localizer = momentLocalizer(moment);
 
-// Es importante setear el app element para accesibilidad
+
 Modal.setAppElement('#root');
 
 function CalendarWithModal() {
-  // Estado para almacenar los eventos cargados desde el backend
+
   const [events, setEvents] = useState([]);
-  // Estado para controlar la visibilidad del modal
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // Estado para guardar la información del evento que se está creando
   const [eventData, setEventData] = useState({
     title: '',
     description: '',
@@ -75,7 +73,6 @@ function CalendarWithModal() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3001/api/eventos', eventData);
-      // Convertimos el evento recibido para react-big-calendar
       const newEvent = {
         ...response.data,
         start: new Date(response.data.date),
@@ -89,17 +86,18 @@ function CalendarWithModal() {
   };
 
   return (
-    <div style={{ margin: "20px" }}>
+    <div className='calendar-page'>
       <h1>Calendario de Eventos</h1>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
+        defaultDate={new Date()}       // Establece la fecha actual como por defecto
+        defaultView="month"            // Define que la vista predeterminada sea el mes
         style={{ height: 500 }}
         selectable
         onSelectSlot={openModal}
-        // Opcional: personalizar el estilo de cada evento según el color guardado
         eventPropGetter={(event) => ({
           style: {
             backgroundColor: event.color || '#3174ad',
@@ -110,7 +108,7 @@ function CalendarWithModal() {
         })}
       />
 
-      {/* Modal para crear un nuevo evento */}
+      {/* Modal para crear un nuevo evento
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -183,7 +181,7 @@ function CalendarWithModal() {
             <button type="button" onClick={closeModal}>Cancelar</button>
           </div>
         </form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

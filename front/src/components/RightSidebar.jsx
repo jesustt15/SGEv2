@@ -11,7 +11,8 @@ const RightSidebar = () => {
   const { selectedPersonal } = usePersonal();
 
   // Si estamos en la ruta 'estudiantes/new', no renderizamos el sidebar
-  if (location.pathname.includes('estudiantes/new' ) || location.pathname.includes('personals/new' )  ) {
+  if (location.pathname.includes('estudiantes/new' ) || location.pathname.includes('personals/new' ) || 
+            location.pathname.includes('calendar')  ) {
     return null;
   }
 

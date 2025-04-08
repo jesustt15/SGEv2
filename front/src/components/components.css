@@ -251,3 +251,8 @@
   align-items: center;
 }
 
+.calendar-page {
+  height: 70vh;
+  width: 95%;
+  margin-left: 2rem;
+}
