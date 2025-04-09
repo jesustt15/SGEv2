@@ -187,12 +187,16 @@
   transform: translateX(-50%);
 }
 
-.dot.green {
-  background-color: #28a745;   /* Verde */
+.dot-wrapper {
+  margin-top: 4px;
+  display: flex;
+  gap: 2px;
 }
 
-.dot.red {
-  background-color: #dc3545;   /* Rojo */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
 }
 
 /* Contenedor del calendario en el sidebar */

@@ -14,14 +14,15 @@ export const useEvento = () => { const context = useContext(EventoContext);
 }; 
     
     export function EventoProvider({ children }) { 
-        const [evento, setEvento] = useState([]); const toast = useRef(null); // Referencia para el Toast 
+        const [evento, setEvento] = useState([]); 
+        const toast = useRef(null); // Referencia para el Toast 
         const navigate = useNavigate(); 
         
         
         const getEventos = async () => { 
             try { 
-                const res = await getEventosRequest(); 
-                setEvento(res.data); 
+                const response = await getEventosRequest();
+                return response.data;
             } catch (error) { 
                 console.error("Error fetching Evento:", error); 
             } }; 
@@ -50,7 +51,7 @@ export const useEvento = () => { const context = useContext(EventoContext);
             const deleteEvento = async (id) => { 
                 try { 
                     const res = await deleteEventoRequest(id); 
-                    if (res.status === 204) setEvento(evento.filter((user) => evento._id !== id));
+                    if (res.status === 204) setEvento(evento.filter((evento) => evento._id !== id));
                      getEventos(); 
                     } catch (error) { 
                         console.error("Error deleting evento:", error); 
