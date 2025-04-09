@@ -53,3 +53,91 @@ b { /* used for event dates/times */
   max-width: 1100px;
   margin: 0 auto;
 }
+
+.form-modal{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  border-top: 1px solid #2332551A
+}
+
+.group-modal{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-item-modal {
+  display: flex;
+  flex-direction:column;
+  width: 45%;
+}
+
+.group-header-modal {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-btn{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+
+}
+.group-item-color{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+
+}
+
+.btn-next-modal {
+  background-color: #EFF7FC;
+  color: #4F5B77;
+  border: 0.5px solid #4F5B77;
+  font-family: Archivo, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  width: 40%;
+  border-radius: 6px;
+  margin-top: 1rem;
+  margin-left: 13rem;
+  align-self: flex-end; 
+}
+
+.btn-next-modal:hover {
+  background-color: #4F5B77;
+  color: white;
+  cursor: pointer;
+}
+
+.event-content-little{
+  border: none;
+  color: black;
+  outline: none;
+}
+
+.divider{
+  border: none;             
+  border-top: 0.5px solid #2332551A;;
+  margin: 1px 0; 
+   
+}
+
+.label-modal {
+  margin-top: 1.2rem;
+}
+
+.p-modal{
+  font-size: 0.9rem ;
+}
