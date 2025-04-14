@@ -24,8 +24,11 @@ const Seccion = sequelize.define('secciones', {
       notEmpty: {msg: 'El apellido no puede estar vacío.'},
     }
   },
-  
-  
+  docente_id: {
+    type: DataTypes.UUIDV4,
+    allowNull:false,
+  }
+   
 });
 
 

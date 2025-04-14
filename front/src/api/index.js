@@ -5,4 +5,5 @@ export * from './representantes';
 export * from './autorizados';
 export * from './personals';
 export * from './eventos';
+export * from './secciones';
 

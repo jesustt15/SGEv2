@@ -50,7 +50,12 @@ const Estudiante = sequelize.define('estudiantes', {
   alergias: DataTypes.STRING,
   condicion: DataTypes.STRING,
   foto: DataTypes.STRING,
-  
+
+  seccion_id:{
+    type: DataTypes.UUID,
+
+  }
+
   
 });
 
