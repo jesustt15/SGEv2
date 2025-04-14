@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, STRING } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Seccion = sequelize.define('secciones', {
@@ -7,6 +7,10 @@ const Seccion = sequelize.define('secciones', {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
+  },
+  seccion: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
   nombre: {
     type: DataTypes.STRING,

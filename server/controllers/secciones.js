@@ -32,12 +32,12 @@ const getOneSeccion = async(req, res = response) => {
 
 const crearSeccion = async(req, res = response) => {
 
-    const {nombre, nivel, docente_id} = req.body;
+    const {nombre, nivel,seccion, docente_id} = req.body;
    
     try {
 
-        const seccion = await Seccion.create({nombre, nivel, docente_id});
-        res.status(201).json(seccion)
+        const seccions = await Seccion.create({nombre, nivel, seccion, docente_id});
+        res.status(201).json(seccions)
         
     } catch (error) {
 

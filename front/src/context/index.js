@@ -5,3 +5,4 @@ export * from './RepresentanteContext';
 export * from './AutorizadoContext';
 export * from './PersonalContext';
 export * from './EventoContext';
+export * from './SeccionContext';

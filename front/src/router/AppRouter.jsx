@@ -6,6 +6,7 @@ import { Usuarios, NewUsuario } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
 import { Personal, NewPersonal, PersonalPage, PersonalEdit } from '../personals';
 import CalendarWithModal from '../calendar/CalendarModal';
+import { NewSeccion, SeccionEdit, Secciones } from '../secciones';
 
 export const AppRouter = () => {
   return (
@@ -28,6 +29,10 @@ export const AppRouter = () => {
           <Route path="personals/:id" element={<PersonalEdit />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
+          <Route path="secciones" element={<Secciones />} />
+          <Route path="secciones/new" element={<NewSeccion />} />
+          <Route path="secciones/:id" element={<SeccionEdit />} />
+
           <Route path="calendar" element={<CalendarWithModal />} />
         </Route>
       </Route>

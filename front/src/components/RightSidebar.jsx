@@ -3,23 +3,26 @@ import { useLocation, useMatch } from 'react-router-dom';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
 import { EstudianteDetails } from '../estudiantes';
 import {PersonalDetails} from '../personals';
-import { useEstudiante, usePersonal } from '../context';
+import { useEstudiante, usePersonal, useSeccion } from '../context';
+import { SeccionDetails } from '../secciones';
 
 const RightSidebar = () => {
   const location = useLocation();
   const { selectedEstudiante } = useEstudiante();
   const { selectedPersonal } = usePersonal();
+  const { selectedSeccion } = useSeccion();
 
   // Si estamos en la ruta 'estudiantes/new', no renderizamos el sidebar
   if (location.pathname.includes('estudiantes/new' ) || location.pathname.includes('personals/new' ) || 
-            location.pathname.includes('calendar')  ) {
+            location.pathname.includes('calendar') || location.pathname.includes('secciones/new')  ) {
     return null;
   }
 
   // Usamos useMatch para detectar rutas del tipo /estudiantes/:id
   const matchEstudianteDetalle = useMatch('/estudiantes/:id');
   const matchPersonalDetalle = useMatch('/personals/:id');
-  if (matchEstudianteDetalle || matchPersonalDetalle) {
+  const matchSeccionDetalle = useMatch('/secciones/:id');
+  if (matchEstudianteDetalle || matchPersonalDetalle || matchSeccionDetalle) {
     return null;
   }
 
@@ -37,6 +40,12 @@ const RightSidebar = () => {
     content = (
       <div className="estudiantes-detail-container">
         <PersonalDetails personal={selectedPersonal} />
+      </div>
+    )
+  }else if (location.pathname.includes('secciones')){
+    content = (
+      <div className="estudiantes-detail-container">
+        <SeccionDetails seccion={selectedSeccion} />
       </div>
     )
   }
