@@ -30,21 +30,23 @@ const getOneSeccion = async(req, res = response) => {
 
 }
 
-const crearSeccion = async(req, res = response) => {
+const crearSeccion = async (req, res) => {
+  const { nombre, nivel, seccion, docente_id } = req.body;
+  
+  try {
+    const seccions = await Seccion.create(
+      { nombre, nivel, seccion, docente_id },
+      { returning: true } // Esto le indica a Sequelize que retorne el objeto creado
+    );
+    console.log("Objeto creado en backend:", seccions); // Verifica qué contiene seccions
 
-    const {nombre, nivel,seccion, docente_id} = req.body;
-   
-    try {
+    // Dependiendo del ORM, es posible que debas acceder a los datos con .dataValues o asegurarte de que se retorne el objeto completo
+    res.status(201).json({ seccion_id: seccions.dataValues.seccion_id });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-        const seccions = await Seccion.create({nombre, nivel, seccion, docente_id});
-        res.status(201).json(seccions)
-        
-    } catch (error) {
-
-        res.status(400).json({error: error.message})   
-    }
-
-}
 
 const editarSeccion = async (req, res = response) => {
     try {

@@ -52,10 +52,12 @@ const Estudiante = sequelize.define('estudiantes', {
   foto: DataTypes.STRING,
 
   seccion_id:{
-    type: DataTypes.UUIDV4,
+    type: DataTypes.UUID,
+    allowNull: true,
   }
 
 });
+
 
 
 module.exports = Estudiante;

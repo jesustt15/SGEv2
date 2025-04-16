@@ -1,15 +1,16 @@
 import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { usePersonal, useSeccion, useEstudiante } from "../context";
+import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { parseImageUrl } from "../helpers";
 
-export const NewSeccion = ({ onStudentCreated }) => {
+export const NewSeccion = ( {onStudentCreated}) => {
   const { createSeccion } = useSeccion();
   const { getPersonals, personal } = usePersonal();
-  const { getEstudiantes, estudiantes } = useEstudiante();
+  const { getEstudiantes, estudiante, updateSeccionEstudiante } = useEstudiante();
   const { handleSubmit, control, formState: { errors } } = useForm();
   const toast = useRef(null);
 
@@ -19,62 +20,77 @@ export const NewSeccion = ({ onStudentCreated }) => {
     getEstudiantes();
   }, [getPersonals, getEstudiantes]);
 
-  // Depuración: Log de los estudiantes cuando se actualiza el estado
-  useEffect(() => {
-    console.log("estudiantes actualizados:", estudiantes);
-  }, [estudiantes]);
 
   // Filtra docentes según la propiedad "cargo"
   const docentes = personal.filter((perso) => perso.cargo === "Docente");
-  console.log("docentes:", docentes);
-
-  // Por el momento, usamos todos los estudiantes sin filtrar
-  console.log("lista completa de estudiantes:", estudiantes);
 
   // Muestra mensaje de carga mientras no lleguen los datos
   if (personal.length === 0) {
     return <div>Cargando datos de personales...</div>;
   }
-  if (!estudiantes || estudiantes.length === 0) {
+  if (!estudiante || estudiante.length === 0) {
     return <div>Cargando datos de estudiantes...</div>;
   }
 
   const createSeccionSubmit = async (data) => {
     try {
-      // Extrae el docente seleccionado: convierte el objeto a su personal_id
       if (data.docente && typeof data.docente === "object") {
         data.docente_id = data.docente.personal_id;
         delete data.docente;
       }
-      
-      // Prepara FormData para enviar todos los campos
+  
       const formData = new FormData();
-      
-      // Si existen estudiantes seleccionados, extrae sus identificadores
+  
       if (data.estudiantes && Array.isArray(data.estudiantes)) {
-        const studentIds = data.estudiantes.map(s => s.estudiante_id);
+        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
         formData.append("estudiantes", JSON.stringify(studentIds));
       }
-      
-      // Agrega el resto de los campos al FormData
+  
       Object.keys(data).forEach((key) => formData.append(key, data[key]));
-
-      // Envía la solicitud para crear la sección
-      await createSeccion(formData);
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Sección creada"
-      });
+  
+      // Llamada al servicio correctamente implementado
+      const response = await createSeccion(formData);
+      console.log("Respuesta de createSeccion:", response);
+      const newSeccionId = response?.data?.seccion_id || response?.data?.id;
+      console.log("Sección creada, su ID es:", newSeccionId);
+  
+      if (!newSeccionId) {
+        throw new Error("No se obtuvo el ID de la sección");
+      }
+  
+      if (data.estudiantes && Array.isArray(data.estudiantes)) {
+        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
+        console.log("Actualizando estudiantes con IDs:", studentIds);
+  
+        await Promise.all(
+          studentIds.map(async (id) => {
+            console.log(`Actualizando estudiante ${id} con seccion_id: ${newSeccionId}`);
+            await updateSeccionEstudiante({ estudiante_id: id, seccion_id: newSeccionId });
+          })
+        );
+  
+        console.log("Todos los estudiantes actualizados correctamente");
+      }
+  
+      if (toast.current) {
+        toast.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Sección creada y estudiantes actualizados"
+        });
+      }
     } catch (error) {
-      console.error("Error al crear la sección:", error);
+      console.error("Error al crear la sección o actualizar estudiantes:", error);
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail: "Revisa los campos marcados."
+        detail: "Revisa los campos marcados o la conexión con la API."
       });
     }
   };
+  
+  
+  
 
   return (
     <div className="card">
@@ -89,7 +105,7 @@ export const NewSeccion = ({ onStudentCreated }) => {
             render={({ field }) => (
               <>
                 <label htmlFor="seccion">Sección</label>
-                <input placeholder="Ingrese la sección" id="seccion" {...field} />
+                <InputText placeholder="Ingrese la sección" id="seccion" {...field} />
               </>
             )}
           />
@@ -103,7 +119,7 @@ export const NewSeccion = ({ onStudentCreated }) => {
             render={({ field }) => (
               <>
                 <label htmlFor="nivel">Nivel</label>
-                <input placeholder="Ingresa el nivel" id="nivel" {...field} />
+                <InputText placeholder="Ingresa el nivel" id="nivel" {...field} />
               </>
             )}
           />
@@ -119,13 +135,12 @@ export const NewSeccion = ({ onStudentCreated }) => {
             render={({ field }) => (
               <>
                 <label htmlFor="nombre">Nombre del Nivel</label>
-                <input placeholder="Ingresa el nombre" id="nombre" {...field} />
+                <InputText placeholder="Ingresa el nombre" id="nombre" {...field} />
               </>
             )}
           />
           {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
 
-          {/* Dropdown para seleccionar el docente filtrado */}
           <Controller
             name="docente"
             control={control}
@@ -165,7 +180,6 @@ export const NewSeccion = ({ onStudentCreated }) => {
           />
           {errors.docente && <small className="p-error">{errors.docente.message}</small>}
 
-          {/* MultiSelect para agregar estudiantes a la sección */}
           <Controller
             name="estudiantes"
             control={control}
@@ -178,10 +192,10 @@ export const NewSeccion = ({ onStudentCreated }) => {
                   id="estudiantes"
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={estudiantes}  // Muestra todos los estudiantes
+                  options={estudiante}  // Asegúrate de que 'estudiante' (o 'estudiantes') contenga el array de objetos.
                   placeholder="Seleccione estudiantes"
                   display="chip"
-                  appendTo={document.body}
+                  optionLabel="nombres"  // O, si prefieres mostrar el nombre completo, puedes crear y usar una propiedad "fullName"
                   itemTemplate={(option) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img 
@@ -202,8 +216,6 @@ export const NewSeccion = ({ onStudentCreated }) => {
               </>
             )}
           />
-          {errors.estudiantes && <small className="p-error">{errors.estudiantes.message}</small>}
-
           <Toast ref={toast} />
           <button type="submit" className="btn-next">
             Guardar

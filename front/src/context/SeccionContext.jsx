@@ -37,8 +37,7 @@ export function SeccionProvider({ children }) {
           if (existingSeccion) {
             throw new Error('Este Seccion ya existe.');
           }
-          const res = await createSeccionRequest(auto);
-          const createdSeccion = res.data;  // Asegúrate de qurepree endpoint devuelve el objeto creado
+          const res = await createSeccionRequest(auto); // Asegúrate de qurepree endpoint devuelve el objeto creado
       
           // Actualiza la lista de Seccions
           getSecciones();
@@ -50,7 +49,8 @@ export function SeccionProvider({ children }) {
             detail: 'Nueva Seccion agregada',
             life: 3000,
           });
-          navigate('/secciones');
+          console.log("Respuesta de axios en createSeccion:", res);
+          return res;
         } catch (error) {
           console.error("Error creating Seccion:", error);
           if (error.response && error.response.data && error.response.data.errors) {

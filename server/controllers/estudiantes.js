@@ -216,6 +216,36 @@ const getRepresentantesDeAlumno = async (req, res = response) => {
   }
 };
 
+const editarSeccionEstudiante = async (req, res = response) => {
+  try {
+    // Asegurarnos de que la ruta defina el parámetro correctamente.
+    // Por ejemplo, si la ruta es "/sge/estudiantes/:estudiante_id/edit-seccion":
+    console.log("Contenido de req.body:", req.body);
+    const { estudiante_id } = req.params;
+    const { seccion_id } = req.body;
+
+    const estudiantes = await Estudiante.findAll();
+    console.log("Lista completa de estudiantes:", estudiantes.map(e => e.get({ plain: true })));
+    const estudiante = await Estudiante.findOne({ where: { estudiante_id } });
+    console.log("Consulta con findOne:", estudiante ? estudiante.get({ plain: true }) : "No encontrado");
+    const updated = await estudiante.update({ seccion_id });
+    console.log("Registro actualizado directamente:", updated.get({ plain: true }));
+
+
+    console.log("Estudiante a actualizar:", estudiante_id);
+
+  
+
+    res.status(200).json({ message: "Estudiante actualizado correctamente" });
+  } catch (error) {
+    console.error("Error al actualizar estudiante:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
 
 
 module.exports = {
@@ -226,6 +256,7 @@ module.exports = {
     editarEstudiante,
     crearEstudiante,
     asociarEstudianteRepresentante,
-    getRepresentantesDeAlumno, 
+    getRepresentantesDeAlumno,
+    editarSeccionEstudiante, 
     
 }

@@ -21,7 +21,7 @@ const Seccion = sequelize.define('secciones', {
     }
   },
   nivel: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notNull: {msg: 'El apellido es requerido.'},

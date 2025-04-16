@@ -8,9 +8,11 @@ const {
     getOneEstudiante,
     asociarEstudianteRepresentante,
     getRepresentantesDeAlumno,
+    editarSeccionEstudiante,
 } = require("../controllers/estudiantes");
 const uploadMiddleware = require('../middlewares/uploadMiddleware')
-
+const multer = require("multer");
+const upload = multer(); 
 const router = Router();
 
 // Ruta para obtener todos los estudiantes
@@ -27,6 +29,7 @@ router.get('/:id/representantes', authenticate, authorize(['admin', 'user']), ge
 
 // Rutas para editar, eliminar y obtener un estudiante específico
 router.put('/:id', authenticate, authorize(['admin']),  uploadMiddleware.uploadEstudiante.single('foto') ,editarEstudiante);
+router.put('/:estudiante_id/edit-seccion', authenticate, authorize(['admin']),  upload.none() ,editarSeccionEstudiante);
 router.delete('/:id', authenticate, authorize(['admin']), eliminarEstudiante);
 router.get('/:id', authenticate, authorize(['admin', 'user']), getOneEstudiante);
 

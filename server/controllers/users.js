@@ -30,11 +30,8 @@ const login =  async(req , res = response ) => {
             msg: 'Credenciales Incorrectas'
         });
       }
-      const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '4h' });
-      res.json({ token, 
-          role: user.role,
-          name: user.name
-      });
+      const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '8h' });
+      res.json({ token, user });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

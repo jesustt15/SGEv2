@@ -9,10 +9,10 @@ export const SeccionDetails = ({ seccion }) => {
   
   
   
-  if (!personal) {
+  if (!seccion) {
     return (
       <div className="estudiante-detail no-selection">
-        <p>Selecciona un estudiante para ver sus detalles.</p>
+        <p>Selecciona una sección para ver sus detalles.</p>
       </div>
     );
   }
@@ -20,26 +20,26 @@ export const SeccionDetails = ({ seccion }) => {
  
   return (
     <div className="estudiante-detail">
-      <h3>Detalles del Personal</h3>
+      <h3>Detalles de la seccion</h3>
       <p>CEDULA</p> 
-      <div className="after-p">{personal.ced}</div>
+      <div className="after-p">{seccion.ced}</div>
       <p>NOMBRES</p>
-      <div className="after-p">{personal.nombres}</div>
+      <div className="after-p">{seccion.nombres}</div>
       <p>APELLIDOS</p> 
-      <div className="after-p">{personal.apellidos}</div>
+      <div className="after-p">{seccion.apellidos}</div>
       <p>CÓDIGO</p> 
-      <div className="after-p">{personal.cod}</div>
+      <div className="after-p">{seccion.cod}</div>
       <p>CARGO</p>
-      <div className="after-p">{personal.cargo}</div>
+      <div className="after-p">{seccion.cargo}</div>
       <p>TELEFONO</p>
-      <div className="after-p">{personal.telf}</div>
+      <div className="after-p">{seccion.telf}</div>
       <div className="btn-section">
       <Button className="btn-outline" icon="pi pi-pen-to-square"
-        onClick={() => navigate(`/personals/${personal.personal_id}`)}
+        onClick={() => navigate(`/seccions/${seccion.seccion_id}`)}
       />
       <Button className="btn-outline" icon="pi pi-trash" />
       <Button label="Ver Más" className="more" severity="secondary" outlined  
-      onClick={() => navigate(`/personals/${personal.personal_id}/more`)} />
+      onClick={() => navigate(`/secciones/${seccion.seccion_id}/more`)} />
       </div>
     </div>
     

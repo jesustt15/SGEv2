@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useRef, useState } from "react";
-import { createEstudiantesRequest, deleteEstudianteRequest, getEstudiantesRequest, getOneEstudianteRequest, updateEstudianteRequest } from "../api";
+import { createEstudiantesRequest, deleteEstudianteRequest, getEstudiantesRequest, getOneEstudianteRequest, updateEstudianteRequest, updateSeccionEstudianteRequest } from "../api";
 import { Toast } from 'primereact/toast';
 import { useNavigate } from "react-router-dom";
 
@@ -23,13 +23,15 @@ export function EstudianteProvider({ children }) {
     const toast = useRef(null); // Referencia para el Toast
 
     const getEstudiantes = async () => {
-        try {
-          const res = await getEstudiantesRequest();
-          setEstudiante(Array.isArray(res.data) ? res.data : []);
-        } catch (error) {
-          console.error("Error fetching Estudiante:", error);
-        }
-      };
+      try {
+        const res = await getEstudiantesRequest();
+        const data = Array.isArray(res.data) ? res.data : [];
+        setEstudiante(data);
+      } catch (error) {
+        console.error("Error al obtener estudiantes:", error);
+      }
+    };
+    
       
 
     const createEstudiante = async (est) => {
@@ -82,6 +84,29 @@ export function EstudianteProvider({ children }) {
         }
     };
 
+    const updateSeccionEstudiante = async ({estudiante_id, seccion_id}) => {
+      try {
+
+          console.log('context:',seccion_id)
+          
+          const res = await updateSeccionEstudianteRequest(estudiante_id, {seccion_id: seccion_id});
+          getEstudiantes();
+         
+          toast.current.show({
+              severity: 'success',
+              summary: 'Actualización Exitosa',
+              detail: 'Estudiante actualizado',
+              life: 2000,
+            });
+            console.log('respuesta de updateSeccionEstudiante:',res);
+
+          navigate('/secciones');
+      } catch (error) {
+          console.error("Error updating estudiante:", error);
+      }
+  };
+
+
     const deleteEstudiante = async (id) => {
         try {
             const res = await deleteEstudianteRequest(id);
@@ -111,7 +136,8 @@ export function EstudianteProvider({ children }) {
             getEstudiantes,
             deleteEstudiante,
             updateEstudiante,
-            getOneEstudiante
+            getOneEstudiante,
+            updateSeccionEstudiante,
         }}>
             {children}
             <Toast ref={toast} />
