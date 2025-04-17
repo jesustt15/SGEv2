@@ -30,7 +30,7 @@ export const EstudiantePage = () => {
       <HeaderOptions id={estudiante.estudiante_id}
          studentName={`${estudiante.apellidos}${estudiante.nombres}`}
       />
-      <div className="pdfContent">
+      <div id="pdfContent" className="pdfContent">
         <HeaderEdit />
         <EstudianteFoto estudiante={estudiante} />
         <div className="page-section">

@@ -9,7 +9,7 @@ import "./estudiantes.css";
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
 import { FileUpload } from "primereact/fileupload";
-import { tiposCedula, prefijosTelf, tipoEdoCivil, prefijosTrabajo } from "../helpers/dropdownOptions";
+import { tiposCedula, prefijosTelf, tipoEdoCivil, prefijosTrabajo, tipos } from "../helpers/dropdownOptions";
 
 export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   const {createRepresentante} = useRepresentante();
@@ -332,7 +332,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                   name="telf_trabajo"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "Ingrese el nro telefónico" }}
+                  disabled={watch("trabajaOption") === "No"} 
                   render={({ field }) => (
                     <>
                       <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf_trabajo" {...field} />
@@ -352,16 +352,25 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             uploadHandler={onUpload}
           />
         <Controller
-        name="tipo"
-        control={control}
-        defaultValue=""
-        rules={{ required: "tipo." }}
-        render={({ field }) => (
-          <div>
-            <InputText id="tipo" {...field} placeholder="Tipo" />
-          </div>
-        )}
-      />
+          name="tipo"
+          control={control}
+          defaultValue=""
+          rules={{ required: "es requerido." }}
+          render={({ field }) => (
+            <>
+              <label htmlFor="tipo">Tipo</label>
+              <Dropdown
+                id="tipo"
+                value={field.value}
+                onChange={(e) => field.onChange(e.value)}
+                options={tipos}
+                optionLabel="name"
+                placeholder="SOLTERO/A"
+                className={errors.tipo ? 'p-invalid' : ''}
+              />
+            </>
+          )}
+        />
       {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
 
         </div>

@@ -1,53 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import './components.css';
-import { useAuth, useEstudiante } from '../context';
+import { useAuth, useEstudiante, usePersonal } from '../context';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const WelcomeHeader = () => {
   const { name } = useAuth();
   const { estudiante, getEstudiantes } = useEstudiante();
+  const { personal, getPersonals } = usePersonal();
 
-  // Estado para los datos del gráfico de alumnos
+  // Estado para el gráfico de alumnos
   const [alumnosData, setAlumnosData] = useState(null);
-
-  // Se asume que el total de personal puede venir de algún hook similar;
-  // en este ejemplo se usa un valor fijo.
-  const personalCount = 100;
-  const personalData = {
-    labels: ['Personal', 'Restante'],
-    datasets: [
-      {
-        data: [personalCount, 300 - personalCount],
-        backgroundColor: ['#233255', '#F6AD2B'],
-        hoverBackgroundColor: ['#eab308', '#fde68a'],
-        borderWidth: 0,
-      },
-    ],
-  };
+  // Estado para el gráfico de personal (docentes vs. otros)
+  const [personalData, setPersonalData] = useState(null);
 
   // Opciones comunes para ambas gráficas de dona
   const chartOptions = {
     cutout: '80%', // Define el tamaño del "hueco" en el centro
     plugins: {
       legend: {
-        display: false, // Oculta la leyenda en la gráfica
+        display: false, // Oculta la leyenda
       },
     },
   };
 
-  // Llamamos a la función para obtener estudiantes al montar el componente
   useEffect(() => {
     getEstudiantes();
-  }, [getEstudiantes]);
+    getPersonals();
+  }, [getEstudiantes, getPersonals]);
 
-  // Cuando estudiante cambia, calculamos la cantidad por sexo y actualizamos alumnosData
+  // Actualiza la data de alumnos cuando cambie la lista de estudiantes
   useEffect(() => {
     if (estudiante && estudiante.length > 0) {
-      // Se filtran hombres y mujeres. Asumimos valores "M", "m", "masculino" para masculino,
-      // y "F", "f", "femenino" para femenino (se puede ajustar según convenga)
       const countMasculino = estudiante.filter((st) => {
         const sexo = st.sexo.toLowerCase();
         return sexo === 'masculino' || sexo === 'm';
@@ -57,7 +43,7 @@ export const WelcomeHeader = () => {
         const sexo = st.sexo.toLowerCase();
         return sexo === 'femenino' || sexo === 'f';
       }).length;
-      
+
       setAlumnosData({
         labels: ['Masculino', 'Femenino'],
         datasets: [
@@ -72,8 +58,30 @@ export const WelcomeHeader = () => {
     }
   }, [estudiante]);
 
+  // Actualiza la data del gráfico de personal diferenciando entre docentes y otros
+  useEffect(() => {
+    if (personal && personal.length > 0) {
+      const countDocentes = personal.filter((p) => p.cargo === 'Docente').length;
+      const countOtros = personal.filter((p) => p.cargo !== 'Docente').length;
+
+      setPersonalData({
+        labels: ['Docentes', 'Otros'],
+        datasets: [
+          {
+            data: [countDocentes, countOtros],
+            backgroundColor: ['#233255', '#F6AD2B'],
+            hoverBackgroundColor: ['#0284c7', '#cbd5e1'],
+            borderWidth: 0,
+          },
+        ],
+      });
+    }
+  }, [personal]);
+
   // Total de estudiantes (siempre que estudiante esté definido)
   const totalEstudiantes = estudiante ? estudiante.length : 0;
+  // Total de personal
+  const totalPersonal = personal ? personal.length : 0;
 
   return (
     <div className="welcome-header">
@@ -81,7 +89,6 @@ export const WelcomeHeader = () => {
       <section className="estadisticas">
         <div className="estadistica-container">
           <div className="chart-wrapper">
-            {/* Se muestra el gráfico solo cuando tenemos data */}
             {alumnosData && <Doughnut data={alumnosData} options={chartOptions} />}
             <div className="chart-overlay">
               <i className="pi pi-book"></i>
@@ -94,14 +101,15 @@ export const WelcomeHeader = () => {
         </div>
         <div className="estadistica-container">
           <div className="chart-wrapper">
-            <Doughnut data={personalData} options={chartOptions} />
+            {/* Se muestra el gráfico de personal solamente cuando tenemos la data */}
+            {personalData && <Doughnut data={personalData} options={chartOptions} />}
             <div className="chart-overlay">
               <i className="pi pi-users"></i>
             </div>
           </div>
           <div className="chart-label">
             <span>PERSONAL</span>
-            <span>{personalCount}</span>
+            <span>{totalPersonal}</span>
           </div>
         </div>
       </section>

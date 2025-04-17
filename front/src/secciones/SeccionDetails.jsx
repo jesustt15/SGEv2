@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { Button } from "primereact/button";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { usePersonal } from "../context/PersonalContext";     // Ejemplo del contexto de docentes
-import { useEstudiante } from "../context/EstudianteContext"; // Ejemplo del contexto de estudiantes
+import { usePersonal, useEstudiante } from "../context";     // Ejemplo del contexto de docentes
 import { getDocenteName, getCantidadAlumnos } from "../helpers";
 import { useEffect } from "react";
 

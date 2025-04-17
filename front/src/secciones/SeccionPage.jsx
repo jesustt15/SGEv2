@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { useEstudiante, usePersonal, useSeccion } from '../context';
 import { HeaderEdit } from '../components';
@@ -7,7 +7,7 @@ import {  getDocenteName, parseSeccionData } from '../helpers';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-export const SeccionPage = ({  }) => {
+export const SeccionPage = () => {
   const { id } = useParams();
   const { setSeccion, getOneSeccion,  seccion } = useSeccion();
   const { getEstudiantes, estudiante } = useEstudiante();
@@ -50,10 +50,6 @@ export const SeccionPage = ({  }) => {
       loadSeccion();
     }
   }, [id, formInitialized, getOneSeccion, estudiante, docentes]);
-  
-  const docenteBodyTemplate = (rowData) => {
-    return getDocenteName(rowData.docente_id, personal);
-  };
   
   return (
     <>
