@@ -10,11 +10,14 @@ import { NavLink } from 'react-router-dom';
 import '../estudiantes/estudiantes.css';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
-import { usePersonal, useSeccion } from '../context';
+import { useEstudiante, usePersonal, useSeccion } from '../context';
+import { getCantidadAlumnos, getDocenteName } from '../helpers';
 
 export const Secciones = () => {
 
   const {seccion, getSecciones, setSelectedSeccion, selectedSeccion } = useSeccion();
+  const { personal, getPersonals } = usePersonal();         // Array de docentes
+  const { estudiante, getEstudiantes } = useEstudiante();      // Array de estudiantes
 
   const [globalFilter, setGlobalFilter] = useState(null);
   const [filters, setFilters] = useState({
@@ -27,6 +30,8 @@ export const Secciones = () => {
 
   useEffect(() => {
     getSecciones();
+    getPersonals();
+    getEstudiantes();
   }, []);
 
   const onGlobalFilterChange = (e) => {
@@ -89,6 +94,16 @@ export const Secciones = () => {
       condicion: { value, matchMode: FilterMatchMode.CONTAINS },
     };
     setFilters(_filters);
+  };
+
+  const docenteBodyTemplate = (rowData) => {
+    return getDocenteName(rowData.docente_id, personal);
+  };
+
+  // Devuelve la cantidad de alumnos asignados a la sección
+  const alumnosBodyTemplate = (rowData) => {
+    // Filtra del listado de estudiantes aquellos que tienen este seccion_id
+    return getCantidadAlumnos(rowData.seccion_id, estudiante);
   };
 
   const renderHeader = () => {
@@ -164,8 +179,8 @@ export const Secciones = () => {
 
           <Column field="seccion" header="SECCIÓN" sortable />
           <Column field="nivel" header="NIVELES" sortable />
-          <Column field="ced" header="DOCENTE" sortable />
-          <Column field="CANTIDAD" header="ALUMNOS" />
+          <Column  header="DOCENTE" body={docenteBodyTemplate}  />
+          <Column  body={alumnosBodyTemplate} header="ALUMNOS"  sortable/>
         </DataTable>
       </div>
     </div>

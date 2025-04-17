@@ -182,6 +182,30 @@ export function parseEstudianteData(fetchedEstudiante, tiposCedula = [], sexos =
   
 
   }
+
+  /**
+ * Transforma el objeto de sección obtenido del backend al formato que espera el formulario.
+ * 
+ * @param {Object} seccionData - El objeto de sección obtenido del backend.
+ * @param {Array} allEstudiantes - El listado completo de estudiantes.
+ * @returns {Object} Objeto con las claves: nombre, seccion, nivel, docente y estudiantes.
+ */
+export const parseSeccionData = (seccionData, allEstudiantes = []) => {
+  if (!seccionData) return {};
+
+  return {
+    nombre: seccionData.nombre || "",
+    seccion: seccionData.seccion || "",
+    nivel: seccionData.nivel || "",
+    // Para el docente usamos un objeto; el Dropdown espera un objeto completo.
+    docente: seccionData.docente_id ? { personal_id: seccionData.docente_id } : null,
+    // La selección de estudiantes será aquellos que tengan en su campo "seccion_id" el id de la sección.
+    estudiantes: Array.isArray(allEstudiantes)
+      ? allEstudiantes.filter(est => est.seccion_id === seccionData.seccion_id)
+      : []
+  };
+};
+
   
   
   

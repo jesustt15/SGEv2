@@ -1,98 +1,128 @@
 import { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import {usePersonal } from '../context';
-import {  EstudianteFoto, HeaderEdit } from '../components';
-import { Calendar } from 'primereact/calendar';
+import { useEstudiante, usePersonal, useSeccion } from '../context';
+import { HeaderEdit } from '../components';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import { sexos, parsePersonalData, tiposCedula, prefijosTelf, cargos } from '../helpers';
-import { RadioButton } from 'primereact/radiobutton';
-import { FileUpload } from 'primereact/fileupload';
-import React from 'react';
+import { MultiSelect } from 'primereact/multiselect';
+import { parseImageUrl, parseSeccionData } from '../helpers';
 
-export const SeccionEdit = ({ onPersonalUpdated, toastRef }) => {
+export const SeccionEdit = ({  toastRef }) => {
   const { id } = useParams();
-  const { personal, setPersonal, getOnePersonal, updatePersonal } = usePersonal();
+  const { setSeccion, getOneSeccion,  updateSeccion } = useSeccion();
+  const { getEstudiantes, updateSeccionEstudiante, estudiante } = useEstudiante();
+  const { personal, getPersonals } = usePersonal();
 
-  const toast = toastRef || useRef(null);
-
-
+  // toastRef: usamos el que se pase por prop o el que define internamente
+  const internalToastRef = useRef(null);
+  const toast = toastRef || internalToastRef;
+  
   const {
-    watch,
-    handleSubmit, 
+    handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm();
 
-  const [foto, setFoto] = useState(null);
   const [formInitialized, setFormInitialized] = useState(false);
 
-  const handleFotoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFoto(e.target.files[0]);
-    }
-  };
+  // Cargamos el listado completo desde los contextos
   useEffect(() => {
-    const loadPersonal = async () => {
+    getPersonals();
+    getEstudiantes();
+  }, [getPersonals, getEstudiantes]);
+
+  const docentes = personal.filter((perso) => perso.cargo === "Docente");
+
+  // Esperamos que además de la sección se tenga el listado de estudiantes (estudiante) cargado
+  useEffect(() => {
+    const loadSeccion = async () => {
       if (id) {
-        const fetchedPersonal = await getOnePersonal(id);
-        setPersonal(fetchedPersonal);
-        const defaultValues = parsePersonalData(fetchedPersonal, tiposCedula, prefijosTelf, cargos);
+        console.log('este es el id:',id);
+        const fetchedSeccion = await getOneSeccion(id);
+        setSeccion(fetchedSeccion);
+        // Primero parseamos la data (sin docente completo)
+        let defaultValues = parseSeccionData(fetchedSeccion, estudiante);
+        
+        // Si se encontró el docente_id, buscamos el docente completo
+        if (fetchedSeccion.docente_id) {
+          const teacherFull = docentes.find(d => d.personal_id === fetchedSeccion.docente_id);
+          if (teacherFull) {
+            defaultValues.docente = teacherFull;
+          }
+        }
+        
         reset(defaultValues);
         setFormInitialized(true);
       }
     };
-
-    if (!formInitialized) {
-      loadPersonal();
+  
+    if (!formInitialized && id && Array.isArray(estudiante) && Array.isArray(docentes)) {
+      loadSeccion();
     }
-  }, [id, formInitialized, reset, getOnePersonal, tiposCedula, prefijosTelf, cargos ]);
+  }, [id, formInitialized, reset, getOneSeccion, estudiante, docentes]);
+  
 
-  const onSubmit = async (data) => {
+  const updateSeccionSubmit = async (data) => {
     try {
-     
-
-        if (data.cargo && typeof data.cargo === 'object') {
-            data.cargo = data.cargo.name;
-          }
+      // Convierte la selección del docente al formato esperado
+      if (data.docente && typeof data.docente === "object") {
+        data.docente_id = data.docente.personal_id;
+        delete data.docente;
+      }
+  
       const formData = new FormData();
-      const cedulaCompleta = `${data.tipoCedula?.name || ''}${data.ced}`;
-      data.ced = cedulaCompleta;
-
-       const telfCompleta = `${data.prefijosTelf?.name || ''}${data.telf}`;
-        data.telf = telfCompleta;
-
-      Object.keys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-
-      if (foto) {
-        formData.append('foto', foto);
+  
+      // Para los estudiantes, si se selecciona, se pasan sus IDs (puedes personalizar según requieras)
+      if (data.estudiantes && Array.isArray(data.estudiantes)) {
+        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
+        formData.append("estudiantes", JSON.stringify(studentIds));
       }
+  
+      // Agrega el resto de las propiedades al formData
+      Object.keys(data).forEach((key) => formData.append(key, data[key]));
+  
+      const response = await updateSeccion(id,formData);
+      console.log("Respuesta completa del updateSeccion:", response.data);
 
-      const response = await updatePersonal(id, formData);
-      
-      if (toast?.current) {
+  
+      const newSeccionId = response?.data?.seccion_id || response?.data?.id || id;
+      console.log("Sección actualizada, su ID es:", newSeccionId);
+  
+      if (!newSeccionId) {
+        throw new Error("No se obtuvo el ID de la sección");
+      }
+  
+      if (data.estudiantes && Array.isArray(data.estudiantes)) {
+        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
+        console.log("Actualizando estudiantes con IDs:", studentIds);
+  
+        await Promise.all(
+          studentIds.map(async (id) => {
+            console.log(`Actualizando estudiante ${id} con seccion_id: ${newSeccionId}`);
+            await updateSeccionEstudiante({ estudiante_id: id, seccion_id: newSeccionId });
+          })
+        );
+  
+        console.log("Todos los estudiantes actualizados correctamente");
+      }
+  
+      if (toast.current) {
         toast.current.show({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Personal actualizado',
+          severity: "success",
+          summary: "Éxito",
+          detail: "Sección actualizada y estudiantes actualizados"
         });
       }
-      
-      if (onPersonalUpdated) onPersonalUpdated(response);
     } catch (error) {
-      console.error("Error al editar Personal:", error);
-      if (toast?.current) {
-        toast.current.show({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Revisa los campos marcados.',
-        });
-      }
+      console.error("Error al actualizar la sección o estudiantes:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Revisa los campos o la conexión con la API."
+      });
     }
   };
 
@@ -100,150 +130,151 @@ export const SeccionEdit = ({ onPersonalUpdated, toastRef }) => {
     <>
       <HeaderEdit />
       <Toast ref={(el) => { toast.current = el; }} />
-      <EstudianteFoto estudiante={personal} />
-      <form onSubmit={handleSubmit(onSubmit)} className='form-alumno' encType="multipart/form-data">
+      <form
+        onSubmit={handleSubmit(updateSeccionSubmit)}
+        className="form-alumno"
+        encType="multipart/form-data"
+      >
         <div className="form-columnone">
           <Controller
-            name="nombres"
+            name="nombre"
             control={control}
             defaultValue=""
             rules={{ required: "El nombre es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="nombres">Nombres</label>
-                <InputText placeholder="Ingrese nombres" id="nombres" {...field} />
+                <label htmlFor="nombre">Nombre</label>
+                <InputText placeholder="Ingrese nombres" id="nombre" {...field} />
               </>
             )}
-            />
-          {errors.nombres && <span>El nombre es requerido.</span>}
-          <label htmlFor="cedula">Cedula</label>
-                <div className="group">
-                  <Controller
-                    name="tipoCedula"
-                    control={control}
-                    defaultValue={tiposCedula[0]}
-                    rules={{ required: "El tipo de cédula es requerido." }}
-                    render={({ field }) => (
-                      <>
-                        <Dropdown
-                          id="tipoCedula"
-                          value={field.value}
-                          onChange={(e) => field.onChange(e.value)}
-                          options={tiposCedula}
-                          optionLabel="name"
-                          placeholder="V-"
-                          className={errors.tipoCedula ? 'p-invalid' : 'dropdown'}
-                        />
-                      </>
-                    )}
-                  />
-                <Controller
-                  name="ced"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "La cédula es requerida." }}
-                  render={({ field }) => (
-                    <>
-                      <InputText placeholder="Ingresa la cedula " className="input-ced" id="ced" {...field} />
-                    </>
-                  )}
-                />
-                {errors.ced && <small className="p-error">{errors.ced.message}</small>}
-            </div>
-            <Controller
-                  name="cod"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "El código es requerido." }}
-                  render={({ field }) => (
-                    <>
-                    <label htmlFor="cod">Código</label>
-                      <InputText placeholder="Ingresa el código " className="input-ced" id="ced" {...field} />
-                    </>
-                  )}
-                />
-                {errors.cod && <small className="p-error">{errors.cod.message}</small>}
+          />
+          {errors.nombre && <span>El nombre es requerido.</span>}
+          <Controller
+            name="seccion"
+            control={control}
+            defaultValue=""
+            rules={{ required: "La sección es requerida." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="seccion">Sección</label>
+                <InputText placeholder="Ingresa la sección" id="seccion" {...field} />
+              </>
+            )}
+          />
+          {errors.seccion && <small className="p-error">{errors.seccion.message}</small>}
+          <Controller
+            name="nivel"
+            control={control}
+            defaultValue=""
+            rules={{ required: "El nivel es requerido." }}
+            render={({ field }) => (
+              <>
+                <label htmlFor="nivel">Nivel</label>
+                <InputText placeholder="Ingresa el nivel" id="nivel" {...field} />
+              </>
+            )}
+          />
+          {errors.nivel && <small className="p-error">{errors.nivel.message}</small>}
         </div>
         <div className="form-columntwo">
-            <Controller
-            name="apellidos"
+        <Controller
+          name="docente"
+          control={control}
+          defaultValue=""
+          rules={{ required: "El docente es requerido." }}
+          render={({ field }) => (
+          <>
+            <label htmlFor="docente">Docente</label>
+            <Dropdown
+              id="docente"
+              value={field.value}
+              onChange={(e) => field.onChange(e.value)}
+              options={docentes}
+              placeholder="Seleccione el docente"
+              filter
+              appendTo={document.body}
+              className={errors.docente ? "p-invalid" : ""}
+              // Indica cómo se mostrará cada opción en el panel desplegable:
+              itemTemplate={(option) => (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <img
+                    src={parseImageUrl(option.foto)}
+                    alt="Foto del docente"
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      marginRight: '8px',
+                      borderRadius: '50%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  <span>{option.nombres} {option.apellidos}</span>
+                </div>
+              )}
+              // Define cómo se muestra el valor seleccionado cuando el Dropdown está cerrado.
+              valueTemplate={(option) => {
+                if (option) {
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img
+                        src={parseImageUrl(option.foto)}
+                        alt="Foto del docente"
+                        style={{
+                          width: '30px',
+                          height: '30px',
+                          marginRight: '8px',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <span>{option.nombres} {option.apellidos}</span>
+                    </div>
+                  );
+                }
+                return <span>Seleccione el docente</span>;
+              }}
+            />
+          </>
+        )}
+      />
+          <Controller
+            name="estudiantes"
             control={control}
-            defaultValue=""
-            rules={{ required: "El nombre es requerido." }}
+            defaultValue={[]}  // Aquí se cargará la selección de estudiantes (los que tienen ese seccion_id)
+            rules={{ required: "Debe seleccionar al menos un estudiante." }}
             render={({ field }) => (
               <>
-                <label htmlFor="apellidos">apellidos</label>
-                <InputText placeholder="Ingrese apellidos" id="apellidos" {...field} />
+                <label htmlFor="estudiantes">Estudiantes</label>
+                <MultiSelect
+                  id="estudiantes"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  // Las opciones mostrarán TODOS los estudiantes (recuerda que "estudiante" es tu listado completo)
+                  options={estudiante}
+                  placeholder="Seleccione estudiantes"
+                  display="chip"
+                  optionLabel="nombres"
+                  itemTemplate={(option) => (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img
+                        src={parseImageUrl(option.foto)}
+                        alt="Foto del estudiante"
+                        style={{
+                          width: '30px',
+                          height: '30px',
+                          marginRight: '8px',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <span>{option.nombres} {option.apellidos}</span>
+                    </div>
+                  )}
+                />
               </>
             )}
-            />
-          {errors.apellidos && <span>El nombre es requerido.</span>}
-          <Controller
-              name="cargo"
-              control={control}
-              defaultValue=""
-              rules={{ required: "El cargo es requerido." }}
-              render={({ field }) => (
-                <>
-                  <label htmlFor="cargo">cargo</label>
-                  <Dropdown
-                    id="cargo"
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.value)}
-                    options={cargos}
-                    optionLabel="name"
-                    placeholder="Seleccione el cargo"
-                    className={errors.cargo ? 'p-invalid' : ''}
-                  />
-                </>
-              )}
-            />
-            <label htmlFor="telefono">Teléfono</label>
-              <div className="group">
-                <Controller
-                  name="prefijoTelf"
-                  control={control}
-                  defaultValue={prefijosTelf[0]}
-                  rules={{ required: "Seleccione un prefijo." }}
-                  render={({ field }) => (
-                    <>
-                      <Dropdown
-                        id="prefijoTelf"
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.value)}
-                        options={prefijosTelf}
-                        optionLabel="name"
-                        placeholder="0414"
-                        className={errors.prefijo ? 'p-invalid' : 'dropdown-phone'}
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="telf"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Ingrese el nro telefónico" }}
-                  render={({ field }) => (
-                    <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
-                    </>
-                  )}
-                />
-                {errors.telf && <small className="p-error">{errors.telf.message}</small>}
-            </div>
-          <label>Cambiar foto:</label>
-           <FileUpload
-              mode="basic"
-              name="foto"
-              accept="image/*"
-              auto
-              chooseLabel='Adjuntar Archivos .JPG'
-              maxFileSize={1000000}
-              customUpload
-              uploadHandler={handleFotoChange}
-            />
-          <button className='btn-next' type="submit">Guardar Cambios</button>
+          />
+          <button className="btn-next" type="submit">Guardar Cambios</button>
         </div>
       </form>
     </>

@@ -63,10 +63,9 @@ export function SeccionProvider({ children }) {
       
       const updateSeccion = async (id, seccion) => {
         try {
-            console.log('context:',seccion, id)
+            console.log('context:', id, seccion)
           const response = await updateSeccionRequest(id, seccion);
           getSecciones();
-          navigate('/secciones');
           return response;
         } catch (error) {
           console.error("Error updating Seccion:", error);
