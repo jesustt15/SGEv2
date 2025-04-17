@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { usePersonal, useSeccion, useEstudiante } from "../context";
@@ -97,34 +98,78 @@ export const NewSeccion = ( {onStudentCreated}) => {
       <h4>Datos de la Sección</h4>
       <form className="form-alumno" onSubmit={handleSubmit(createSeccionSubmit)}>
         <div className="form-columnone">
+          <div className="group">
+            <div className="group-item">
+              <Controller
+                name="seccion"
+                control={control}
+                defaultValue=""
+                rules={{ required: "La Sección es requerida." }}
+                render={({ field }) => (
+                  <>
+                    <label htmlFor="seccion">Sección</label>
+                    <InputText placeholder="Ingrese la sección" id="seccion" {...field} />
+                  </>
+                )}
+              />
+              {errors.seccion && <small className="p-error">{errors.seccion.message}</small>}
+            </div>
+            <div className="group-item">
+              <Controller
+                name="nivel"
+                control={control}
+                defaultValue=""
+                rules={{ required: "El nivel es requerido." }}
+                render={({ field }) => (
+                  <>
+                    <label htmlFor="nivel">Nivel</label>
+                    <InputText placeholder="Ingresa el nivel" id="nivel" {...field} />
+                  </>
+                )}
+              />
+              {errors.nivel && <small className="p-error">{errors.nivel.message}</small>}
+            </div>
+          </div>
           <Controller
-            name="seccion"
+            name="estudiantes"
             control={control}
-            defaultValue=""
-            rules={{ required: "La Sección es requerida." }}
+            defaultValue={[]}
+            rules={{ required: "Debe seleccionar al menos un estudiante." }}
             render={({ field }) => (
               <>
-                <label htmlFor="seccion">Sección</label>
-                <InputText placeholder="Ingrese la sección" id="seccion" {...field} />
+                <label htmlFor="estudiantes">Añadir Alumnos</label>
+                <MultiSelect
+                  id="estudiantes"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={estudiante}  // Asegúrate de que 'estudiante' (o 'estudiantes') contenga el array de objetos.
+                  placeholder="Seleccione estudiantes"
+                  display="chip"
+                  optionLabel="nombres"  // O, si prefieres mostrar el nombre completo, puedes crear y usar una propiedad "fullName"
+                  itemTemplate={(option) => (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img 
+                        src={parseImageUrl(option.foto)}
+                        alt="Foto del estudiante"
+                        style={{
+                          width: '30px',
+                          height: '30px',
+                          marginRight: '8px',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <span>{option.nombres} {option.apellidos}</span>
+                    </div>
+                  )}
+                />
               </>
             )}
           />
-          {errors.seccion && <small className="p-error">{errors.seccion.message}</small>}
-
-          <Controller
-            name="nivel"
-            control={control}
-            defaultValue=""
-            rules={{ required: "El nivel es requerido." }}
-            render={({ field }) => (
-              <>
-                <label htmlFor="nivel">Nivel</label>
-                <InputText placeholder="Ingresa el nivel" id="nivel" {...field} />
-              </>
-            )}
-          />
-          {errors.nivel && <small className="p-error">{errors.nivel.message}</small>}
         </div>
+          
+
+         
 
         <div className="form-columntwo">
           <Controller
@@ -180,42 +225,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
           />
           {errors.docente && <small className="p-error">{errors.docente.message}</small>}
 
-          <Controller
-            name="estudiantes"
-            control={control}
-            defaultValue={[]}
-            rules={{ required: "Debe seleccionar al menos un estudiante." }}
-            render={({ field }) => (
-              <>
-                <label htmlFor="estudiantes">Estudiantes</label>
-                <MultiSelect
-                  id="estudiantes"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
-                  options={estudiante}  // Asegúrate de que 'estudiante' (o 'estudiantes') contenga el array de objetos.
-                  placeholder="Seleccione estudiantes"
-                  display="chip"
-                  optionLabel="nombres"  // O, si prefieres mostrar el nombre completo, puedes crear y usar una propiedad "fullName"
-                  itemTemplate={(option) => (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <img 
-                        src={parseImageUrl(option.foto)}
-                        alt="Foto del estudiante"
-                        style={{
-                          width: '30px',
-                          height: '30px',
-                          marginRight: '8px',
-                          borderRadius: '50%',
-                          objectFit: 'cover'
-                        }}
-                      />
-                      <span>{option.nombres} {option.apellidos}</span>
-                    </div>
-                  )}
-                />
-              </>
-            )}
-          />
+         
           <Toast ref={toast} />
           <button type="submit" className="btn-next">
             Guardar

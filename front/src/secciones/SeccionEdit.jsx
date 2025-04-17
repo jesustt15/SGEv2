@@ -67,53 +67,54 @@ export const SeccionEdit = ({  toastRef }) => {
 
   const updateSeccionSubmit = async (data) => {
     try {
-      // Convierte la selección del docente al formato esperado
+      // Conversión del docente: extraemos el personal_id y eliminamos el objeto docente
       if (data.docente && typeof data.docente === "object") {
         data.docente_id = data.docente.personal_id;
         delete data.docente;
       }
   
+      // Creamos el FormData para la actualización de la sección
       const formData = new FormData();
-  
-      // Para los estudiantes, si se selecciona, se pasan sus IDs (puedes personalizar según requieras)
+      
+      // Si tienes estudiantes, los extraes y los agregas como JSON
+      let studentIds = [];
       if (data.estudiantes && Array.isArray(data.estudiantes)) {
-        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
+        studentIds = data.estudiantes.map((s) => s.estudiante_id);
         formData.append("estudiantes", JSON.stringify(studentIds));
       }
   
       // Agrega el resto de las propiedades al formData
-      Object.keys(data).forEach((key) => formData.append(key, data[key]));
+      Object.keys(data).forEach((key) => {
+        // Evita duplicar el campo 'estudiantes'
+        if (key !== "estudiantes") {
+          formData.append(key, data[key]);
+        }
+      });
   
-      const response = await updateSeccion(id,formData);
+      // Realiza la actualización de la sección.
+      const response = await updateSeccion(id, formData);
       console.log("Respuesta completa del updateSeccion:", response.data);
-
-  
+      
+      // Usamos el ID devuelto o, si no, el id original
       const newSeccionId = response?.data?.seccion_id || response?.data?.id || id;
       console.log("Sección actualizada, su ID es:", newSeccionId);
-  
+      
       if (!newSeccionId) {
         throw new Error("No se obtuvo el ID de la sección");
       }
-  
-      if (data.estudiantes && Array.isArray(data.estudiantes)) {
-        const studentIds = data.estudiantes.map((s) => s.estudiante_id);
+      
+      // Actualiza los estudiantes usando el endpoint de actualización en bloque.
+      if (studentIds.length) {
         console.log("Actualizando estudiantes con IDs:", studentIds);
-  
-        await Promise.all(
-          studentIds.map(async (id) => {
-            console.log(`Actualizando estudiante ${id} con seccion_id: ${newSeccionId}`);
-            await updateSeccionEstudiante({ estudiante_id: id, seccion_id: newSeccionId });
-          })
-        );
-  
-        console.log("Todos los estudiantes actualizados correctamente");
+        const estudiantesResponse = await updateSeccionEstudiante(newSeccionId, studentIds);
+        console.log("Respuesta de actualización en bloque de estudiantes:", estudiantesResponse);
       }
-  
+      
       if (toast.current) {
         toast.current.show({
           severity: "success",
           summary: "Éxito",
-          detail: "Sección actualizada y estudiantes actualizados"
+          detail: "Sección y estudiantes actualizados correctamente"
         });
       }
     } catch (error) {
@@ -125,7 +126,7 @@ export const SeccionEdit = ({  toastRef }) => {
       });
     }
   };
-
+  
   return (
     <>
       <HeaderEdit />

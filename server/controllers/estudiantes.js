@@ -216,24 +216,41 @@ const getRepresentantesDeAlumno = async (req, res = response) => {
   }
 };
 
+// PUT /sge/secciones/:seccion_id/estudiantes
 const editarSeccionEstudiante = async (req, res = response) => {
   try {
-    // Asegurarnos de que la ruta defina el parámetro correctamente.
-    // Por ejemplo, si la ruta es "/sge/estudiantes/:estudiante_id/edit-seccion":
-    const { estudiante_id } = req.params;
-    const { seccion_id } = req.body;
+    // Obtenemos el seccion_id desde la URL
+    const { seccion_id } = req.params;
+    const { estudiantes: nuevosEstudiantes } = req.body;
+    
+    // Obtén la lista de estudiantes que actualmente están asignados a esta sección
+    const estudiantesActuales = await Estudiante.findAll({
+      where: { seccion_id }
+    });
 
-    const estudiantes = await Estudiante.findAll();
-    const estudiante = await Estudiante.findOne({ where: { estudiante_id } });
-    const updated = await estudiante.update({ seccion_id });
-  
+    // Desvincula aquellos que ya no están en el array enviado
+    for (const estudiante of estudiantesActuales) {
+      if (!nuevosEstudiantes.includes(estudiante.estudiante_id)) {
+        await estudiante.update({ seccion_id: null });
+      }
+    }
 
-    res.status(200).json({ message: "Estudiante actualizado correctamente" });
+    // Vincula (o deja vinculados) los estudiantes del array
+    for (const estudiante_id of nuevosEstudiantes) {
+      const estudiante = await Estudiante.findOne({ where: { estudiante_id } });
+      // Si el estudiante existe y no está ya asignado a esta sección, actualízalo
+      if (estudiante && estudiante.seccion_id !== seccion_id) {
+        await estudiante.update({ seccion_id });
+      }
+    }
+
+    res.status(200).json({ message: "Estudiantes actualizados correctamente para la sección." });
   } catch (error) {
-    console.error("Error al actualizar estudiante:", error);
+    console.error("Error al actualizar estudiantes de la sección:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 

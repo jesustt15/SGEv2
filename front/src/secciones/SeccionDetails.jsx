@@ -55,7 +55,7 @@ export const SeccionDetails = ({ seccion }) => {
           className="more"
           severity="secondary"
           outlined
-          onClick={() => navigate(`/secciones/${seccion.seccion_id}`)}
+          onClick={() => navigate(`/secciones/${seccion.seccion_id}/more`)}
         />
       </div>
     </div>

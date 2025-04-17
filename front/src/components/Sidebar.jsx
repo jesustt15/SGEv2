@@ -16,7 +16,7 @@ export const Sidebar = () => {
     { label: "Matriculas", to: "/estudiantes", icon: "pi pi-book" },
     { label: "Personal", to: "/personals", icon: "pi pi-users" },
     { label: "Calendario de Actividades", to: "/calendar", icon: "pi pi-calendar" },
-    { label: "Secciones", to: "/secciones", icon: "pi pi-users" },
+    { label: "Secciones", to: "/secciones", icon: "pi pi-sort-alpha-up" },
   ];
 
   // Enlaces en la parte inferior

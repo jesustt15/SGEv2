@@ -84,12 +84,12 @@ export function EstudianteProvider({ children }) {
         }
     };
 
-    const updateSeccionEstudiante = async ({estudiante_id, seccion_id}) => {
+    const updateSeccionEstudiante = async (seccion_id, estudiantesArray) => {
       try {
 
           console.log('context:',seccion_id)
           
-          const res = await updateSeccionEstudianteRequest(estudiante_id, {seccion_id: seccion_id});
+          const res = await updateSeccionEstudianteRequest(seccion_id,{estudiantes: estudiantesArray});
           getEstudiantes();
          
           toast.current.show({
@@ -101,6 +101,7 @@ export function EstudianteProvider({ children }) {
             console.log('respuesta de updateSeccionEstudiante:',res);
 
           navigate('/secciones');
+          return res.data; // Asegúrate de que este endpoint devuelve el objeto creado
       } catch (error) {
           console.error("Error updating estudiante:", error);
       }
