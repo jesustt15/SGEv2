@@ -81,13 +81,13 @@ export const WelcomeHeader = () => {
   const totalEstudiantes = estudiante ? estudiante.length : 0;
   // Total de personal
   const totalPersonal = personal ? personal.length : 0;
-  const displayName = role === 'admin' ? `Msc ${name}` : name;
+
 
   return (
     <div className="welcome-header">
       <h1>Bienvenido/a 
         <img className='smiley' src={Smiley} alt="smiley" />
-        {displayName}</h1>
+        {name}</h1>
       <section className="estadisticas">
         <div className="estadistica-container">
           <div className="chart-wrapper">

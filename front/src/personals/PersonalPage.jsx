@@ -26,7 +26,8 @@ export const PersonalPage = () => {
       <HeaderOptions id={personal.personal_id}
          studentName={`${personal.apellidos}${personal.nombres}`}
       />
-      <div className="pdfContent">
+      <h4>DATOS DEL PERSONAL</h4>
+      <div className="pdfContent" id='pdfContent'>
         <HeaderEdit />
         <EstudianteFoto estudiante={personal} />
         <div className="page-section">
