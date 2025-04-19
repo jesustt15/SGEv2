@@ -40,6 +40,9 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
       if (data.edo_civil && typeof data.edo_civil === 'object') {
         data.edo_civil = data.edo_civil.name;
       }
+      if (data.tipo && typeof data.tipo === 'object') {
+        data.tipo = data.tipo.name;
+      }
 
       const formData = new FormData();
       
@@ -99,7 +102,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
 
   return (
     <div className="card">
-      <h2>datos de padres</h2>
+      <h2>datos de Padre o Madre</h2>
       <form className="form-alumno" onSubmit={handleSubmit(createRepresentanteSubmit)}>
         <div className="form-columnone">
           <Controller
@@ -341,6 +344,27 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                 />
                 {errors.telf_trabajo && <small className="p-error">{errors.telf_trabajo.message}</small>}
                 </div>
+                <Controller
+                name="tipo"
+                control={control}
+                defaultValue=""
+                rules={{ required: "es requerido." }}
+                render={({ field }) => (
+                  <>
+                    <label htmlFor="tipo">Tipo</label>
+                    <Dropdown
+                      id="tipo"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.value)}
+                      options={tipos}
+                      optionLabel="name"
+                      placeholder="padres"
+                      className={errors.tipo ? 'p-invalid' : ''}
+                    />
+                  </>
+                )}
+              />
+        {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
                           
         <label htmlFor="foto">FOTO</label>
           <FileUpload
@@ -351,27 +375,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             customUpload
             uploadHandler={onUpload}
           />
-        <Controller
-          name="tipo"
-          control={control}
-          defaultValue=""
-          rules={{ required: "es requerido." }}
-          render={({ field }) => (
-            <>
-              <label htmlFor="tipo">Tipo</label>
-              <Dropdown
-                id="tipo"
-                value={field.value}
-                onChange={(e) => field.onChange(e.value)}
-                options={tipos}
-                optionLabel="name"
-                placeholder="SOLTERO/A"
-                className={errors.tipo ? 'p-invalid' : ''}
-              />
-            </>
-          )}
-        />
-      {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
+        
 
         </div>
 

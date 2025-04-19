@@ -12,7 +12,7 @@ export const NewEstudianteStepper = () => {
 
   const stepsModel = [
     { label: 'Estudiante' },
-    { label: 'Representantes' },
+    { label: 'Padres' },
     { label: 'Autorizado' },
   ];
 
