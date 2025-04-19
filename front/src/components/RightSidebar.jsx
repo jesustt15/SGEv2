@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { RightSidebarCalendar } from './RightSidebarCalendar';
 import { EstudianteDetails } from '../estudiantes';
 import { PersonalDetails } from '../personals';
-import { useEstudiante, useEvento, usePersonal, useSeccion } from '../context';
+import { useEstudiante, useEvento, usePersonal, useSeccion, useUsuario } from '../context';
 import { SeccionDetails } from '../secciones';
+import { UsuarioDetails } from '../usuarios';
 
 const RightSidebar = () => {
   const location = useLocation();
@@ -14,6 +15,7 @@ const RightSidebar = () => {
   const { selectedEstudiante } = useEstudiante();
   const { selectedPersonal } = usePersonal();
   const { selectedSeccion } = useSeccion();
+  const { selectedUsuario } = useUsuario();
   const { evento, setEvento, getEventos } = useEvento();
   const [todayEvents, setTodayEvents] = useState([]);
 
@@ -65,7 +67,9 @@ const RightSidebar = () => {
   // Preparar el contenido del sidebar.
   let content;
   if (location.pathname.includes('usuarios')) {
-    content = <div>Contenido de Usuario: estadísticas o notificaciones.</div>;
+    content = <div className="estudiantes-detail-container">
+    <UsuarioDetails usuario={selectedUsuario} />
+  </div>
   } else if (location.pathname.includes('estudiantes')) {
     content = (
       <div className="estudiantes-detail-container">

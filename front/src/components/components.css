@@ -8,11 +8,15 @@
 .welcome-header h1 {
     font-size: 35px;
     font-weight: 600;
-    color: #333;
+    color: #233255E5;
     margin: 0;
     padding: 0;
     width: 45%;
 }
+.smiley {
+  vertical-align: middle;
+}
+
 
 /* Contenedor general para ambas estadísticas */
 .estadisticas {
@@ -63,13 +67,16 @@
   .chart-overlay i {
     font-size: 30px;
     margin-bottom: 4px;
+    color:#233255;
   }
   
   /* Etiqueta debajo de cada gráfica */
   .chart-label {
+    margin-left: 0.7rem;
     font-size: 20px;
     display: flex;
     font-weight: 600;
+    color: #233255;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -237,9 +244,10 @@
   width: 136px;
   height: 172px;
   border-radius: 6px;
-  border-width: 3px;
   margin-left: 5%;
+  border: 3px solid #233255;
 }
+
 
 .foto-edit img {
   width: 100%;          /* La imagen ocupará todo el contenedor */

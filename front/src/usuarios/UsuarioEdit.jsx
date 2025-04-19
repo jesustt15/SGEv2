@@ -4,10 +4,12 @@ import { InputText } from "primereact/inputtext";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUsuario } from "../context";
+import { useParams } from "react-router-dom";
 
-export const NewUsuario = () => {
+export const UsuarioEdit = () => {
+  const { id } = useParams();
+  const { getOneUsuario, updateUsuario } = useUsuario();
   const [selectedRole, setSelectedRole] = useState(null);
-  const { createUsuario } = useUsuario();
   const roles = [
     { name: "Administrador", code: "admin" },
     { name: "Usuario", code: "user" },
@@ -17,34 +19,57 @@ export const NewUsuario = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     watch,
     formState: { errors }
   } = useForm();
+
+  // Carga la información del usuario y establece los valores iniciales del formulario
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const usuario = await getOneUsuario(id);
+        // Se espera que "usuario" contenga { name, username, role }.
+        reset({
+          name: usuario.name,
+          username: usuario.username,
+          password: "",        // Se deja vacío para que el usuario ingrese una nueva contraseña si lo desea
+          confirmPassword: "", // También se limpia este campo
+          role: usuario.role,  // Código del rol (p.ej., 'admin' o 'user')
+        });
+        const roleSelected = roles.find(r => r.code === usuario.role);
+        setSelectedRole(roleSelected);
+      } catch (error) {
+        console.error("Error al cargar el usuario:", error);
+      }
+    };
+    fetchUsuario();
+  }, [id, getOneUsuario, reset]);
 
   useEffect(() => {
     register("role", { required: "El rol es requerido" });
   }, [register]);
 
-  const createUsuarioSubmit = async (data) => {
-    // La validación se realiza en el campo "confirmPassword" (aunque también podrías validarla aquí de forma extra)
+  const updateUsuarioSubmit = async (data) => {
+    // Aunque la validación en el input ya evita contraseñas distintas,
+    // se podría agregar lógica adicional aquí si fuera necesario.
     try {
-      // Asigna el código del role seleccionado al campo 'role'
       data.role = selectedRole.code;
-      await createUsuario(data);
+      await updateUsuario(id, data);
     } catch (error) {
-      console.error("Error creando usuario:", error);
+      console.error("Error actualizando el usuario:", error);
     }
   };
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.value);
-    setValue("role", e.value.code); // Actualiza el campo del formulario con el código del role
+    setValue("role", e.value.code);
   };
 
   return (
     <div className="card">
-      <h4>DATOS DEL NUEVO USUARIO</h4>
-      <form className="form-alumno" onSubmit={handleSubmit(createUsuarioSubmit)}>
+      <h4>EDITAR USUARIO</h4>
+      <form className="form-alumno" onSubmit={handleSubmit(updateUsuarioSubmit)}>
         <div className="form-columnone">
           <label htmlFor="name">Nombre Completo</label>
           <InputText
@@ -81,7 +106,7 @@ export const NewUsuario = () => {
           {errors.confirmPassword && <span>{errors.confirmPassword.message}</span>}
         </div>
         <div className="form-columntwo">
-          <label htmlFor="role">ROL</label>        
+          <label htmlFor="role">ROL</label>
           <Dropdown
             value={selectedRole}
             onChange={handleRoleChange}
@@ -92,11 +117,8 @@ export const NewUsuario = () => {
           />
           {errors.role && <span>{errors.role.message}</span>}
         </div>
-        <Button className="btn-next" label="Añadir" type="submit" />
+        <Button className="btn-next" label="Actualizar" type="submit" />
       </form>
     </div>
   );
 };
-
-
-

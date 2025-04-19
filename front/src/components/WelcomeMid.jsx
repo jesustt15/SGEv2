@@ -127,6 +127,7 @@ export const WelcomeMid = () => {
         </div>
       </div>
       <div className="estudiantes-table">
+        <h3>Agregados Recientemente</h3>
                 <DataTable
                     value={Array.isArray(estudiante) ? estudiante : []}
                     paginator

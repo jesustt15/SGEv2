@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Legend, Tooltip } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import Smiley from '../assets/smiley.png';
 import './components.css';
 import { useAuth, useEstudiante, usePersonal } from '../context';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const WelcomeHeader = () => {
-  const { name } = useAuth();
+  const { name, role } = useAuth();
   const { estudiante, getEstudiantes } = useEstudiante();
   const { personal, getPersonals } = usePersonal();
 
-  // Estado para el gráfico de alumnos
   const [alumnosData, setAlumnosData] = useState(null);
-  // Estado para el gráfico de personal (docentes vs. otros)
   const [personalData, setPersonalData] = useState(null);
 
   // Opciones comunes para ambas gráficas de dona
   const chartOptions = {
-    cutout: '80%', // Define el tamaño del "hueco" en el centro
+    cutout: '90%', // Define el tamaño del "hueco" en el centro
     plugins: {
       legend: {
         display: false, // Oculta la leyenda
@@ -82,10 +81,13 @@ export const WelcomeHeader = () => {
   const totalEstudiantes = estudiante ? estudiante.length : 0;
   // Total de personal
   const totalPersonal = personal ? personal.length : 0;
+  const displayName = role === 'admin' ? `Msc ${name}` : name;
 
   return (
     <div className="welcome-header">
-      <h1>Bienvenido/a Msc {name}</h1>
+      <h1>Bienvenido/a 
+        <img className='smiley' src={Smiley} alt="smiley" />
+        {displayName}</h1>
       <section className="estadisticas">
         <div className="estadistica-container">
           <div className="chart-wrapper">

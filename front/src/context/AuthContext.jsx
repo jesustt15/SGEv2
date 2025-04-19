@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('name', name);
-      setAuthState({ token, role, isAuthenticated: true });
+      setAuthState({ token, role, name, isAuthenticated: true });
       toast.current.show({
         severity: 'success',
         summary: 'Login Exitoso',
@@ -75,9 +75,11 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    setAuthState({ token: null, role: null, isAuthenticated: false });
+    localStorage.removeItem('name');
+    setAuthState({ token: null, role: null, name: null, isAuthenticated: false });
     navigate('/auth');
   };
+  
 
   return (
     <AuthContext.Provider value={{ ...authState, loading, login, register, logout }}>

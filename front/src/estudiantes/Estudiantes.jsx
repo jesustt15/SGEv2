@@ -101,7 +101,7 @@ export const Estudiantes = () => {
             <InputText
               value={globalFilter}
               onChange={onGlobalFilterChange}
-              placeholder="Buscar"
+              placeholder="Buscar por nombre o apellido"
               className="search-bar"
             />
           </div>

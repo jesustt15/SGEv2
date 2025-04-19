@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */ 
 /* eslint-disable react/prop-types */ 
-import { createContext, useContext, useRef, useState } from "react"; 
+import { createContext, useCallback, useContext, useRef, useState } from "react"; 
 import { createEventosRequest, deleteEventoRequest, getOneEventoRequest, getEventosRequest, updateEventoRequest } from "../api"; 
 import { useNavigate } from "react-router-dom"; 
 import { Toast } from 'primereact/toast'; 
@@ -19,13 +19,14 @@ export const useEvento = () => { const context = useContext(EventoContext);
         const navigate = useNavigate(); 
         
         
-        const getEventos = async () => { 
+        const getEventos = useCallback(async () => {
             try { 
-                const response = await getEventosRequest();
-                return response.data;
+              const response = await getEventosRequest();
+              return response.data;
             } catch (error) { 
-                console.error("Error fetching Evento:", error); 
-            } }; 
+              console.error("Error fetching Evento:", error); 
+            }
+          }, []);
 
         const createEvento = async (evento) => {
              try { 

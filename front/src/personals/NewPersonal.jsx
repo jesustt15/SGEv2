@@ -8,9 +8,9 @@ import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 import { tiposCedula, cargos, prefijosTelf } from "../helpers/dropdownOptions";
 
-export const NewPersonal = ({ onStudentCreated }) => {
+export const NewPersonal = () => {
   const { createPersonal } = usePersonal();
-  const { handleSubmit, control, formState: { errors }, watch } = useForm();
+  const { handleSubmit, control, formState: { errors }} = useForm();
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
@@ -47,7 +47,7 @@ export const NewPersonal = ({ onStudentCreated }) => {
       }
       
       // Llamamos a la función del contexto para crear el estudiante
-      const createdPersonal = await createPersonal(formData);
+     await createPersonal(formData);
       toast.current.show({
         severity: 'success',
         summary: 'Éxito',

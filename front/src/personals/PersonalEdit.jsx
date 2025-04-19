@@ -3,14 +3,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import {usePersonal } from '../context';
 import {  EstudianteFoto, HeaderEdit } from '../components';
-import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import { sexos, parsePersonalData, tiposCedula, prefijosTelf, cargos } from '../helpers';
-import { RadioButton } from 'primereact/radiobutton';
+import { parsePersonalData, tiposCedula, prefijosTelf, cargos } from '../helpers';
 import { FileUpload } from 'primereact/fileupload';
-import React from 'react';
 
 export const PersonalEdit = ({ onPersonalUpdated, toastRef }) => {
   const { id } = useParams();
@@ -20,7 +17,6 @@ export const PersonalEdit = ({ onPersonalUpdated, toastRef }) => {
 
 
   const {
-    watch,
     handleSubmit, 
     control,
     reset,

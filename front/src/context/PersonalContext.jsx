@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { createPersonalsRequest, deletePersonalRequest, getPersonalsRequest, getOnePersonalRequest, updatePersonalRequest } from "../api";
 import { useNavigate } from "react-router-dom";
 import { Toast } from 'primereact/toast';
@@ -22,14 +22,14 @@ export function PersonalProvider({ children }) {
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
-    const getPersonals = async () => {
-        try {
-            const res = await getPersonalsRequest();
-            setPersonal(res.data);
-        } catch (error) {
-            console.error("Error fetching Personal:", error);
-        }
-    };
+    const getPersonals = useCallback(async () => {
+      try {
+        const res = await getPersonalsRequest();
+        setPersonal(res.data);
+      } catch (error) {
+        console.error("Error fetching Personal:", error);
+      }
+    }, []);
 
     const createPersonal = async (auto) => {
         try {

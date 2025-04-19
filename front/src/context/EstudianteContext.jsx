@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { createEstudiantesRequest, deleteEstudianteRequest, getEstudiantesRequest, getOneEstudianteRequest, updateEstudianteRequest, updateSeccionEstudianteRequest } from "../api";
 import { Toast } from 'primereact/toast';
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ export function EstudianteProvider({ children }) {
     const navigate = useNavigate();
     const toast = useRef(null); // Referencia para el Toast
 
-    const getEstudiantes = async () => {
+    const getEstudiantes = useCallback(async () => {
       try {
         const res = await getEstudiantesRequest();
         const data = Array.isArray(res.data) ? res.data : [];
@@ -30,8 +30,7 @@ export function EstudianteProvider({ children }) {
       } catch (error) {
         console.error("Error al obtener estudiantes:", error);
       }
-    };
-    
+    }, []);
       
 
     const createEstudiante = async (est) => {

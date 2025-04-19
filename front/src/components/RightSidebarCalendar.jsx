@@ -29,17 +29,17 @@ export const RightSidebarCalendar = () => {
     // Si hay eventos, mapeamos para crear un dot por cada uno.
     return (
       <div className="dot-wrapper">
-        {eventsForDate.map((event) => {
+        {eventsForDate.map((event, index) => {
           const dotColor =
             event.type === 'escolar'
               ? '#d2f0ff'
               : event.type === 'administrativo'
               ? '#ffd9d9'
               : 'gray';
-  
+
           return (
             <div
-              key={event.id}
+              key={event.id ? `${event.id}-${index}` : index}
               className="dot"
               style={{
                 backgroundColor: dotColor,

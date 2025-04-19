@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { usePersonal } from '../context';
+
 
 // dropdownOptions.js
 export const tiposCedula = [
@@ -46,12 +45,17 @@ export const tiposCedula = [
     { name: 'Sub Director(a)', code: 'subdir' },
     { name:'Coordinador(a) Pedagogia', code: 'coop' },
     { name: 'Docente', code: 'doc' },
-    { name: 'Auxiliar',code: 'aux' },
+    { name: 'Vigilante',code: 'vig' },
     { name:  'Secretaria', code: 'sec' },
     { name:  'Obrero(a)', code: 'obr' },
     { name:  'Cocinero(a)' ,code: 'coc' },
     
   ]
+
+  export const roles = [
+    { name: "Administrador", code: "admin" },
+    { name: "Usuario", code: "user" },
+  ];
 
 
 

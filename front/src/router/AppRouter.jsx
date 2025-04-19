@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from './DashboardLayout';
 import { Home, Login } from '../auth';
 import { Estudiantes, NewEstudianteStepper, EstudiantePage, EstudianteEdit } from '../estudiantes';
-import { Usuarios, NewUsuario } from '../usuarios';
+import { Usuarios, NewUsuario, UsuarioEdit } from '../usuarios';
 import { RutaProtegida } from './RutaProtegida';
 import { Personal, NewPersonal, PersonalPage, PersonalEdit } from '../personals';
 import CalendarWithModal from '../calendar/CalendarModal';
@@ -29,6 +29,8 @@ export const AppRouter = () => {
           <Route path="personals/:id" element={<PersonalEdit />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/new" element={<NewUsuario />} />
+          <Route path="usuarios/:id" element={<UsuarioEdit />} />
+          {/* Rutas para las secciones */}
           <Route path="secciones" element={<Secciones />} />
           <Route path="secciones/new" element={<NewSeccion />} />
           <Route path="secciones/:id" element={<SeccionEdit />} />

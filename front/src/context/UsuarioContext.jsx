@@ -17,6 +17,7 @@ export const useUsuario = () => {
 
 export function UsuarioProvider({ children }) {
     const [usuario, setUsuario] = useState([]);
+    const [selectedUsuario, setSelectedUsuario] = useState(null);
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
@@ -72,6 +73,7 @@ export function UsuarioProvider({ children }) {
     const getOneUsuario = async (id) => {
         try {
             const res = await getOneUsuarioRequest(id);
+            console.log('context:', res.data);
             return res.data;
         } catch (error) {
             console.error("Error fetching user:", error);
@@ -81,6 +83,8 @@ export function UsuarioProvider({ children }) {
     return (
         <UsuarioContext.Provider value={{
             usuario,
+            selectedUsuario,
+            setSelectedUsuario,
             createUsuario,
             getUsuarios,
             deleteUsuario,

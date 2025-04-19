@@ -31,7 +31,7 @@ const login =  async(req , res = response ) => {
         });
       }
       const token = jwt.sign({ user_id: user.user_id }, 'secretKey', { expiresIn: '8h' });
-      res.json({ token, user });
+      res.json({ token, name: user.name, role: user.role });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -60,6 +60,17 @@ const getUsers =  async(req , res = response ) => {
         res.status(500).json({ error: error.message });
       }
     
+}
+
+const getOneUser = async(req , res = response ) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) return res.status(404).send('User not found.');
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
 }
 
 const editUser =  async(req , res = response ) => {
@@ -105,6 +116,7 @@ module.exports = {
     login,
     crearUser,
     getUsers,
+    getOneUser,
     editUser,
     deleteUser
 }

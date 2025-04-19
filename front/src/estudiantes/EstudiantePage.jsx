@@ -67,7 +67,7 @@ export const EstudiantePage = () => {
         </div>
             {representantePadre ? (
               <>
-                <h4 className="parent-type">Padre</h4>
+                <h4 className="parent-type">Representantes</h4>
                 <EstudianteFoto estudiante={representantePadre} />
                 <div className="page-section">
                   <div className="form-columnone">
@@ -113,7 +113,7 @@ export const EstudiantePage = () => {
             )}
             {representanteMadre ? (
               <>
-                <h4 className="parent-type">Madre</h4>
+                <h4 className="parent-type">Representantes</h4>
                 <EstudianteFoto estudiante={representanteMadre} />
                 <div className="page-section">
                   <div className="form-columnone">
@@ -172,7 +172,7 @@ export const EstudiantePage = () => {
                   <label>dirección</label>
                   <h5>{autorizado.direccion}</h5>
                   <label>observación</label>
-                  <h5>{autorizado.observacion}</h5>
+                  <h5>{autorizado.observaciones}</h5>
                 </div>
                 <div className="form-columntwo">
                   <label>Apellidos</label>

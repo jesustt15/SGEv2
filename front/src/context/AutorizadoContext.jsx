@@ -67,7 +67,6 @@ export function AutorizadoProvider({ children }) {
       
       const updateAutorizado = async (id, autorizado) => {
         try {
-            console.log('context:',autorizado, id)
           const response = await updateAutorizadoRequest(id, autorizado);
           getAutorizados();
           return response; 

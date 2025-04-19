@@ -10,7 +10,7 @@ import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 import { RadioButton } from "primereact/radiobutton";
 import { tiposCedula, sexos } from "../helpers/dropdownOptions";
-
+import moment from "moment/moment";
 export const NewEstudiante = ({ onStudentCreated }) => {
   const { createEstudiante } = useEstudiante();
   const { handleSubmit, control, formState: { errors }, watch } = useForm();
@@ -48,7 +48,10 @@ export const NewEstudiante = ({ onStudentCreated }) => {
         data.sexo = data.sexo.name;
       }
       const formData = new FormData();
-      
+
+      if (!data.tipoCedula) {
+        data.tipoCedula = { name: "V-" };
+      }
       const cedulaCompleta = `${data.tipoCedula.name}${data.cedulaEscolar}`;
       data.cedulaEscolar = cedulaCompleta;
       
@@ -124,20 +127,29 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               {errors.fechaNacimiento && <small className="p-error">{errors.fechaNacimiento.message}</small>}
             </div>
             <div className="group-item">
-              <Controller
-                name="edad"
-                control={control}
-                defaultValue={null}
-                rules={{ required: "La edad es requerida." }}
-                render={({ field }) => (
-                  <>
-                    <label htmlFor="edad">Edad</label>
-                    <InputText placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
-                  </>
-                )}
-              />
-              {errors.edad && <small className="p-error">{errors.edad.message}</small>}
-            </div>
+            <Controller
+              name="edad"
+              control={control}
+              defaultValue=""
+              rules={{
+              required: "La edad es requerida.",
+              validate: (value) => {
+                        const fechaNacimiento = watch("fechaNacimiento");
+                        if (!fechaNacimiento) return true; // Si no se ha ingresado la fecha, no validar
+                        // Calcula la edad a partir de la fecha de nacimiento
+                        const computedAge = moment().diff(fechaNacimiento, 'years');
+                        return parseInt(value, 10) === computedAge || "La edad no coincide con la fecha de nacimiento";
+                      }
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <label htmlFor="edad">Edad</label>
+                        <InputText placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
+                      </>
+          )}
+        />
+        {errors.edad && <small className="p-error">{errors.edad.message}</small>}
+        </div>
           </div>
           <label htmlFor="cedula">Cedula escolar</label>
           <div className="group">
