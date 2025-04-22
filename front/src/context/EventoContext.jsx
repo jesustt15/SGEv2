@@ -31,8 +31,8 @@ export const useEvento = () => { const context = useContext(EventoContext);
         const createEvento = async (evento) => {
              try { 
                 await createEventosRequest(evento); 
-                getEventos(); 
                 toast.current.show({ severity: 'success', summary: 'Registro Exitoso', detail: 'Nuevo Evento agregado', life: 3000, });
+                getEventos(); 
                 navigate('/calendar'); 
             } catch (error) { 
                 console.error("Error creating events:", error); 

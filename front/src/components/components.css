@@ -161,13 +161,6 @@
   background: white;
 }
 
-/* Efecto hover en las celdas */
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
-  background-color: #a1a7af;
-  border-radius: 10%;
-  cursor: pointer;
-}
 
 /* Día actual resaltado con fondo azul (puedes ajustar el color) */
 .react-calendar__tile--now {

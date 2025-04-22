@@ -6,6 +6,7 @@ import  Logo  from '../assets/logo.png';
 
 export const HeaderApp = () => {
   const { logout, name } = useAuth();
+  const containerRef = useRef(null);
   const menuRef = useRef(null);
 
   const items = [
@@ -34,7 +35,7 @@ export const HeaderApp = () => {
           <span>{name}</span>
           <i className="pi pi-caret-down" style={{ marginLeft: '0.5rem' }}></i>
         </div>
-        <Menu model={items} popup ref={menuRef} />
+        <Menu model={items} popup ref={menuRef}  appendTo={document.getElementById('overlay-container')}/>
       </div>
     </div>
   );

@@ -35,11 +35,19 @@ export function PersonalProvider({ children }) {
         try {
           const existingPersonal = personal.find(u => u.ced === auto.get('ced'));
           if (existingPersonal) {
-            throw new Error('Este Personal ya existe.');
+            throw new Error('Este Personal ya existe con esa cedula.');
           }
-          // Se asume que createPersonalsRequest devuelve una respuesta con la data del Personal creado
-          const res = await createPersonalsRequest(auto);
-          const createdPersonal = res.data;  // Asegúrate de qurepree endpoint devuelve el objeto creado
+          const existingByCod = personal.find(u => u.cod === auto.get('cod'));
+          if (existingByCod) {
+            throw new Error('Ya existe un personal con ese código.');
+          }
+
+          const existingByTelf = personal.find(u => u.telf === auto.get('telf'));
+          if (existingByTelf) {
+            throw new Error('Ya existe un personal con ese teléfono.');
+}
+
+         await createPersonalsRequest(auto);
       
           // Actualiza la lista de Personals
           getPersonals();
@@ -64,7 +72,20 @@ export function PersonalProvider({ children }) {
       
       const updatePersonal = async (id, personal) => {
         try {
-            console.log('context:',personal, id)
+          const existingPersonal = personal.find(u => u.ced === personal.get('ced'));
+          if (existingPersonal) {
+            throw new Error('Este Personal ya existe con esa cedula.');
+          }
+          const existingByCod = personal.find(u => u.cod === personal.get('cod'));
+          if (existingByCod) {
+            throw new Error('Ya existe un personal con ese código.');
+          }
+
+          const existingByTelf = personal.find(u => u.telf === personal.get('telf'));
+          if (existingByTelf) {
+            throw new Error('Ya existe un personal con ese teléfono.');
+          }
+
           const response = await updatePersonalRequest(id, personal);
           getPersonals();
           navigate('/personals');

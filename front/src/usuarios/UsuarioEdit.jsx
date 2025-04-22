@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
@@ -89,7 +90,7 @@ export const UsuarioEdit = () => {
           <InputText
             id="password"
             type="password"
-            {...register("password", { required: "La contraseña es requerida" })}
+            {...register("password")}
           />
           {errors.password && <span>{errors.password.message}</span>}
           
@@ -98,7 +99,6 @@ export const UsuarioEdit = () => {
             id="confirmPassword"
             type="password"
             {...register("confirmPassword", {
-              required: "Confirma la contraseña",
               validate: (value) =>
                 value === watch("password") || "Las contraseñas no coinciden"
             })}

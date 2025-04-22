@@ -7,6 +7,7 @@ import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { parseImageUrl } from "../helpers";
+import Icon from "../assets/user-default.jpg";
 
 export const NewSeccion = ( {onStudentCreated}) => {
   const { createSeccion } = useSeccion();
@@ -66,7 +67,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
         await Promise.all(
           studentIds.map(async (id) => {
             console.log(`Actualizando estudiante ${id} con seccion_id: ${newSeccionId}`);
-            await updateSeccionEstudiante({ estudiante_id: id, seccion_id: newSeccionId });
+            await updateSeccionEstudiante(newSeccionId, id);
           })
         );
   
@@ -149,7 +150,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
                   itemTemplate={(option) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img 
-                        src={parseImageUrl(option.foto)}
+                        src={option.foto ? parseImageUrl(option.foto) : Icon}
                         alt="Foto del estudiante"
                         style={{
                           width: '30px',
@@ -206,7 +207,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
                   itemTemplate={(option) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img
-                        src={parseImageUrl(option.foto)}
+                        src={option.foto ? parseImageUrl(option.foto) : Icon}
                         alt="Foto del docente"
                         style={{
                           width: '30px',

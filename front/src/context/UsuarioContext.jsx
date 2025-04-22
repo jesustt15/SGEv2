@@ -54,7 +54,14 @@ export function UsuarioProvider({ children }) {
     const updateUsuario = async (id, user) => {
         try {
             await updateUsuarioRequest(id, user);
+            toast.current.show({
+                severity: 'success',
+                summary: 'Actualizacion Exitosa',
+                detail: 'Nuevo Usuario agregado',
+                life: 3000,
+              }); 
             getUsuarios();
+            navigate('/usuarios');
         } catch (error) {
             console.error("Error updating user:", error);
         }

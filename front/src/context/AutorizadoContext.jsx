@@ -17,7 +17,7 @@ export const useAutorizado = () => {
 };
 
 export function AutorizadoProvider({ children }) {
-    const [Autorizado, setAutorizado] = useState([]);
+    const [autorizado, setAutorizado] = useState([]);
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
@@ -32,13 +32,17 @@ export function AutorizadoProvider({ children }) {
 
     const createAutorizado = async (auto) => {
         try {
-        //   const existingAutorizado = Autorizado.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
-        //   if (existingAutorizado) {
-        //     throw new Error('Este Autorizado ya existe.');
-        //   }
-          // Se asume que createAutorizadosRequest devuelve una respuesta con la data del Autorizado creado
+          const existingAutorizado = autorizado.find(u => u.ced === auto.get('ced'));
+          if (existingAutorizado) {
+            throw new Error('Este Autorizado ya existe.');
+          }
+          const existingByTelf = autorizado.find(u => u.telf === auto.get('telf'));
+          if (existingByTelf) {
+            throw new Error('Este Autorizado ya existe.');
+          }
+
           const res = await createAutorizadosRequest(auto);
-          const createdAutorizado = res.data;  // Asegúrate de qurepree endpoint devuelve el objeto creado
+          const createdAutorizado = res.data; 
       
           // Actualiza la lista de Autorizados
           getAutorizados();
@@ -53,7 +57,6 @@ export function AutorizadoProvider({ children }) {
       
           // Devuelve el Autorizado creado (o al menos su ID)
           
-          return createdAutorizado;
           navigate('/estudiantes');
         } catch (error) {
           console.error("Error creating Autorizado:", error);
@@ -67,6 +70,16 @@ export function AutorizadoProvider({ children }) {
       
       const updateAutorizado = async (id, autorizado) => {
         try {
+
+          const existingAutorizado = autorizado.find(u => u.ced === autorizado.get('ced'));
+          if (existingAutorizado) {
+            throw new Error('Este Autorizado ya existe.');
+          }
+          const existingByTelf = autorizado.find(u => u.telf === autorizado.get('telf'));
+          if (existingByTelf) {
+            throw new Error('Este Autorizado ya existe.');
+          }
+
           const response = await updateAutorizadoRequest(id, autorizado);
           getAutorizados();
           return response; 
@@ -79,7 +92,7 @@ export function AutorizadoProvider({ children }) {
     const deleteAutorizado = async (id) => {
         try {
             const res = await deleteAutorizadoRequest(id);
-            if (res.status === 204) setAutorizado(Autorizado.filter((Autorizado) => Autorizado.Autorizado_id !== id));
+            if (res.status === 204) setAutorizado(autorizado.filter((autorizado) => autorizado.Autorizado_id !== id));
             getAutorizados();
         } catch (error) {
             console.error("Error deleting Autorizado:", error);
@@ -97,7 +110,7 @@ export function AutorizadoProvider({ children }) {
 
     return (
         <AutorizadoContext.Provider value={{
-            Autorizado,
+            autorizado,
             createAutorizado,
             getAutorizados,
             deleteAutorizado,

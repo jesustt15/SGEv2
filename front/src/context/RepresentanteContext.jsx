@@ -31,16 +31,18 @@ export function RepresentanteProvider({ children }) {
 
     const createRepresentante = async (repre) => {
         
-        console.log(repre);
+
         try {
-        //   const existingRepresentante = Representante.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
-        //   if (existingRepresentante) {
-        //     throw new Error('Este Representante ya existe.');
-        //   }
-          // Se asume que createRepresentantesRequest devuelve una respuesta con la data del Representante creado
+          const existingRepresentante = representante.find(u => u.ced === repre.get('ced'));
+          if (existingRepresentante) {
+            throw new Error('Este Representante ya existe.');
+          }
+          const existingPhone = representante.find(u => u.telf === repre.get('telf'));
+          if (existingPhone) {
+            throw new Error('Ya existe un Representante con este número de teléfono.');
+          }
           const res = await createRepresentantesRequest(repre);
           const createdRepresentante = res.data;
-          console.log("Context:",createdRepresentante);  // Asegúrate de qurepree endpoint devuelve el objeto creado
       
           // Actualiza la lista de Representantes
           getRepresentantes();
@@ -52,9 +54,7 @@ export function RepresentanteProvider({ children }) {
             detail: 'Nuevo Representante agregado',
             life: 3000,
           });
-      
-          // Devuelve el Representante creado (o al menos su ID)
-          console.log(createdRepresentante);
+      ;
           return createdRepresentante;
         } catch (error) {
           console.error("Error creating Representante:", error);
@@ -68,11 +68,17 @@ export function RepresentanteProvider({ children }) {
       
       const updateRepresentante = async (id, representante) => {
         try {
-          console.log("Actualizando representante con id:", id);
-          // Si deseas ver que se está enviando al backend, puedes inspeccionar el objeto 'representante'
-          console.log("Datos enviados a la API:", representante);
+          const existingRepresentante = representante.find(u => u.ced === representante.get('ced'));
+          if (existingRepresentante) {
+            throw new Error('Este Representante ya existe.');
+          }
+          const existingPhone = representante.find(u => u.telf === representante.get('telf'));
+          if (existingPhone) {
+            throw new Error('Ya existe un Representante con este número de teléfono.');
+          }
+
           await updateRepresentanteRequest(id, representante);
-          console.log("Representante actualizado exitosamente.");
+
           getRepresentantes();
         } catch (error) {
           console.error("Error updating Representante:", error);
@@ -83,7 +89,7 @@ export function RepresentanteProvider({ children }) {
     const deleteRepresentante = async (id) => {
         try {
             const res = await deleteRepresentanteRequest(id);
-            if (res.status === 204) setRepresentante(representante.filter((Representante) => Representante.Representante_id !== id));
+            if (res.status === 204) setRepresentante(representante.filter((representante) => representante.representante_id !== id));
             getRepresentantes();
         } catch (error) {
             console.error("Error deleting Representante:", error);

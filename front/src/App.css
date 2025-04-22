@@ -21,7 +21,6 @@ html, body, #root {
  ;
 }
 
-
 /* Header de la app (parte superior fija) */
 .header-app {
   display: flex;

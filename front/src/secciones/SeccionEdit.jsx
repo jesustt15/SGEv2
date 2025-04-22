@@ -8,6 +8,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { parseImageUrl, parseSeccionData } from '../helpers';
+import Icon from "../assets/user-default.jpg";
 
 export const SeccionEdit = ({  toastRef }) => {
   const { id } = useParams();
@@ -199,7 +200,7 @@ export const SeccionEdit = ({  toastRef }) => {
               itemTemplate={(option) => (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <img
-                    src={parseImageUrl(option.foto)}
+                    src={option.foto ? parseImageUrl(option.foto) : Icon}
                     alt="Foto del docente"
                     style={{
                       width: '30px',
@@ -218,7 +219,7 @@ export const SeccionEdit = ({  toastRef }) => {
                   return (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img
-                        src={parseImageUrl(option.foto)}
+                        src={ option.foto ? parseImageUrl(option.foto) : Icon}
                         alt="Foto del docente"
                         style={{
                           width: '30px',
@@ -258,7 +259,7 @@ export const SeccionEdit = ({  toastRef }) => {
                   itemTemplate={(option) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img
-                        src={parseImageUrl(option.foto)}
+                        src={option.foto ? parseImageUrl(option.foto) : Icon}
                         alt="Foto del estudiante"
                         style={{
                           width: '30px',

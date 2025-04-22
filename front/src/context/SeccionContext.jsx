@@ -49,7 +49,7 @@ export function SeccionProvider({ children }) {
             detail: 'Nueva Seccion agregada',
             life: 3000,
           });
-          console.log("Respuesta de axios en createSeccion:", res);
+          navigate('/secciones');
           return res;
         } catch (error) {
           console.error("Error creating Seccion:", error);
@@ -63,9 +63,9 @@ export function SeccionProvider({ children }) {
       
       const updateSeccion = async (id, seccion) => {
         try {
-            console.log('context:', id, seccion)
           const response = await updateSeccionRequest(id, seccion);
           getSecciones();
+          navigate('/secciones');
           return response;
         } catch (error) {
           console.error("Error updating Seccion:", error);
