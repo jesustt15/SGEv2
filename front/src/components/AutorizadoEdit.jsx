@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { useAutorizado } from '../context';
@@ -141,7 +142,8 @@ export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) 
                   rules={{ required: "La cédula  es requerida." }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa la cedula " className="input-ced" id="ced" {...field} />
+                      <InputText placeholder="Ingresa la cedula" type='number'
+                      className="input-ced" id="ced" {...field} />
                     </>
                   )}
                 />
@@ -225,7 +227,8 @@ export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) 
                   rules={{ required: "Ingrese el nro telefónico" }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                      <InputText placeholder="Ingresa Telefono" className="input-ced"
+                      type='number' id="telf" {...field} />
                     </>
                   )}
                 />

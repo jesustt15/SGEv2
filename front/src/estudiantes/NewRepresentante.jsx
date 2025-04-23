@@ -33,7 +33,6 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   };
   
   const createRepresentanteSubmit = async (data) => {
-    console.log("Datos del formulario:", data);
     
     try {
 
@@ -45,18 +44,27 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
       }
 
       const formData = new FormData();
-      
+
+      if (!data.tipoCedula) {
+        data.tipoCedula = { name: "V-" };
+      }
       const cedulaCompleta = `${data.tipoCedula.name}${data.ced}`;
       data.ced = cedulaCompleta;
 
+      if (!data.prefijoTelf){
+        data.prefijoTelf = { code: "0414" };
+      }
       const telfCompleto = `${data.prefijoTelf.code}${data.telf}`;
       data.telf = telfCompleto;
 
+      if (!data.prefijoTrabajo){
+        data.prefijoTrabajo = { code: "0286" };
+      }
       const telfTrabajoCompleto = `${data.prefijoTrabajo.code}${data.telf_trabajo}`;
       data.telf_trabajo = telfTrabajoCompleto;
 
       if (watch("trabajaOption") === "No") {
-        data.trabajo = "";
+        data.trabajo = "NO";
      }
 
       Object.keys(data).forEach(key => formData.append(key, data[key]));
@@ -75,8 +83,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
         summary: 'Éxito',
         detail: 'Representante creado'
       });
-      // Vincula automáticamente al estudiante con el representante creado.
-      console.log("Enviando payload:", { estudiante_id: studentId, representante_id: createdRepresentante.representante_id });
+
       await asociarEstudianteRepresentante({
       estudiante_id: studentId,
       representante_id: createdRepresentante.representante_id,
@@ -102,7 +109,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
 
   return (
     <div className="card">
-      <h2>datos de Padre o Madre</h2>
+      <h2>DATOS DE PADRES</h2>
       <form className="form-alumno" onSubmit={handleSubmit(createRepresentanteSubmit)}>
         <div className="form-columnone">
           <Controller
@@ -124,7 +131,6 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                       name="edo_civil"
                       control={control}
                       defaultValue=""
-                      rules={{ required: "es requerido." }}
                       render={({ field }) => (
                         <>
                           <label htmlFor="edo_civil">edo. civil</label>
@@ -134,7 +140,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                             onChange={(e) => field.onChange(e.value)}
                             options={tipoEdoCivil}
                             optionLabel="name"
-                            placeholder="SOLTERO/A"
+                            placeholder="Soltero/a"
                             className={errors.edo_civil ? 'p-invalid' : ''}
                           />
                         </>
@@ -185,7 +191,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                 rules={{ required: "La cédula escolar es requerida." }}
                 render={({ field }) => (
                   <>
-                    <InputText placeholder="Ingresa la cedula escolar" className="input-ced" id="ced" {...field} />
+                    <InputText type='number' placeholder="Ingresa la cedula escolar" className="input-ced" id="ced" {...field} />
                   </>
                 )}
               />
@@ -247,8 +253,16 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
               </>
             )}
           />
+          <label htmlFor="foto">FOTO</label>
+          <FileUpload
+            mode="basic"
+            name="foto"
+            accept="image/*"
+            maxFileSize={1000000}
+            customUpload
+            uploadHandler={onUpload}
+          />
         </div>
-
         <div className="form-columntwo">
           <Controller
             name="apellido"
@@ -263,6 +277,26 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             )}
           />
           {errors.apellido && <small className="p-error">{errors.apellido.message}</small>}
+          <Controller
+                name="tipo"
+                control={control}
+                defaultValue=""
+                rules={{ required: "es requerido." }}
+                render={({ field }) => (
+                  <>
+                    <label htmlFor="tipo">Tipo</label>
+                    <Dropdown
+                      id="tipo"
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.value)}
+                      options={tipos}
+                      optionLabel="name"
+                      placeholder="Seleccione un tipo"
+                      className={errors.tipo ? 'p-invalid' : ''}
+                    />
+                  </>
+                )}
+              />
             <Controller
             name="direccion"
             control={control}
@@ -304,7 +338,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                   rules={{ required: "Ingrese el nro telefónico" }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                      <InputText type='number' placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
                     </>
                   )}
                 />
@@ -338,50 +372,17 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                   disabled={watch("trabajaOption") === "No"} 
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf_trabajo" {...field} />
+                      <InputText type='number' placeholder="Ingresa Telefono" className="input-ced" id="telf_trabajo" {...field} />
                     </>
                   )}
                 />
                 {errors.telf_trabajo && <small className="p-error">{errors.telf_trabajo.message}</small>}
                 </div>
-                <Controller
-                name="tipo"
-                control={control}
-                defaultValue=""
-                rules={{ required: "es requerido." }}
-                render={({ field }) => (
-                  <>
-                    <label htmlFor="tipo">Tipo</label>
-                    <Dropdown
-                      id="tipo"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.value)}
-                      options={tipos}
-                      optionLabel="name"
-                      placeholder="padres"
-                      className={errors.tipo ? 'p-invalid' : ''}
-                    />
-                  </>
-                )}
-              />
-        {errors.tipo && <small className="p-error">{errors.tipo.message}</small>}
-                          
-        <label htmlFor="foto">FOTO</label>
-          <FileUpload
-            mode="basic"
-            name="foto"
-            accept="image/*"
-            maxFileSize={1000000}
-            customUpload
-            uploadHandler={onUpload}
-          />
-        
-
-        </div>
-
-
-        <Toast ref={toast} />
+                
         <button type="submit" className="btn-next">Siguiente</button>
+        </div>
+        <Toast ref={toast} />
+
       </form>
     </div>
   );

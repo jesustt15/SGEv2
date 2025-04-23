@@ -69,7 +69,7 @@ export const EstudiantePage = () => {
               <>
                 <h4 className="parent-type">Representantes</h4>
                 <EstudianteFoto estudiante={representantePadre} />
-                <div className="page-section">
+                <div className="page-section-large">
                   <div className="form-columnone">
                     <label>Nombres</label>
                     <h5>{representantePadre.nombre}</h5>
@@ -115,7 +115,7 @@ export const EstudiantePage = () => {
               <>
                 <h4 className="parent-type">Representantes</h4>
                 <EstudianteFoto estudiante={representanteMadre} />
-                <div className="page-section">
+                <div className="page-section-large">
                   <div className="form-columnone">
                     <label>Nombres</label>
                     <h5>{representanteMadre.nombre}</h5>
@@ -156,7 +156,7 @@ export const EstudiantePage = () => {
               </>
 
             ) : (
-              <p>No hay representante registrado como madre.</p>
+              <br />
             )}
             
             {autorizado ? (

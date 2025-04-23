@@ -56,10 +56,10 @@ export const NewEstudiante = ({ onStudentCreated }) => {
       data.cedulaEscolar = cedulaCompleta;
       
       if (watch("alergiaOption") === "No") {
-        data.alergias = "";
+        data.alergias = "NO";
      }
      if (watch("condicionOption") === "No") {
-        data.condicion = "";
+        data.condicion = "NO";
      }
 
       Object.keys(data).forEach(key => formData.append(key, data[key]));

@@ -28,10 +28,15 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
       // Agregamos el ID del estudiante para vincular al autorizado
       data.estudiante_id = studentId;
 
-
+      if (!data.tipoCedula) {
+        data.tipoCedula = { name: "V-" };
+      }
       const cedulaCompleta = `${data.tipoCedula.name}${data.ced}`;
       data.ced = cedulaCompleta;
 
+      if (!data.prefijoTelf){
+        data.prefijoTelf = { code: "0414" };
+      }
       const telfCompleto = `${data.prefijoTelf.code}${data.telf}`;
       data.telf = telfCompleto;
 
@@ -118,7 +123,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
                 rules={{ required: "La cédula es requerida." }}
                 render={({ field }) => (
                   <>
-                    <InputText placeholder="Ingresa la cedula" className="input-ced" id="ced" {...field} />
+                    <InputText type='number' placeholder="Ingresa la cedula" className="input-ced" id="ced" {...field} />
                   </>
                 )}
               />
@@ -206,7 +211,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
                   rules={{ required: "Ingrese el nro telefónico" }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                      <InputText type='number' placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
                     </>
                   )}
                 />

@@ -8,7 +8,7 @@ import { useAuth, useEstudiante, usePersonal } from '../context';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const WelcomeHeader = () => {
-  const { name, role } = useAuth();
+  const { name } = useAuth();
   const { estudiante, getEstudiantes } = useEstudiante();
   const { personal, getPersonals } = usePersonal();
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { useRepresentante } from '../context';
@@ -202,7 +203,8 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                     rules={{ required: "La cédula  es requerida." }}
                     render={({ field }) => (
                         <>
-                        <InputText placeholder="Ingresa la cedula " className="input-ced" id="ced" {...field} />
+                        <InputText type='number' 
+                        placeholder="Ingresa la cedula " className="input-ced" id="ced" {...field} />
                         </>
                     )}
                     />
@@ -319,7 +321,8 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                   rules={{ required: "Ingrese el nro telefónico" }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
+                      <InputText placeholder="Ingresa Telefono" type='number'
+                      className="input-ced" id="telf" {...field} />
                     </>
                   )}
                 />
@@ -353,7 +356,8 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                   rules={{ required: "Ingrese el nro telefónico" }}
                   render={({ field }) => (
                     <>
-                      <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf_trabajo" {...field} />
+                      <InputText placeholder="Ingresa Telefono" type='number'
+                      className="input-ced" id="telf_trabajo" {...field} />
                     </>
                   )}
                 />

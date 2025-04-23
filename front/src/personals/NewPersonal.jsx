@@ -34,10 +34,16 @@ export const NewPersonal = () => {
         data.cargo = data.cargo.name;
       }
       const formData = new FormData();
-      
+
+      if (!data.tipoCedula) {
+        data.tipoCedula = { name: "V-" };
+      }
       const cedulaCompleta = `${data.tipoCedula.name}${data.ced}`;
       data.ced = cedulaCompleta;
 
+      if (!data.prefijoTelf){
+        data.prefijoTelf = { code: "0414" };
+      }
       const telfCompleto = `${data.prefijoTelf.code}${data.telf}`;
       data.telf = telfCompleto;
       

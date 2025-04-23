@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';

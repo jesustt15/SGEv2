@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -144,7 +145,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
                   defaultValue={null}
                   rules={{ required: "La edad es requerida." }}
                   render={({ field }) => (
-                      <InputText placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
+                      <InputText type='number' placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
                   )}
                 />
                 {errors.edad && <small className="p-error">{errors.edad.message}</small>}

@@ -21,7 +21,13 @@ const Personal = sequelize.define('personals', {
     allowNull: false,
   },
   cod: DataTypes.STRING,
-  telf: DataTypes.STRING,
+  telf:{
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [10,13]
+    }
+  }, 
   cargo:{
     type: DataTypes.ENUM('Director(a)', 'Sub Director(a)','Coordinador(a) Pedagogia'
       , 'Docente', 'Vigilante', 'Secretaria', 'Obrero(a)', 'Cocinero(a)'),
