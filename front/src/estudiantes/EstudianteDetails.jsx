@@ -35,10 +35,6 @@ export const EstudianteDetails = ({ estudiante }) => {
       <div className="after-p">{estudiante.sexo}</div>
       <p>LUGAR DE NACIMIENTO</p>
       <div className="after-p">{estudiante.lugarNacimiento}</div>
-      <p>TELEFONO</p>
-      <div className="after-p">{estudiante.telf}</div>
-      <p>CORREO ELECTRÓNICO</p>
-      <div className="after-p">{estudiante.sexo}</div>
       <div className="btn-section">
       <Button className="btn-outline" icon="pi pi-pen-to-square"
         onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}`)}

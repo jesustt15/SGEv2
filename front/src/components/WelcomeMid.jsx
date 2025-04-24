@@ -34,20 +34,20 @@ export const WelcomeMid = () => {
   useEffect(() => {
     if (estudiante && estudiante.length > 0) {
       // Definimos grupos de edad; puedes ajustar estos rangos según tu necesidad
-      const ageLabels = ['<10', '10-14', '15-19', '20-24', '25+'];
+      const ageLabels = ['<2', '3', '4', '5', '5+'];
       const ageCounts = [0, 0, 0, 0, 0];
 
       estudiante.forEach((stu) => {
         const edad = parseInt(stu.edad, 10);
         if (!isNaN(edad)) {
           // Asigna la edad al grupo correspondiente
-          if (edad < 10) {
+          if (edad < 2) {
             ageCounts[0]++;
-          } else if (edad < 15) {
+          } else if (edad < 3) {
             ageCounts[1]++;
-          } else if (edad < 20) {
+          } else if (edad < 4) {
             ageCounts[2]++;
-          } else if (edad < 25) {
+          } else if (edad < 5) {
             ageCounts[3]++;
           } else {
             ageCounts[4]++;

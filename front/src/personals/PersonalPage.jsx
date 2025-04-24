@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { usePersonal } from '../context';
-import { EstudianteFoto, HeaderEdit, HeaderOptions } from '../components';
+import { EstudianteFoto, HeaderEdit, HeaderOptionsP } from '../components';
 
 export const PersonalPage = () => {
   const { id } = useParams();
@@ -23,8 +23,8 @@ export const PersonalPage = () => {
 
   return (
     <>
-      <HeaderOptions id={personal.personal_id}
-         studentName={`${personal.apellidos}${personal.nombres}`}
+      <HeaderOptionsP id={personal.personal_id}
+         personalName={`${personal.apellidos}${personal.nombres}`}
       />
       <h4>DATOS DEL PERSONAL</h4>
       <div className="pdfContent" id='pdfContent'>

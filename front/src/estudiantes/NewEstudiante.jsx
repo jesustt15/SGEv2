@@ -18,12 +18,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
 
-
-  const onUpload = (event) => {
-    setFoto(event.files[0]);
-    toast.current.show({ severity: 'info', summary: 'Éxito', detail: 'Foto cargada' });
-  };
-
   const onInvalid = (errors) => {
     console.log("Errores de validación:", errors);
   };
@@ -330,15 +324,35 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               <div className="group-item">
                 <label htmlFor="foto">FOTO</label>
                 <FileUpload
-                  mode="basic"
-                  name="foto"
-                  accept="image/*"
-                  maxFileSize={1000000}
-                  customUpload
-                  auto
-                  chooseLabel='Adjuntar Archivo .JPG'
-                  uploadHandler={onUpload}
-                />
+                mode="basic"
+                name="foto"
+                accept="image/*"
+                customUpload
+                chooseLabel="Adjuntar Archivo (.JPG)"
+                maxFileSize={1000000}
+                uploadHandler={(e) => {
+                  if (e.files && e.files[0]) {
+                    const selectedFile = e.files[0];
+                    setFoto(selectedFile); // Guardamos el archivo en el estado
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'success',
+                        summary: 'Archivo cargado',
+                        detail: `El archivo ${selectedFile.name} se ha cargado correctamente.`,
+                      });
+                    }
+                  } else {
+                    // Opcionalmente, si no hay archivo, mostramos un aviso
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'warn',
+                        summary: 'Sin archivo',
+                        detail: 'No se ha seleccionado ningún archivo.',
+                      });
+                    }
+                  }
+                }}
+              />
               </div>
           </div>
           <Toast ref={toast} />

@@ -17,7 +17,7 @@ import { Button } from 'primereact/button';
 Modal.setAppElement('#root');
 
 export default function CalendarWithModal() {
-  const { evento, getEventos, createEvento, updateEvento } = useEvento();
+  const { evento, getEventos, createEvento, updateEvento, deleteEvento } = useEvento();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMode, setModalMode] = useState("create"); // "create" | "view" | "edit"
@@ -69,6 +69,10 @@ export default function CalendarWithModal() {
   const handleEdit = () => {
     setModalMode("edit");
   };
+
+  const handleDelete = async () => {
+    
+  }
 
   // Cierra el modal y reinicia el formulario
   const closeModal = () => {
@@ -228,7 +232,7 @@ export default function CalendarWithModal() {
                 <label className='label-modal'>EVENTO</label>
            
                 <div className="group-btn">
-                  <Button onClick={handleEdit} className="btn-outline" icon="pi pi-trash" />
+                  <Button onClick={handleDelete} className="btn-outline" icon="pi pi-trash" />
                   <Button className="btn-outline" icon="pi pi-pen-to-square"
                       onClick={handleEdit} />
                 </div>

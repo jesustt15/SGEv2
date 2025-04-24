@@ -17,13 +17,14 @@ export const useRepresentante = () => {
 
 export function RepresentanteProvider({ children }) {
     const [representante, setRepresentante] = useState([]);
+    const [representantes, setRepresentantes] = useState([]); // Cambié el nombre de la variable a "representantes" para evitar confusiones
     const toast = useRef(null); // Referencia para el Toast
 
 
     const getRepresentantes = async () => {
         try {
             const res = await getRepresentantesRequest();
-            setRepresentante(res.data);
+            setRepresentantes(res.data);
         } catch (error) {
             console.error("Error fetching Representante:", error);
         }
@@ -68,11 +69,11 @@ export function RepresentanteProvider({ children }) {
       
       const updateRepresentante = async (id, representante) => {
         try {
-          const existingRepresentante = representante.find(u => u.ced === representante.get('ced'));
+          const existingRepresentante = representantes.find(u => u.ced === representante.get('ced'));
           if (existingRepresentante) {
             throw new Error('Este Representante ya existe.');
           }
-          const existingPhone = representante.find(u => u.telf === representante.get('telf'));
+          const existingPhone = representantes.find(u => u.telf === representante.get('telf'));
           if (existingPhone) {
             throw new Error('Ya existe un Representante con este número de teléfono.');
           }
@@ -108,6 +109,7 @@ export function RepresentanteProvider({ children }) {
     return (
         <RepresentanteContext.Provider value={{
             representante,
+            representantes,
             createRepresentante,
             getRepresentantes,
             deleteRepresentante,

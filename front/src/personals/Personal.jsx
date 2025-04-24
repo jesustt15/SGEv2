@@ -12,7 +12,7 @@ import '../estudiantes/estudiantes.css';
 import { usePersonal } from '../context';
 
 export const Personal = () => {
-  const {personal, getPersonals, setSelectedPersonal, selectedPersonal } = usePersonal();
+  const {personal, personals, getPersonals, setSelectedPersonal, selectedPersonal } = usePersonal();
   const [globalFilter, setGlobalFilter] = useState(null);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -67,7 +67,7 @@ export const Personal = () => {
         <Toast ref={toast} />
         <ConfirmDialog />
         <DataTable
-            value={Array.isArray(personal) ?personal : []}
+            value={Array.isArray(personals) ?personals : []}
             paginator
             rows={10}
             header={renderHeader()}

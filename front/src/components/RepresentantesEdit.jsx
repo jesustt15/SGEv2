@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +13,8 @@ import { FileUpload } from 'primereact/fileupload';
 
 export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpdated }) => {
   const { updateRepresentante } = useRepresentante();
-  const toast = toastRef || useRef(null);
+  const internalToastRef = useRef(null);
+  const toast = toastRef || internalToastRef;
 
   const {
     handleSubmit,
@@ -50,11 +52,6 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
   }, [initialData, reset, tiposCedula, prefijosTelf, prefijosTrabajo, tipoEdoCivil]);
 
   const [foto, setFoto] = useState(null);
-  const handleFotoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFoto(e.target.files[0]);
-    }
-  };
 
   const onSubmit = async (data) => {
 
@@ -364,15 +361,35 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                 {errors.telf_trabajo && <small className="p-error">{errors.telf_trabajo.message}</small>}
             </div>
             <label>Cambiar foto:</label>
-              <FileUpload
+            <FileUpload
                 mode="basic"
                 name="foto"
                 accept="image/*"
-                maxFileSize={1000000}
                 customUpload
-                auto
-                chooseLabel='Adjuntar Archivo .JPG'
-                uploadHandler={handleFotoChange}
+                chooseLabel="Adjuntar Archivo (.JPG)"
+                maxFileSize={1000000}
+                uploadHandler={(e) => {
+                  if (e.files && e.files[0]) {
+                    const selectedFile = e.files[0];
+                    setFoto(selectedFile); // Guardamos el archivo en el estado
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'success',
+                        summary: 'Archivo cargado',
+                        detail: `El archivo ${selectedFile.name} se ha cargado correctamente.`,
+                      });
+                    }
+                  } else {
+                    // Opcionalmente, si no hay archivo, mostramos un aviso
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'warn',
+                        summary: 'Sin archivo',
+                        detail: 'No se ha seleccionado ningún archivo.',
+                      });
+                    }
+                  }
+                }}
               />
             <button type="submit" className='btn-next'>Guardar Representantes</button>
         </div>        

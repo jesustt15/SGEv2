@@ -2,10 +2,12 @@
 import { Button } from "primereact/button";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
+import { usePersonal } from "../context";
 
 export const PersonalDetails = ({ personal }) => {
   
   const navigate = useNavigate();
+  const {deletePersonal} = usePersonal();
   
   
   
@@ -37,7 +39,7 @@ export const PersonalDetails = ({ personal }) => {
       <Button className="btn-outline" icon="pi pi-pen-to-square"
         onClick={() => navigate(`/personals/${personal.personal_id}`)}
       />
-      <Button className="btn-outline" icon="pi pi-trash" />
+      <Button className="btn-outline" icon="pi pi-trash" onClick={() => deletePersonal(personal.personal_id)} />
       <Button label="Ver Más" className="more" severity="secondary" outlined  
       onClick={() => navigate(`/personals/${personal.personal_id}/more`)} />
       </div>

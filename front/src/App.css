@@ -33,6 +33,7 @@ html, body, #root {
 }
 
 .header-app .logo img {
+  margin-left: -1.2rem;
   height: 6rem;
 }
 
@@ -228,6 +229,19 @@ html, body, #root {
 }
 
 .p-dropdown-panel {
-  height: auto !important;
+  max-height: 250px !important;
+}
+.p-multiselect-panel {
+  max-height: 280px !important;
+  max-width: auto !important;
+}
+.p-menu {
+  max-height: 100px !important;
+}
+.card {
+  margin-left: 2rem;
 }
 
+.pdfContent {
+  margin-left: 2rem;
+}

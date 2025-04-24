@@ -5,7 +5,7 @@ import "./components.css";
 import { useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 
-export const HeaderOptions = ({ id, studentName }) => {
+export const HeaderOptionsP = ({ id, personalName }) => {
   const navigate = useNavigate();
 
   const downloadPdf = () => {
@@ -17,7 +17,7 @@ export const HeaderOptions = ({ id, studentName }) => {
   
     const options = {
       margin:       0.5, // márgenes en pulgadas
-      filename:     `${studentName}.pdf`, // nombre del archivo PDF'``,
+      filename:     `${personalName}.pdf`, // nombre del archivo PDF'``,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -32,7 +32,7 @@ export const HeaderOptions = ({ id, studentName }) => {
         <Button
           className="btn-outline"
           icon="pi pi-pen-to-square"
-          onClick={() => navigate(`/estudiantes/${id}`)}
+          onClick={() => navigate(`/personals/${id}`)}
         />
         <Button className="btn-outline" icon="pi pi-trash" />
         <Button

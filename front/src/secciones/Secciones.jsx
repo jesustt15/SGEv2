@@ -15,7 +15,7 @@ import { getCantidadAlumnos, getDocenteName } from '../helpers';
 export const Secciones = () => {
 
   const {seccion, getSecciones, setSelectedSeccion, selectedSeccion } = useSeccion();
-  const { personal, getPersonals } = usePersonal();         // Array de docentes
+  const {  getPersonals, personals } = usePersonal();         // Array de docentes
   const { estudiante, getEstudiantes } = useEstudiante();      // Array de estudiantes
 
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -39,7 +39,7 @@ export const Secciones = () => {
 
 
   const docenteBodyTemplate = (rowData) => {
-    return getDocenteName(rowData.docente_id, personal);
+    return getDocenteName(rowData.docente_id, personals);
   };
 
   // Devuelve la cantidad de alumnos asignados a la sección
@@ -61,7 +61,7 @@ export const Secciones = () => {
             <InputText
               value={globalFilter}
               onChange={onGlobalFilterChange}
-              placeholder="Buscar"
+              placeholder="Buscar por sección"
               className="search-bar"
             />
           </div>

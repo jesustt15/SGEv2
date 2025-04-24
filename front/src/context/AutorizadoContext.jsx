@@ -18,13 +18,14 @@ export const useAutorizado = () => {
 
 export function AutorizadoProvider({ children }) {
     const [autorizado, setAutorizado] = useState([]);
+    const [autorizados, setAutorizados] = useState([]); //estado para almacenar el array
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
 
     const getAutorizados = async () => {
         try {
             const res = await getAutorizadosRequest();
-            setAutorizado(res.data);
+            setAutorizados(res.data);
         } catch (error) {
             console.error("Error fetching Autorizado:", error);
         }
@@ -42,7 +43,7 @@ export function AutorizadoProvider({ children }) {
           }
 
           const res = await createAutorizadosRequest(auto);
-          const createdAutorizado = res.data; 
+
       
           // Actualiza la lista de Autorizados
           getAutorizados();
@@ -55,7 +56,6 @@ export function AutorizadoProvider({ children }) {
             life: 3000,
           });
       
-          // Devuelve el Autorizado creado (o al menos su ID)
           
           navigate('/estudiantes');
         } catch (error) {
@@ -68,31 +68,34 @@ export function AutorizadoProvider({ children }) {
         }
       };
       
-      const updateAutorizado = async (id, autorizado) => {
-        try {
+    const updateAutorizado = async (id, autorizado) => {
+      try {
+        const cedula = autorizado.get('ced');
+        const telf = autorizado.get('telf');
+        const idString = String(id);
 
-          const existingAutorizado = autorizado.find(u => u.ced === autorizado.get('ced'));
-          if (existingAutorizado) {
-            throw new Error('Este Autorizado ya existe.');
-          }
-          const existingByTelf = autorizado.find(u => u.telf === autorizado.get('telf'));
-          if (existingByTelf) {
-            throw new Error('Este Autorizado ya existe.');
-          }
-
-          const response = await updateAutorizadoRequest(id, autorizado);
-          getAutorizados();
-          return response; 
-        } catch (error) {
-          console.error("Error updating Autorizado:", error);
+        const existingAutorizado = autorizados.find(u => String(u.id) !== idString && u.ced === cedula);;
+        if (existingAutorizado) {
+          throw new Error('Este Autorizado ya existe.');
         }
-      };
+        const existingByTelf = autorizados.find(u => String(u.id) !== idString && u.telf === telf);
+        if (existingByTelf) {
+          throw new Error('Este Autorizado ya existe.');
+        }
+
+        const response = await updateAutorizadoRequest(id, autorizado);
+        getAutorizados();
+        return response; 
+      } catch (error) {
+        console.error("Error updating Autorizado:", error);
+      }
+    };
       
       
     const deleteAutorizado = async (id) => {
         try {
             const res = await deleteAutorizadoRequest(id);
-            if (res.status === 204) setAutorizado(autorizado.filter((autorizado) => autorizado.Autorizado_id !== id));
+            if (res.status === 204) setAutorizado(autorizado.filter((autorizado) => autorizado.autorizado_id !== id));
             getAutorizados();
         } catch (error) {
             console.error("Error deleting Autorizado:", error);
@@ -111,6 +114,7 @@ export function AutorizadoProvider({ children }) {
     return (
         <AutorizadoContext.Provider value={{
             autorizado,
+            autorizados,
             createAutorizado,
             getAutorizados,
             deleteAutorizado,

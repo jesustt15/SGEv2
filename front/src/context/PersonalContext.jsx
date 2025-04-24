@@ -18,6 +18,7 @@ export const usePersonal = () => {
 
 export function PersonalProvider({ children }) {
     const [personal, setPersonal] = useState([]);
+    const [personals, setPersonals] = useState([]); //estado para almacenar el array
     const [selectedPersonal, setSelectedPersonal] = useState(null);
     const toast = useRef(null); // Referencia para el Toast
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ export function PersonalProvider({ children }) {
     const getPersonals = useCallback(async () => {
       try {
         const res = await getPersonalsRequest();
-        setPersonal(res.data);
+        setPersonals(res.data);
       } catch (error) {
         console.error("Error fetching Personal:", error);
       }
@@ -33,16 +34,16 @@ export function PersonalProvider({ children }) {
 
     const createPersonal = async (auto) => {
         try {
-          const existingPersonal = personal.find(u => u.ced === auto.get('ced'));
+          const existingPersonal = personals.find(u => u.ced === auto.get('ced'));
           if (existingPersonal) {
             throw new Error('Este Personal ya existe con esa cedula.');
           }
-          const existingByCod = personal.find(u => u.cod === auto.get('cod'));
+          const existingByCod = personals.find(u => u.cod === auto.get('cod'));
           if (existingByCod) {
             throw new Error('Ya existe un personal con ese código.');
           }
 
-          const existingByTelf = personal.find(u => u.telf === auto.get('telf'));
+          const existingByTelf = personals.find(u => u.telf === auto.get('telf'));
           if (existingByTelf) {
             throw new Error('Ya existe un personal con ese teléfono.');
 }
@@ -70,23 +71,30 @@ export function PersonalProvider({ children }) {
         }
       };
       
-      const updatePersonal = async (id, personal) => {
+      const updatePersonal = async (id, newPersonal) => {
         try {
-          const existingPersonal = personal.find(u => u.ced === personal.get('ced'));
+          const cedula = newPersonal.get('ced');
+          const cod = newPersonal.get('cod');
+          const telf = newPersonal.get('telf');
+      
+          // Convirtiendo el id a string para garantizar la comparación
+          const idString = String(id);
+      
+          // Excluimos el registro propio convirtiendo también el id del objeto a string
+          const existingPersonal = personals.find(u => String(u.id) !== idString && u.ced === cedula);
           if (existingPersonal) {
-            throw new Error('Este Personal ya existe con esa cedula.');
+            throw new Error('Este Personal ya existe con esa cédula.');
           }
-          const existingByCod = personal.find(u => u.cod === personal.get('cod'));
+          const existingByCod = personals.find(u => String(u.id) !== idString && u.cod === cod);
           if (existingByCod) {
             throw new Error('Ya existe un personal con ese código.');
           }
-
-          const existingByTelf = personal.find(u => u.telf === personal.get('telf'));
+          const existingByTelf = personals.find(u => String(u.id) !== idString && u.telf === telf);
           if (existingByTelf) {
             throw new Error('Ya existe un personal con ese teléfono.');
           }
-
-          const response = await updatePersonalRequest(id, personal);
+      
+          const response = await updatePersonalRequest(id, newPersonal);
           getPersonals();
           navigate('/personals');
           return response;
@@ -94,6 +102,7 @@ export function PersonalProvider({ children }) {
           console.error("Error updating Personal:", error);
         }
       };
+      
       
       
     const deletePersonal = async (id) => {
@@ -118,6 +127,7 @@ export function PersonalProvider({ children }) {
     return (
         <PersonalContext.Provider value={{
             personal,
+            personals,
             selectedPersonal,
             setSelectedPersonal,
             setPersonal,

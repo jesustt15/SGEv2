@@ -14,7 +14,7 @@ export const SeccionEdit = ({  toastRef }) => {
   const { id } = useParams();
   const { setSeccion, getOneSeccion,  updateSeccion } = useSeccion();
   const { getEstudiantes, updateSeccionEstudiante, estudiante } = useEstudiante();
-  const { personal, getPersonals } = usePersonal();
+  const { personals, getPersonals } = usePersonal();
 
   // toastRef: usamos el que se pase por prop o el que define internamente
   const internalToastRef = useRef(null);
@@ -35,26 +35,24 @@ export const SeccionEdit = ({  toastRef }) => {
     getEstudiantes();
   }, [getPersonals, getEstudiantes]);
 
-  const docentes = personal.filter((perso) => perso.cargo === "Docente");
+  const docentes = personals.filter((perso) => perso.cargo === "Docente");
 
   // Esperamos que además de la sección se tenga el listado de estudiantes (estudiante) cargado
   useEffect(() => {
     const loadSeccion = async () => {
       if (id) {
-        console.log('este es el id:',id);
         const fetchedSeccion = await getOneSeccion(id);
+        console.log("Fetched Sección:", fetchedSeccion);
         setSeccion(fetchedSeccion);
-        // Primero parseamos la data (sin docente completo)
         let defaultValues = parseSeccionData(fetchedSeccion, estudiante);
-        
-        // Si se encontró el docente_id, buscamos el docente completo
         if (fetchedSeccion.docente_id) {
+          console.log("docente_id en seccion:", fetchedSeccion.docente_id);
           const teacherFull = docentes.find(d => d.personal_id === fetchedSeccion.docente_id);
+          console.log("Teacher encontrado:", teacherFull);
           if (teacherFull) {
             defaultValues.docente = teacherFull;
           }
         }
-        
         reset(defaultValues);
         setFormInitialized(true);
       }
@@ -64,6 +62,7 @@ export const SeccionEdit = ({  toastRef }) => {
       loadSeccion();
     }
   }, [id, formInitialized, reset, getOneSeccion, estudiante, docentes]);
+  
   
 
   const updateSeccionSubmit = async (data) => {

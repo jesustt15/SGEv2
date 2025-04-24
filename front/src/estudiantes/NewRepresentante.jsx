@@ -17,12 +17,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
 
-  const onUpload = (event) => {
-    setFoto(event.files[0]);
-    toast.current.show({ severity: 'info', summary: 'Éxito', detail: 'Foto cargada' });
-  };
 
-  // Función para vincular el representante con el estudiante en la tabla EstudianteRepresentante.
   const asociarEstudianteRepresentante = async ({ estudiante_id, representante_id }) => {
     const response = await axios.post('/estudiantes/asociar', { 
       estudiante_id, 
@@ -109,7 +104,6 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
 
   return (
     <div className="card">
-      <h2>DATOS DE PADRES</h2>
       <form className="form-alumno" onSubmit={handleSubmit(createRepresentanteSubmit)}>
         <div className="form-columnone">
           <Controller
@@ -188,10 +182,10 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                 name="ced"
                 control={control}
                 defaultValue=""
-                rules={{ required: "La cédula escolar es requerida." }}
+                rules={{ required: "La cédula es requerida." }}
                 render={({ field }) => (
                   <>
-                    <InputText type='number' placeholder="Ingresa la cedula escolar" className="input-ced" id="ced" {...field} />
+                    <InputText type='number' placeholder="Ingresa la cedula" className="input-ced" id="ced" {...field} />
                   </>
                 )}
               />
@@ -255,13 +249,35 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
           />
           <label htmlFor="foto">FOTO</label>
           <FileUpload
-            mode="basic"
-            name="foto"
-            accept="image/*"
-            maxFileSize={1000000}
-            customUpload
-            uploadHandler={onUpload}
-          />
+                mode="basic"
+                name="foto"
+                accept="image/*"
+                customUpload
+                chooseLabel="Adjuntar Archivo (.JPG)"
+                maxFileSize={1000000}
+                uploadHandler={(e) => {
+                  if (e.files && e.files[0]) {
+                    const selectedFile = e.files[0];
+                    setFoto(selectedFile); // Guardamos el archivo en el estado
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'success',
+                        summary: 'Archivo cargado',
+                        detail: `El archivo ${selectedFile.name} se ha cargado correctamente.`,
+                      });
+                    }
+                  } else {
+                    // Opcionalmente, si no hay archivo, mostramos un aviso
+                    if (toast?.current) {
+                      toast.current.show({
+                        severity: 'warn',
+                        summary: 'Sin archivo',
+                        detail: 'No se ha seleccionado ningún archivo.',
+                      });
+                    }
+                  }
+                }}
+              />
         </div>
         <div className="form-columntwo">
           <Controller

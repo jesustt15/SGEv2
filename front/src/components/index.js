@@ -9,3 +9,4 @@ export * from './EstudianteFoto.jsx'
 export * from './HeaderOptions.jsx';
 export * from './RepresentantesEdit.jsx';
 export * from './AutorizadoEdit.jsx';
+export * from './HeaderOptionsP.jsx';

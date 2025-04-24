@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 export const SeccionDetails = ({ seccion }) => {
   const navigate = useNavigate();
-  const { personal, getPersonals } = usePersonal();         // Array de docentes
+  const { personals, getPersonals, deleteSeccion } = usePersonal();         // Array de docentes
   const { estudiante, getEstudiantes } = useEstudiante();      // Array de estudiantes
 
 
@@ -37,7 +37,7 @@ export const SeccionDetails = ({ seccion }) => {
       <div className="after-p">{seccion.seccion}</div>
       <p>Docente</p>
       <div className="after-p">
-        {getDocenteName(seccion.docente_id, personal)}
+        {getDocenteName(seccion.docente_id, personals)}
       </div>
       <p>Cantidad de alumnos</p>
       <div className="after-p">
@@ -49,7 +49,7 @@ export const SeccionDetails = ({ seccion }) => {
           icon="pi pi-pen-to-square"
           onClick={() => navigate(`/secciones/${seccion.seccion_id}`)}
         />
-        <Button className="btn-outline" icon="pi pi-trash" />
+        <Button className="btn-outline" icon="pi pi-trash" onClick={()=>deleteSeccion(seccion.seccion_id)} />
         <Button
           label="Ver Más"
           className="more"
