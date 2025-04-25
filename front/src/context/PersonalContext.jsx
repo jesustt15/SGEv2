@@ -34,19 +34,23 @@ export function PersonalProvider({ children }) {
 
     const createPersonal = async (auto) => {
         try {
-          const existingPersonal = personals.find(u => u.ced === auto.get('ced'));
+          const cedulaFromForm = auto.get('ced');
+          const codFromForm = auto.get('cod');
+          const telfFromForm = auto.get('telf');
+
+          const existingPersonal = personals.find(u => u.ced === cedulaFromForm);
           if (existingPersonal) {
-            throw new Error('Este Personal ya existe con esa cedula.');
+            throw [{ field: 'ced', message: 'Este Personal ya existe.' }];
           }
-          const existingByCod = personals.find(u => u.cod === auto.get('cod'));
+          const existingByCod = personals.find(u => u.cod === codFromForm);
           if (existingByCod) {
-            throw new Error('Ya existe un personal con ese código.');
+            throw [{field: 'cod', message: 'Ya existe un personal con ese código.'}];
           }
 
-          const existingByTelf = personals.find(u => u.telf === auto.get('telf'));
+          const existingByTelf = personals.find(u => u.telf === telfFromForm);
           if (existingByTelf) {
-            throw new Error('Ya existe un personal con ese teléfono.');
-}
+            throw [{field: 'telf', message: 'Ya existe un personal con ese telf.'}];
+          }
 
          await createPersonalsRequest(auto);
       
@@ -64,11 +68,14 @@ export function PersonalProvider({ children }) {
         } catch (error) {
           console.error("Error creating Personal:", error);
           if (error.response && error.response.data && error.response.data.errors) {
-            throw error.response.data.errors;
-          } else {
-            throw [{ message: 'Error al crear Personal' }];
+              throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+              throw error;
           }
-        }
+          else {
+              throw [{ message: 'Error al crear personal' }];
+          }
+      }
       };
       
       const updatePersonal = async (id, newPersonal) => {
@@ -77,21 +84,20 @@ export function PersonalProvider({ children }) {
           const cod = newPersonal.get('cod');
           const telf = newPersonal.get('telf');
       
-          // Convirtiendo el id a string para garantizar la comparación
+
           const idString = String(id);
       
-          // Excluimos el registro propio convirtiendo también el id del objeto a string
           const existingPersonal = personals.find(u => String(u.id) !== idString && u.ced === cedula);
           if (existingPersonal) {
-            throw new Error('Este Personal ya existe con esa cédula.');
+            throw [{ field: 'ced', message: 'Este Personal ya existe.' }];
           }
           const existingByCod = personals.find(u => String(u.id) !== idString && u.cod === cod);
           if (existingByCod) {
-            throw new Error('Ya existe un personal con ese código.');
+            throw [{field: 'cod', message: 'Ya existe un personal con ese código.'}];
           }
           const existingByTelf = personals.find(u => String(u.id) !== idString && u.telf === telf);
           if (existingByTelf) {
-            throw new Error('Ya existe un personal con ese teléfono.');
+            throw [{field: 'telf', message: 'Ya existe un personal con ese telf.'}];
           }
       
           const response = await updatePersonalRequest(id, newPersonal);
@@ -99,8 +105,16 @@ export function PersonalProvider({ children }) {
           navigate('/personals');
           return response;
         } catch (error) {
-          console.error("Error updating Personal:", error);
-        }
+          console.error("Error creating Personal:", error);
+          if (error.response && error.response.data && error.response.data.errors) {
+              throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+              throw error;
+          }
+          else {
+              throw [{ message: 'Error al crear personal' }];
+          }
+      }
       };
       
       

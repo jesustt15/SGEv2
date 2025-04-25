@@ -19,7 +19,7 @@ const Representante = sequelize.define('representantes', {
     validate: {
       notNull: {msg: 'El nombre es requerido.'},
       notEmpty: {msg: 'El nombre no puede estar vacío.'},
-      len: [4, 30],
+      len: [3, 30, {msg: 'El nombre debe tener entre 3 y 30 caracteres.' }],
     }
   },
   apellido: {
@@ -28,7 +28,7 @@ const Representante = sequelize.define('representantes', {
     validate: {
       notNull: {msg: 'El apellido es requerido.'},
       notEmpty: {msg: 'El apellido no puede estar vacío.'},
-      len: [4, 30],
+      len: [4, 30, {msg: 'El apellido debe tener entre 4 y 30 caracteres.' }],
     }
   },
   edo_civil: DataTypes.STRING,
@@ -38,21 +38,21 @@ const Representante = sequelize.define('representantes', {
     allowNull: false,
     unique: true,
     validate: {
-      len: [7, 11]
+      len: [7, 11,  {msg: "La cédula debe tener entre 7 y 11 dígitos." }],
     }
   },
   direccion: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [4,100]
+      len: [4,100, {msg: "La dirección debe tener entre 4 y 100 caracteres." }],
     }
   },
   telf: {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      len: [10,12]
+      len: [10,12, {msg: "El número de teléfono debe tener entre 10 y 12 dígitos." }],
     }
   },
   ocupacion: DataTypes.STRING,

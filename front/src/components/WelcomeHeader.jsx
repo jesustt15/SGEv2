@@ -10,7 +10,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export const WelcomeHeader = () => {
   const { name } = useAuth();
   const { estudiante, getEstudiantes } = useEstudiante();
-  const { personal, getPersonals } = usePersonal();
+  const { personals, getPersonals } = usePersonal();
 
   const [alumnosData, setAlumnosData] = useState(null);
   const [personalData, setPersonalData] = useState(null);
@@ -59,9 +59,9 @@ export const WelcomeHeader = () => {
 
   // Actualiza la data del gráfico de personal diferenciando entre docentes y otros
   useEffect(() => {
-    if (personal && personal.length > 0) {
-      const countDocentes = personal.filter((p) => p.cargo === 'Docente').length;
-      const countOtros = personal.filter((p) => p.cargo !== 'Docente').length;
+    if (personals && personals.length > 0) {
+      const countDocentes = personals.filter((p) => p.cargo === 'Docente').length;
+      const countOtros = personals.filter((p) => p.cargo !== 'Docente').length;
 
       setPersonalData({
         labels: ['Docentes', 'Otros'],
@@ -75,12 +75,12 @@ export const WelcomeHeader = () => {
         ],
       });
     }
-  }, [personal]);
+  }, [personals]);
 
   // Total de estudiantes (siempre que estudiante esté definido)
   const totalEstudiantes = estudiante ? estudiante.length : 0;
   // Total de personal
-  const totalPersonal = personal ? personal.length : 0;
+  const totalPersonal = personals ? personals.length : 0;
 
 
   return (

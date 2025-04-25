@@ -10,7 +10,7 @@ import { tiposCedula, cargos, prefijosTelf } from "../helpers/dropdownOptions";
 
 export const NewPersonal = () => {
   const { createPersonal } = usePersonal();
-  const { handleSubmit, control, formState: { errors }} = useForm();
+  const { handleSubmit, control, formState: { errors }, setError} = useForm();
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
@@ -58,12 +58,23 @@ export const NewPersonal = () => {
       
     } catch (error) {
       console.log("Error al crear estudiante:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      } else if (error.message) {
+        setError("ced", { type: 'manual', message: error.message });
+        setError("cod", { type: 'manual', message: error.message });
+        setError("telf", { type: 'manual', message: error.message });
+      }
       toast.current.show({
         severity: 'error',
         summary: 'Error',
         detail: 'Revisa los campos marcados.'
       });
-    }
+    }    
   };
 
   return (

@@ -80,7 +80,6 @@ const crearEstudiante = async (req, res = response) => {
     res.status(201).json(estudiante);
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
-      // Collect all validation error messages
       const validationErrors = error.errors.map((err) => ({
         field: err.path,
         message: err.message,
@@ -88,7 +87,6 @@ const crearEstudiante = async (req, res = response) => {
 
       res.status(400).json({ errors: validationErrors });
     } else if (error.name === 'SequelizeUniqueConstraintError') {
-      // Handle unique constraint errors separately
       const uniqueErrors = error.errors.map((err) => ({
         field: err.path,
         message: err.message,

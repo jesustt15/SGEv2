@@ -33,13 +33,17 @@ export function AutorizadoProvider({ children }) {
 
     const createAutorizado = async (auto) => {
         try {
-          const existingAutorizado = autorizado.find(u => u.ced === auto.get('ced'));
+
+          const cedulaCompletaFromForm = auto.get('ced'); 
+          const telfFromForm = auto.get('telf')// Get the complete cedula from formData
+
+          const existingAutorizado = autorizado.find(u => u.ced === cedulaCompletaFromForm);
           if (existingAutorizado) {
-            throw new Error('Este Autorizado ya existe.');
+            throw [{ field: 'ced', message: 'Este autorizado ya existe.' }];
           }
-          const existingByTelf = autorizado.find(u => u.telf === auto.get('telf'));
+          const existingByTelf = autorizado.find(u => u.telf === telfFromForm);
           if (existingByTelf) {
-            throw new Error('Este Autorizado ya existe.');
+            throw [{ field: 'telf', message: 'Este telf ya existe.' }];
           }
 
           const res = await createAutorizadosRequest(auto);
@@ -59,13 +63,17 @@ export function AutorizadoProvider({ children }) {
           
           navigate('/estudiantes');
         } catch (error) {
-          console.error("Error creating Autorizado:", error);
+          console.error("Error creating autorizado:", error);
           if (error.response && error.response.data && error.response.data.errors) {
-            throw error.response.data.errors;
-          } else {
-            throw [{ message: 'Error al crear Autorizado' }];
+              throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+              throw error;
           }
-        }
+          else {
+              // Handle any other unexpected errors
+              throw [{ message: 'Error al crear el autorizado' }];
+          }
+      }
       };
       
     const updateAutorizado = async (id, autorizado) => {

@@ -32,6 +32,7 @@ export const EstudiantePage = () => {
       />
       <div id="pdfContent" className="pdfContent">
         <HeaderEdit />
+        <hr />
         <EstudianteFoto estudiante={estudiante} />
         <div className="page-section">
           <div className="form-columnone">
@@ -65,6 +66,7 @@ export const EstudiantePage = () => {
             <h5>{estudiante.condicion}</h5>
           </div>
         </div>
+        <hr />
             {representantePadre ? (
               <>
                 <h4 className="parent-type">Representantes</h4>
@@ -158,7 +160,7 @@ export const EstudiantePage = () => {
             ) : (
               <br />
             )}
-            
+            <hr />
             {autorizado ? (
             <>
               <h4 className="parent-type">AUTORIZADO</h4>

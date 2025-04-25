@@ -241,7 +241,7 @@ export const SeccionEdit = ({  toastRef }) => {
           <Controller
             name="estudiantes"
             control={control}
-            defaultValue={[]}  // Aquí se cargará la selección de estudiantes (los que tienen ese seccion_id)
+            defaultValue={[]}  
             rules={{ required: "Debe seleccionar al menos un estudiante." }}
             render={({ field }) => (
               <>
@@ -254,6 +254,8 @@ export const SeccionEdit = ({  toastRef }) => {
                   options={estudiante}
                   placeholder="Seleccione estudiantes"
                   display="chip"
+                  filter
+                  filterBy='nombres, apellidos'
                   optionLabel="nombres"
                   itemTemplate={(option) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>

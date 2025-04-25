@@ -13,7 +13,12 @@ import { tiposCedula, sexos } from "../helpers/dropdownOptions";
 import moment from "moment/moment";
 export const NewEstudiante = ({ onStudentCreated }) => {
   const { createEstudiante } = useEstudiante();
-  const { handleSubmit, control, formState: { errors }, watch } = useForm();
+  const { handleSubmit, control, formState: { errors }, watch, setError } = useForm({
+    defaultValues: {
+      alergiaOption: "No",
+      condicionOption: "No",
+    }
+  });
 
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
@@ -36,26 +41,23 @@ export const NewEstudiante = ({ onStudentCreated }) => {
 
   const createEstudianteSubmit = async (data) => {
     try {
-
-
+      // Procesamiento y armado del FormData, etc.
       if (data.sexo && typeof data.sexo === 'object') {
         data.sexo = data.sexo.name;
       }
       const formData = new FormData();
-
       if (!data.tipoCedula) {
         data.tipoCedula = { name: "V-" };
       }
       const cedulaCompleta = `${data.tipoCedula.name}${data.cedulaEscolar}`;
       data.cedulaEscolar = cedulaCompleta;
-      
+  
       if (watch("alergiaOption") === "No") {
         data.alergias = "NO";
-     }
-     if (watch("condicionOption") === "No") {
+      }
+      if (watch("condicionOption") === "No") {
         data.condicion = "NO";
-     }
-
+      }
       Object.keys(data).forEach(key => formData.append(key, data[key]));
       if (foto) {
         formData.append('foto', foto);
@@ -69,7 +71,6 @@ export const NewEstudiante = ({ onStudentCreated }) => {
         detail: 'Estudiante creado'
       });
       
-      // Si obtenemos el ID del estudiante, llamamos al callback para avanzar.
       if (onStudentCreated && createdStudent && createdStudent.estudiante_id) {
         onStudentCreated(createdStudent.estudiante_id);
       } else {
@@ -77,14 +78,23 @@ export const NewEstudiante = ({ onStudentCreated }) => {
       }
     } catch (error) {
       console.log("Error al crear estudiante:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      } else if (error.message) {
+        setError("cedulaEscolar", { type: 'manual', message: error.message });
+      }
       toast.current.show({
         severity: 'error',
         summary: 'Error',
         detail: 'Revisa los campos marcados.'
       });
-    }
+    }    
   };
-
+  
   return (
     <div className="card">
         <h4>Datos Alumnos</h4>
@@ -114,7 +124,9 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                 render={({ field }) => (
                   <>
                     <label htmlFor="fechaNacimiento">Fecha de nacimiento</label>
-                    <Calendar placeholder="00/00/0000" inputId="fechaNacimiento" locale="es" {...field} />
+                    <Calendar placeholder="00/00/0000" inputId="fechaNacimiento" 
+                    dateFormat="yy/mm/dd"
+                    locale="es" {...field} />
                   </>
                 )}
               />
@@ -168,18 +180,18 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               />
               {errors.tipoCedula && <small className="p-error">{errors.tipoCedula.message}</small>}
               <Controller
-                name="cedulaEscolar"
-                control={control}
-                defaultValue=""
-                rules={{ required: "La cédula escolar es requerida." }}
-                render={({ field }) => (
-                  <>
-                    <InputText placeholder="Ingresa la cedula escolar" className="input-ced" id="cedulaEscolar" {...field} />
-                  </>
-                )}
-              />
-              {errors.cedulaEscolar && <small className="p-error">{errors.cedulaEscolar.message}</small>}
+              name="cedulaEscolar"
+              control={control}
+              defaultValue=""
+              rules={{ required: "La cédula escolar es requerida." }}
+              render={({ field }) => (
+                <>
+                  <InputText placeholder="Ingresa la cédula escolar" type="number" id="cedulaEscolar" {...field} />
+                </>
+              )}
+            />
           </div>
+          {errors.cedulaEscolar && (<small className="p-error">{errors.cedulaEscolar.message}</small>)}
           <label htmlFor="alergias">Alergias</label>
           <div className="group">
             <div className="p-field-radiobutton">

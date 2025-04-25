@@ -34,35 +34,44 @@ export function EstudianteProvider({ children }) {
       
 
     const createEstudiante = async (est) => {
-        try {
-          const existingEstudiante = estudiante.find(u => u.cedulaEscolar === est.get('cedulaEscolar'));
+      try {
+          // 'est' is FormData, and createEstudianteSubmit puts the complete cedula in 'cedulaEscolar'
+          const cedulaCompletaFromForm = est.get('cedulaEscolar'); // Get the complete cedula from formData
+  
+          // Ensure 'estudiante' array contains objects with 'cedulaEscolar' in the complete format
+          const existingEstudiante = estudiante.find(u => u.cedulaEscolar === cedulaCompletaFromForm);
+  
           if (existingEstudiante) {
-            throw new Error('Este estudiante ya existe.');
+              throw [{ field: 'cedulaEscolar', message: 'Este estudiante ya existe.' }];
           }
-        
-          const res = await createEstudiantesRequest(est);
-          const createdEstudiante = res.data;  // Asegúrate de que este endpoint devuelve el objeto creado
-      
-          getEstudiantes();
-      
-          toast.current.show({
-            severity: 'success',
-            summary: 'Registro Exitoso',
-            detail: 'Nuevo Estudiante agregado',
-            life: 3000,
-          });
-      
 
+          const res = await createEstudiantesRequest(est);
+          const createdEstudiante = res.data;
+  
+          getEstudiantes();
+  
+          toast.current.show({
+              severity: 'success',
+              summary: 'Registro Exitoso',
+              detail: 'Nuevo Estudiante agregado',
+              life: 3000,
+          });
+  
           return createdEstudiante;
-        } catch (error) {
+      } catch (error) {
           console.error("Error creating estudiante:", error);
           if (error.response && error.response.data && error.response.data.errors) {
-            throw error.response.data.errors;
-          } else {
-            throw [{ message: 'Error al crear estudiante' }];
+              throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+              throw error;
           }
-        }
-      };
+          else {
+              // Handle any other unexpected errors
+              throw [{ message: 'Error al crear estudiante' }];
+          }
+      }
+  };
+    
       
     const updateEstudiante = async (id, estudiante) => {
         try {

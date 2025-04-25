@@ -25,7 +25,7 @@ const Personal = sequelize.define('personals', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [10,13]
+      len: [10,13, {msg: "El número de teléfono debe tener entre 10 y 13 dígitos." }],
     }
   }, 
   cargo:{

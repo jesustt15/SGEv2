@@ -3,20 +3,46 @@
 import { Button } from "primereact/button";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { usePersonal, useEstudiante } from "../context";     // Ejemplo del contexto de docentes
+import { usePersonal, useEstudiante, useSeccion, useAuth } from "../context";     // Ejemplo del contexto de docentes
 import { getDocenteName, getCantidadAlumnos } from "../helpers";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
 
 export const SeccionDetails = ({ seccion }) => {
   const navigate = useNavigate();
-  const { personals, getPersonals, deleteSeccion } = usePersonal();         // Array de docentes
-  const { estudiante, getEstudiantes } = useEstudiante();      // Array de estudiantes
+  const { role } = useAuth(); // Ejemplo de función para obtener el rol del usuario
+  const { deleteSeccion } = useSeccion(); // Ejemplo de función para eliminar sección
+  const { personals, getPersonals } = usePersonal();         // Array de docentes
+  const { estudiante, getEstudiantes } = useEstudiante(); 
+  const toast = useRef(null);     // Array de estudiantes
 
 
   useEffect(() => {
     getPersonals();
     getEstudiantes();
   }, []);
+
+   const confirmDelete = () => {
+          confirmDialog({
+            message: '¿Está seguro que desea eliminar esta seccion?',
+            header: 'Confirmación de eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            accept: async () => {
+              await deleteSeccion(seccion.seccion_id);
+              toast.current.show({
+                severity: 'success',
+                summary: 'Eliminado',
+                detail: 'La sección se eliminó satisfactoriamente',
+                life: 3000,
+              });
+              navigate("/secciones"); // Redirigir a la lista de estudiantes después de eliminar
+            },
+            reject: () => {
+              // Puedes manejar alguna acción al cancelar, si lo deseas
+            }
+          });
+      };
 
   if (!seccion) {
     return (
@@ -44,12 +70,16 @@ export const SeccionDetails = ({ seccion }) => {
       {getCantidadAlumnos(seccion.seccion_id, estudiante)}
       </div>
       <div className="btn-section">
-        <Button
-          className="btn-outline"
-          icon="pi pi-pen-to-square"
-          onClick={() => navigate(`/secciones/${seccion.seccion_id}`)}
-        />
-        <Button className="btn-outline" icon="pi pi-trash" onClick={()=>deleteSeccion(seccion.seccion_id)} />
+        {role !== 'user' && (
+          <>
+          <Button
+            className="btn-outline"
+            icon="pi pi-pen-to-square"
+            onClick={() => navigate(`/secciones/${seccion.seccion_id}`)}
+          />
+          <Button className="btn-outline" icon="pi pi-trash" onClick={confirmDelete} />
+          </>  
+        )}
         <Button
           label="Ver Más"
           className="more"
@@ -58,6 +88,8 @@ export const SeccionDetails = ({ seccion }) => {
           onClick={() => navigate(`/secciones/${seccion.seccion_id}/more`)}
         />
       </div>
+      <ConfirmDialog />
+      <Toast ref={toast} />
     </div>
   );
 };

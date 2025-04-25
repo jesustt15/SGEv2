@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -32,8 +33,8 @@ export default function CalendarWithModal() {
 
   useEffect(() => {
     getEventos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   // Al seleccionar una fecha en FullCalendar
   const handleDateSelect = (selectInfo) => {
@@ -88,9 +89,6 @@ export default function CalendarWithModal() {
     });
   };
 
-  // Manejador unificado para los inputs
-  // Se revisa si el evento proviene de un componente PrimeReact (que envía e.value)
-  // o es un evento estándar (que trae e.target.value)
   const handleInputChange = (e, name) => {
     let value;
 
@@ -124,25 +122,23 @@ export default function CalendarWithModal() {
     }
   };
 
-  // Convertimos los eventos al formato requerido por FullCalendar
-  const calendarEvents = evento.map((evt) => {
+  const calendarEvents = (evento || []).map((evt) => {
     const eventDate = moment(evt.date, 'YYYY-MM-DD').toDate();
     const bgColor =
       evt.type === 'administrativo' ? '#ffd9d9' :
       evt.type === 'escolar' ? '#d2f0ff' :
-      evt.color; // Caso extra
-
+      evt.color;
     return {
-      id: evt.evento_id,
-      title: evt.title,
-      start: eventDate,
-      end: eventDate,
-      allDay: true,
-      backgroundColor: bgColor,
-      extendedProps: {
-        description: evt.description,
-        type: evt.type,
-      },
+        id: evt.evento_id,
+        title: evt.title,
+        start: eventDate,
+        end: eventDate,
+        allDay: true,
+        backgroundColor: bgColor,
+        extendedProps: {
+          description: evt.description,
+          type: evt.type,
+        },
     };
   });
 

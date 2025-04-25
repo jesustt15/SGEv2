@@ -13,7 +13,11 @@ import { tiposCedula, prefijosTelf, tipoEdoCivil, prefijosTrabajo, tipos } from 
 
 export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
   const {createRepresentante} = useRepresentante();
-  const { handleSubmit, control, formState: { errors }, watch } = useForm();
+  const { handleSubmit, control, formState: { errors }, watch, setError } = useForm({
+    defaultValues: {
+      trabajaOption: "No",
+    }
+  });
   const toast = useRef(null);
   const [foto, setFoto] = useState(null);
 
@@ -94,12 +98,22 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
       }
     } catch (error) {
       console.log("Error al crear representante:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      } else if (error.message) {
+        setError("ced", { type: 'manual', message: error.message });
+        setError("telf", { type: 'manual', message: error.message });
+      }
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'Revisa los campos.'
+        detail: 'Revisa los campos marcados.'
       });
-    }
+    }    
   };
 
   return (

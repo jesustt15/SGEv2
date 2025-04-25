@@ -34,13 +34,16 @@ export function RepresentanteProvider({ children }) {
         
 
         try {
-          const existingRepresentante = representante.find(u => u.ced === repre.get('ced'));
+          const cedulaCompletaFromForm = representante.get('ced');
+          const telfFromForm = representante.get('telf');
+
+          const existingRepresentante = representantes.find(u => u.ced === cedulaCompletaFromForm);
           if (existingRepresentante) {
-            throw new Error('Este Representante ya existe.');
+            throw [{ field: 'ced', message: 'Este representante ya existe.' }];
           }
-          const existingPhone = representante.find(u => u.telf === repre.get('telf'));
+          const existingPhone = representantes.find(u => u.telf === telfFromForm);
           if (existingPhone) {
-            throw new Error('Ya existe un Representante con este número de teléfono.');
+            throw [{ field: 'telf', message: 'Este telf ya esta registrado' }];
           }
           const res = await createRepresentantesRequest(repre);
           const createdRepresentante = res.data;
@@ -58,24 +61,31 @@ export function RepresentanteProvider({ children }) {
       ;
           return createdRepresentante;
         } catch (error) {
-          console.error("Error creating Representante:", error);
+          console.error("Error creating representante", error);
           if (error.response && error.response.data && error.response.data.errors) {
-            throw error.response.data.errors;
-          } else {
-            throw [{ message: 'Error al crear Representante' }];
+              throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+              throw error;
           }
-        }
+          else {
+              // Handle any other unexpected errors
+              throw [{ message: 'Error al crear representante' }];
+          }
+      }
       };
       
       const updateRepresentante = async (id, representante) => {
         try {
-          const existingRepresentante = representantes.find(u => u.ced === representante.get('ced'));
+          const cedulaCompletaFromForm = representante.get('ced');
+          const telfFromForm = representante.get('telf');
+
+          const existingRepresentante = representantes.find(u => u.ced === cedulaCompletaFromForm);
           if (existingRepresentante) {
-            throw new Error('Este Representante ya existe.');
+            throw [{ field: 'ced', message: 'Este representante ya existe.' }];
           }
-          const existingPhone = representantes.find(u => u.telf === representante.get('telf'));
+          const existingPhone = representantes.find(u => u.telf === telfFromForm);
           if (existingPhone) {
-            throw new Error('Ya existe un Representante con este número de teléfono.');
+            throw [{ field: 'telf', message: 'Este telf ya esta registrado' }];
           }
 
           await updateRepresentanteRequest(id, representante);

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../App.css";
+import { useAuth } from "../context";
 
 export const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const { role } = useAuth();
 
   // Alternar entre expandido y colapsado
   const toggleSidebar = () => {
@@ -19,10 +21,10 @@ export const Sidebar = () => {
     { label: "Secciones", to: "/secciones", icon: "pi pi-sort-alpha-up" },
   ];
 
-  // Enlaces en la parte inferior
-  const bottomItems = [
-    { label: "Gestión de Usuarios", to: "/usuarios", icon: "pi pi-cog" },
-  ];
+  // Puedes asignar los enlaces del footer condicionalmente:
+  const bottomItems = role !== "user"
+    ? [{ label: "Gestión de Usuarios", to: "/usuarios", icon: "pi pi-cog" }]
+    : [];
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : "expanded"}`}>
@@ -58,7 +60,7 @@ export const Sidebar = () => {
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 <i className={item.icon}></i>
-                {!collapsed && <span>{item.label}</span>}
+                {!collapsed && <span className="span-footer">{item.label}</span>}
               </NavLink>
             </li>
           ))}
@@ -67,6 +69,7 @@ export const Sidebar = () => {
     </div>
   );
 };
+
 
 
 

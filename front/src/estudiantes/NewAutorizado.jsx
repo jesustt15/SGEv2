@@ -11,17 +11,11 @@ import { FileUpload } from "primereact/fileupload";
 
 export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
   const { createAutorizado } = useAutorizado();
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const { handleSubmit, control, formState: { errors }, setError } = useForm();
 
   const [foto, setFoto] = useState(null);
   const toast = useRef(null);
 
-
-
-  const onUpload = (event) => {
-    setFoto(event.files[0]);
-    toast.current.show({ severity: 'info', summary: 'Éxito', detail: 'Foto cargada' });
-  };
 
   const createAutorizadoSubmit = async (data) => {
     try {
@@ -66,13 +60,23 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
         onAutorizadoCreated();
       }
     } catch (error) {
-      console.error("Error al crear autorizado:", error);
+      console.log("Error al crear estudiante:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      } else if (error.message) {
+        setError("ced", { type: 'manual', message: error.message });
+        setError("telf", { type: 'manual', message: error.message });
+      }
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'Verifica los datos.'
+        detail: 'Revisa los campos marcados.'
       });
-    }
+    }    
   };
   ;
 
@@ -178,7 +182,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             render={({ field }) => (
               <>
               <label htmlFor="parentesco">Parentesco</label>
-                <InputText id="parentesco" {...field} placeholder="parentesco del autorizado" />
+                <InputText id="parentesco" {...field} placeholder="Parentesco del autorizado" />
               </>
             )}
           />

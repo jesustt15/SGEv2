@@ -15,7 +15,7 @@ const Estudiante = sequelize.define('estudiantes', {
     validate: {
       notNull: {msg: 'El nombre es requerido.'},
       notEmpty: {msg: 'El nombre no puede estar vacío.'},
-      len: [4, 30],
+      len: [3, 30, {msg: 'El nombre debe tener entre 4 y 30 caracteres.'}],
     }
   },
   apellidos: {
@@ -24,7 +24,7 @@ const Estudiante = sequelize.define('estudiantes', {
     validate: {
       notNull: {msg: 'El apellido es requerido.'},
       notEmpty: {msg: 'El apellido no puede estar vacío.'},
-      len: [3, 30],
+      len: [3, 30, {msg: 'El apellido debe tener entre 3 y 30 caracteres.'}],
     }
   },
   fechaNacimiento: {
@@ -38,7 +38,7 @@ const Estudiante = sequelize.define('estudiantes', {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      len: [6,90]
+      len: [6,90, {msg: 'El lugar de nacimiento debe tener entre 6 y 90 caracteres.'}],
     }
   },
   edad: DataTypes.INTEGER,

@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */ 
 import { createContext, useCallback, useContext, useRef, useState } from "react"; 
 import { createEventosRequest, deleteEventoRequest, getOneEventoRequest, getEventosRequest, updateEventoRequest } from "../api"; 
-import { useNavigate } from "react-router-dom"; 
 import { Toast } from 'primereact/toast'; 
 
 const EventoContext = createContext(); 
@@ -12,16 +11,16 @@ export const useEvento = () => { const context = useContext(EventoContext);
     } 
     return context; 
 }; 
-    
-    export function EventoProvider({ children }) { 
+     export function EventoProvider({ children }) { 
         const [evento, setEvento] = useState([]); 
         const toast = useRef(null); // Referencia para el Toast 
-        const navigate = useNavigate(); 
+
         
         
-        const getEventos = useCallback(async () => {
+    const getEventos = useCallback(async () => {
             try { 
               const response = await getEventosRequest();
+              setEvento(response.data);
               return response.data;
             } catch (error) { 
               console.error("Error fetching Evento:", error); 
@@ -31,9 +30,8 @@ export const useEvento = () => { const context = useContext(EventoContext);
         const createEvento = async (evento) => {
              try { 
                 await createEventosRequest(evento); 
+                getEventos();  
                 toast.current.show({ severity: 'success', summary: 'Registro Exitoso', detail: 'Nuevo Evento agregado', life: 3000, });
-                getEventos(); 
-                navigate('/calendar'); 
             } catch (error) { 
                 console.error("Error creating events:", error); 
                 throw error; // Re-throw the error to be caught in the component 
