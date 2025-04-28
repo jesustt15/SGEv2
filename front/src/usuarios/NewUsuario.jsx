@@ -18,6 +18,7 @@ export const NewUsuario = () => {
     handleSubmit,
     setValue,
     watch,
+    setError,
     formState: { errors }
   } = useForm();
 
@@ -32,9 +33,17 @@ export const NewUsuario = () => {
       data.role = selectedRole.code;
       await createUsuario(data);
     } catch (error) {
-      console.error("Error creando usuario:", error);
-    }
+      console.log("Error al crear usuario:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      } 
+    }    
   };
+
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.value);

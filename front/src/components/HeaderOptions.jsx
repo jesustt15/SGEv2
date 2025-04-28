@@ -5,7 +5,7 @@ import "./components.css";
 import { useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import { useAuth, useEstudiante } from "../context";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import {  confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
 
@@ -72,7 +72,6 @@ export const HeaderOptions = ({ id, studentName }) => {
           onClick={downloadPdf}
         />
       </div>
-      <ConfirmDialog />
       <Toast ref={toast} />
     </div>
   );

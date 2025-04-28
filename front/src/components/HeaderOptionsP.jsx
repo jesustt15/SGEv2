@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import "./components.css";
 import { useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import {  confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
 import { useAuth, usePersonal } from "../context";
@@ -23,7 +23,7 @@ export const HeaderOptionsP = ({ id, personalName }) => {
     }
   
     const options = {
-      margin:       0.5, // márgenes en pulgadas
+      margin:       0.2, // márgenes en pulgadas
       filename:     `${personalName}.pdf`, // nombre del archivo PDF'``,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },
@@ -74,7 +74,6 @@ export const HeaderOptionsP = ({ id, personalName }) => {
           onClick={downloadPdf}
         />
       </div>
-      <ConfirmDialog />
       <Toast ref={toast} /> 
     </div>
   );

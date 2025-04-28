@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { usePersonal, useEstudiante, useSeccion, useAuth } from "../context";     // Ejemplo del contexto de docentes
 import { getDocenteName, getCantidadAlumnos } from "../helpers";
 import { useEffect, useRef } from "react";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 export const SeccionDetails = ({ seccion }) => {
@@ -28,6 +28,7 @@ export const SeccionDetails = ({ seccion }) => {
             message: '¿Está seguro que desea eliminar esta seccion?',
             header: 'Confirmación de eliminación',
             icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Si',
             accept: async () => {
               await deleteSeccion(seccion.seccion_id);
               toast.current.show({
@@ -36,10 +37,11 @@ export const SeccionDetails = ({ seccion }) => {
                 detail: 'La sección se eliminó satisfactoriamente',
                 life: 3000,
               });
+              confirmDialog.close();
               navigate("/secciones"); // Redirigir a la lista de estudiantes después de eliminar
             },
             reject: () => {
-              // Puedes manejar alguna acción al cancelar, si lo deseas
+             confirmDialog.close();
             }
           });
       };
@@ -88,7 +90,6 @@ export const SeccionDetails = ({ seccion }) => {
           onClick={() => navigate(`/secciones/${seccion.seccion_id}/more`)}
         />
       </div>
-      <ConfirmDialog />
       <Toast ref={toast} />
     </div>
   );

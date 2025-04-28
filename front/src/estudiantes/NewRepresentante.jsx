@@ -104,9 +104,6 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             setError(err.field, { type: 'manual', message: err.message });
           }
         });
-      } else if (error.message) {
-        setError("ced", { type: 'manual', message: error.message });
-        setError("telf", { type: 'manual', message: error.message });
       }
       toast.current.show({
         severity: 'error',
@@ -155,7 +152,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                       )}
                     />
               </div>
-              <div className="group-item">
+              <div className="group-item-xs">
                 <Controller
                       name="edad"
                       control={control}

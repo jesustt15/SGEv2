@@ -187,7 +187,12 @@ label {
     flex-direction:column;
     width: 48%;
 }
-
+.group-item-xs{
+    display: flex;
+    flex-direction:column;
+    width: 49%;
+    margin-left: 1rem;
+}
 
 .dropdown {
     width: 20%;

@@ -6,13 +6,12 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog } from 'primereact/confirmdialog';
 import { NavLink } from 'react-router-dom';
 import '../estudiantes/estudiantes.css';
 import { usePersonal } from '../context';
 
 export const Personal = () => {
-  const {personal, personals, getPersonals, setSelectedPersonal, selectedPersonal } = usePersonal();
+  const { personals, getPersonals, setSelectedPersonal, selectedPersonal } = usePersonal();
   const [globalFilter, setGlobalFilter] = useState(null);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -65,7 +64,6 @@ export const Personal = () => {
     <div className="estduiante-page">
       <div className="estudiantes-table">
         <Toast ref={toast} />
-        <ConfirmDialog />
         <DataTable
             value={Array.isArray(personals) ?personals : []}
             paginator

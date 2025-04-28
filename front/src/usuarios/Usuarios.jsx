@@ -6,7 +6,6 @@ import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
 import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog} from 'primereact/confirmdialog';
 import { useUsuario } from '../context';
 import { NavLink } from 'react-router-dom';
 
@@ -85,7 +84,6 @@ export const Usuarios = () => {
     <div className="estduiante-page">
       <div className="estudiantes-table">
         <Toast ref={toast} />
-        <ConfirmDialog />
         <DataTable
             value={Array.isArray(usuario) ?usuario : []}
             paginator

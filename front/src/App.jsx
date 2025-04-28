@@ -5,6 +5,7 @@ import { AuthProvider, EstudianteProvider, RepresentanteProvider,
   UsuarioProvider, AutorizadoProvider, PersonalProvider, EventoProvider, SeccionProvider } from './context'
 import './App.css';
 
+
 function App() {
 
 

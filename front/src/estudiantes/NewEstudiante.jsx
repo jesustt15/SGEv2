@@ -125,7 +125,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                   <>
                     <label htmlFor="fechaNacimiento">Fecha de nacimiento</label>
                     <Calendar placeholder="00/00/0000" inputId="fechaNacimiento" 
-                    dateFormat="yy/mm/dd"
+                    dateFormat="dd/mm/yy"
                     locale="es" {...field} />
                   </>
                 )}

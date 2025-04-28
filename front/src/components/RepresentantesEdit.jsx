@@ -156,7 +156,7 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                         )}
                     />
             </div>
-            <div className="group-item">
+            <div className="group-item-xs">
                 <Controller
                 name="edad"
                 control={control}

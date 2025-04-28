@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Button } from 'primereact/button';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import {  confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import "../App.css";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ export const EstudianteDetails = ({ estudiante }) => {
       message: '¿Está seguro que desea eliminar este estudiante?',
       header: 'Confirmación de eliminación',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Si',    // Texto personalizado para el botón de aceptar
       accept: async () => {
         await deleteEstudiante(estudiante.estudiante_id);
         toast.current.show({
@@ -26,9 +27,11 @@ export const EstudianteDetails = ({ estudiante }) => {
           detail: 'El estudiante se eliminó satisfactoriamente',
           life: 3000,
         });
+        confirmDialog({ visible: false });
+        navigate("/estudiantes"); // Redirige a la lista después de eliminar
       },
       reject: () => {
-        // Puedes manejar alguna acción al cancelar, si lo deseas
+        confirmDialog({ visible: false });
       }
     });
   };
@@ -70,8 +73,6 @@ export const EstudianteDetails = ({ estudiante }) => {
         <Button label="Ver Más" className="more" severity="secondary" outlined  
           onClick={() => navigate(`/estudiantes/${estudiante.estudiante_id}/more`)} />
       </div>
-      {/* Incluye el ConfirmDialog y el Toast */}
-      <ConfirmDialog />
       <Toast ref={toast} />
     </div>
   );

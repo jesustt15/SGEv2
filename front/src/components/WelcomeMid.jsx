@@ -43,11 +43,11 @@ export const WelcomeMid = () => {
           // Asigna la edad al grupo correspondiente
           if (edad < 2) {
             ageCounts[0]++;
-          } else if (edad < 3) {
+          } else if (edad == 3) {
             ageCounts[1]++;
-          } else if (edad < 4) {
+          } else if (edad == 4) {
             ageCounts[2]++;
-          } else if (edad < 5) {
+          } else if (edad == 5) {
             ageCounts[3]++;
           } else {
             ageCounts[4]++;

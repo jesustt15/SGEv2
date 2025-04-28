@@ -31,48 +31,52 @@ export function RepresentanteProvider({ children }) {
     };
 
     const createRepresentante = async (repre) => {
+      try {
+        // Extrae los valores del FormData y normalízalos
+        const cedulaCompletaFromForm = repre.get('ced');
+        const telfFromForm = repre.get('telf');
+  
+        const normalizedCedula = cedulaCompletaFromForm?.trim().toLowerCase();
+        const normalizedTelf = telfFromForm?.trim();
+    
+        const existingRepresentante = representantes.find(u => {
+          const storedCed = u.ced?.trim().toLowerCase();
+          return storedCed === normalizedCedula;
+        });
+        if (existingRepresentante) {
+          throw [{ field: 'ced', message: 'Este representante ya existe.' }];
+        }
         
+        const existingPhone = representantes.find(u => u.telf?.trim() === normalizedTelf);
+        if (existingPhone) {
+          throw [{ field: 'telf', message: 'Este telf ya está registrado' }];
+        }
+        
+        const res = await createRepresentantesRequest(repre);
+        const createdRepresentante = res.data;
+        
+        getRepresentantes();
 
-        try {
-          const cedulaCompletaFromForm = representante.get('ced');
-          const telfFromForm = representante.get('telf');
-
-          const existingRepresentante = representantes.find(u => u.ced === cedulaCompletaFromForm);
-          if (existingRepresentante) {
-            throw [{ field: 'ced', message: 'Este representante ya existe.' }];
-          }
-          const existingPhone = representantes.find(u => u.telf === telfFromForm);
-          if (existingPhone) {
-            throw [{ field: 'telf', message: 'Este telf ya esta registrado' }];
-          }
-          const res = await createRepresentantesRequest(repre);
-          const createdRepresentante = res.data;
-      
-          // Actualiza la lista de Representantes
-          getRepresentantes();
-      
-          // Muestra el mensaje de éxito
-          toast.current.show({
-            severity: 'success',
-            summary: 'Registro Exitoso',
-            detail: 'Nuevo Representante agregado',
-            life: 3000,
-          });
-      ;
-          return createdRepresentante;
-        } catch (error) {
-          console.error("Error creating representante", error);
-          if (error.response && error.response.data && error.response.data.errors) {
-              throw error.response.data.errors;
-          } else if (Array.isArray(error)) {
-              throw error;
-          }
-          else {
-              // Handle any other unexpected errors
-              throw [{ message: 'Error al crear representante' }];
-          }
+        toast.current.show({
+          severity: 'success',
+          summary: 'Registro Exitoso',
+          detail: 'Nuevo Representante agregado',
+          life: 3000,
+        });
+        
+        return createdRepresentante;
+      } catch (error) {
+        console.error("Error creating representante", error);
+        if (error.response && error.response.data && error.response.data.errors) {
+          throw error.response.data.errors;
+        } else if (Array.isArray(error)) {
+          throw error;
+        } else {
+          throw [{ message: 'Error al crear representante' }];
+        }
       }
-      };
+    };
+    
       
       const updateRepresentante = async (id, representante) => {
         try {

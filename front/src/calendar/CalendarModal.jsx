@@ -13,6 +13,7 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import './index.css'
 import { Button } from 'primereact/button';
+import { confirmDialog } from 'primereact/confirmdialog';
 
 // Configurar el elemento raíz para accesibilidad
 Modal.setAppElement('#root');
@@ -71,9 +72,6 @@ export default function CalendarWithModal() {
     setModalMode("edit");
   };
 
-  const handleDelete = async () => {
-    
-  }
 
   // Cierra el modal y reinicia el formulario
   const closeModal = () => {
@@ -104,6 +102,26 @@ export default function CalendarWithModal() {
     const fieldName = name || (e && e.target && e.target.name);
     setFormData({ ...formData, [fieldName]: value });
   };
+
+  const confirmDelete = () => {
+    confirmDialog({
+      message: '¿Está seguro que desea eliminar este evento?',
+      header: 'Confirmación de eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Si',    // Texto personalizado para "Aceptar"
+      rejectLabel: 'No',    // Texto personalizado para "Rechazar"
+      accept: async () => {
+        // Asumiendo que el id del evento a eliminar está en formData.id
+        await deleteEvento(formData.id);
+        await getEventos();
+        closeModal();
+      },
+      reject: () => {
+        // Opcionalmente, alguna acción si se rechaza
+      }
+    });
+  };
+  
 
   // Envía el formulario para crear o editar
   const handleSubmit = async (e) => {
@@ -228,7 +246,7 @@ export default function CalendarWithModal() {
                 <label className='label-modal'>EVENTO</label>
            
                 <div className="group-btn">
-                  <Button onClick={handleDelete} className="btn-outline" icon="pi pi-trash" />
+                  <Button className="btn-outline" icon="pi pi-trash" onClick={confirmDelete} />
                   <Button className="btn-outline" icon="pi pi-pen-to-square"
                       onClick={handleEdit} />
                 </div>

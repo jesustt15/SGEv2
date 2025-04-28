@@ -60,16 +60,13 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
         onAutorizadoCreated();
       }
     } catch (error) {
-      console.log("Error al crear estudiante:", error);
+      console.log("Error al crear Autorizado:", error);
       if (Array.isArray(error)) {
         error.forEach(err => {
           if (err.field) {
             setError(err.field, { type: 'manual', message: err.message });
           }
         });
-      } else if (error.message) {
-        setError("ced", { type: 'manual', message: error.message });
-        setError("telf", { type: 'manual', message: error.message });
       }
       toast.current.show({
         severity: 'error',

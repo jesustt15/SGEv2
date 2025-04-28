@@ -14,13 +14,15 @@ export const PersonalEdit = ({ onPersonalUpdated, toastRef }) => {
   const { id } = useParams();
   const { personal, setPersonal, getOnePersonal, updatePersonal } = usePersonal();
 
-  const toast = toastRef || useRef(null);
+  const internalToastRef = useRef(null);
+  const toast = toastRef || internalToastRef;
 
 
   const {
     handleSubmit, 
     control,
     reset,
+    setError,
     formState: { errors },
   } = useForm();
 
@@ -80,15 +82,20 @@ export const PersonalEdit = ({ onPersonalUpdated, toastRef }) => {
       
       if (onPersonalUpdated) onPersonalUpdated(response);
     } catch (error) {
-      console.error("Error al editar Personal:", error);
-      if (toast?.current) {
-        toast.current.show({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Revisa los campos marcados.',
+      console.log("Error al crear estudiante:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
         });
-      }
-    }
+      } 
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Revisa los campos marcados.'
+      });
+    }    
   };
 
   return (
@@ -153,7 +160,7 @@ export const PersonalEdit = ({ onPersonalUpdated, toastRef }) => {
                   render={({ field }) => (
                     <>
                     <label htmlFor="cod">Código</label>
-                      <InputText placeholder="Ingresa el código " className="input-ced" id="ced" {...field} />
+                      <InputText placeholder="Ingresa el código " className="input-ced" id="cod" {...field} />
                     </>
                   )}
                 />

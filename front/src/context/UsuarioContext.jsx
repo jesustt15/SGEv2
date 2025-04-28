@@ -34,7 +34,7 @@ export function UsuarioProvider({ children }) {
         try {
             const existingUser = usuario.find(u => u.username === user.username);
             if (existingUser) {
-                throw new Error('Usuario con este username ya existe.');
+                throw [{ field: 'username', message: 'Este usuario ya existe.' }];
             }
             await createUsuariosRequest(user);
             getUsuarios();

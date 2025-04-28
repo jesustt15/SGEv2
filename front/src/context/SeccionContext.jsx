@@ -32,34 +32,50 @@ export function SeccionProvider({ children }) {
     };
 
     const createSeccion = async (auto) => {
-        try {
-          const existingSeccion = seccion.find(u => u.nombre === auto.get('nombre'));
-          if (existingSeccion) {
-            throw new Error('Este Seccion ya existe.');
-          }
-          const res = await createSeccionRequest(auto); // Asegúrate de qurepree endpoint devuelve el objeto creado
-      
-          // Actualiza la lista de Seccions
-          getSecciones();
-      
-          // Muestra el mensaje de éxito
-          toast.current.show({
-            severity: 'success',
-            summary: 'Registro Exitoso',
-            detail: 'Nueva Seccion agregada',
-            life: 3000,
-          });
-          navigate('/secciones');
-          return res;
-        } catch (error) {
-          console.error("Error creating Seccion:", error);
-          if (error.response && error.response.data && error.response.data.errors) {
-            throw error.response.data.errors;
-          } else {
-            throw [{ message: 'Error al crear Seccion' }];
+      try {
+        // Extraer los datos necesarios del FormData
+        const nombre = auto.get('nombre');
+        const docenteId = auto.get('docente_id');
+    
+        // Validación: si el docente ya tiene una sección asignada
+        if (docenteId) {
+          const existingDocenteSeccion = seccion.find(u => u.docente_id === docenteId);
+          if (existingDocenteSeccion) {
+            throw new Error('El docente ya está asociado a una sección.');
           }
         }
-      };
+    
+        // Validación: si la sección con ese nombre ya existe
+        const existingSeccion = seccion.find(u => u.nombre === nombre);
+        if (existingSeccion) {
+          throw new Error('Este Seccion ya existe.');
+        }
+    
+        // Llamada a la API para crear la sección
+        const res = await createSeccionRequest(auto); // Asegúrate que este endpoint devuelva el objeto creado
+    
+        // Actualiza la lista de Secciones
+        getSecciones();
+    
+        // Muestra el mensaje de éxito
+        toast.current.show({
+          severity: 'success',
+          summary: 'Registro Exitoso',
+          detail: 'Nueva Sección agregada',
+          life: 3000,
+        });
+        navigate('/secciones');
+        return res;
+      } catch (error) {
+        console.error("Error creating Seccion:", error);
+        if (error.response && error.response.data && error.response.data.errors) {
+          throw error.response.data.errors;
+        } else {
+          throw [{ message: 'Error al crear Seccion' }];
+        }
+      }
+    };
+    
       
       const updateSeccion = async (id, seccion) => {
         try {

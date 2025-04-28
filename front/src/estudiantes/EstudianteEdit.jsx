@@ -16,7 +16,8 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const { id } = useParams();
   const { estudiante, setEstudiante, getOneEstudiante, updateEstudiante } = useEstudiante();
 
-  const toast = toastRef || useRef(null);
+  const internalToastRef = useRef(null);
+  const toast = toastRef || internalToastRef;
 
   const autorizado = estudiante.autorizados?.[0];
   const representantePadre = estudiante.representantes?.find(rep => rep.tipo === 'Padre');
@@ -32,11 +33,7 @@ export const EstudianteEdit = ({ onEstudianteUpdated, toastRef }) => {
   const [foto, setFoto] = useState(null);
   const [formInitialized, setFormInitialized] = useState(false);
 
-  const handleFotoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFoto(e.target.files[0]);
-    }
-  };
+
   useEffect(() => {
     const loadEstudiante = async () => {
       if (id) {

@@ -78,51 +78,72 @@ export function PersonalProvider({ children }) {
       }
       };
       
-      const updatePersonal = async (id, newPersonal) => {
-        try {
-          const cedula = newPersonal.get('ced');
-          const cod = newPersonal.get('cod');
-          const telf = newPersonal.get('telf');
-      
+// Función auxiliar para obtener el ID del personal (según la propiedad que exista)
+const getUserId = (user) => {
+  return user._id || user.id || user.personal_id;
+};
 
-          const idString = String(id);
-      
-          const existingPersonal = personals.find(u => String(u.id) !== idString && u.ced === cedula);
-          if (existingPersonal) {
-            throw [{ field: 'ced', message: 'Este Personal ya existe.' }];
-          }
-          const existingByCod = personals.find(u => String(u.id) !== idString && u.cod === cod);
-          if (existingByCod) {
-            throw [{field: 'cod', message: 'Ya existe un personal con ese código.'}];
-          }
-          const existingByTelf = personals.find(u => String(u.id) !== idString && u.telf === telf);
-          if (existingByTelf) {
-            throw [{field: 'telf', message: 'Ya existe un personal con ese telf.'}];
-          }
-      
-          const response = await updatePersonalRequest(id, newPersonal);
-          getPersonals();
-          navigate('/personals');
-          return response;
-        } catch (error) {
-          console.error("Error creating Personal:", error);
-          if (error.response && error.response.data && error.response.data.errors) {
-              throw error.response.data.errors;
-          } else if (Array.isArray(error)) {
-              throw error;
-          }
-          else {
-              throw [{ message: 'Error al crear personal' }];
-          }
-      }
-      };
-      
-      
+const updatePersonal = async (id, newPersonal) => {
+  try {
+    // Extraemos los valores enviados en el FormData
+    const cedula = newPersonal.get('ced');
+    const cod = newPersonal.get('cod');
+    const telf = newPersonal.get('telf');
+    // Convertimos id a string para la comparación
+    const idString = String(id);
+    // Validación de duplicados para cédula
+    const existingPersonal = personals.find(u => {
+      const userId = String(getUserId(u)); 
+      return userId !== idString && u.ced === cedula;
+    });
+    if (existingPersonal) {
+      console.error("[updatePersonal] Duplicado encontrado para cédula:", existingPersonal);
+      throw [{ field: 'ced', message: 'Este Personal ya existe.' }];
+    }
+
+    // Validación de duplicados para código
+    const existingByCod = personals.find(u => {
+      const userId = String(getUserId(u)); 
+      return userId !== idString && u.cod === cod;
+    });
+    if (existingByCod) {
+      throw [{ field: 'cod', message: 'Ya existe un personal con ese código.' }];
+    }
+
+    // Validación de duplicados para teléfono
+    const existingByTelf = personals.find(u => {
+      const userId = String(getUserId(u)); 
+      return userId !== idString && u.telf === telf;
+    });
+    if (existingByTelf) {
+      throw [{ field: 'telf', message: 'Ya existe un personal con ese telf.' }];
+    }
+    // Se procede a actualizar el personal con la request correspondiente.
+    const response = await updatePersonalRequest(id, newPersonal);
+
+    // Refresco el listado de personals y navego a la ruta correspondiente.
+    getPersonals();
+    navigate('/personals');
+
+    return response;
+  } catch (error) {
+    console.error("[updatePersonal] Error al actualizar Personal:", error);
+    if (error.response && error.response.data && error.response.data.errors) {
+      throw error.response.data.errors;
+    } else if (Array.isArray(error)) {
+      throw error;
+    } else {
+      throw [{ message: 'Error al crear personal' }];
+    }
+  }
+};
+
       
     const deletePersonal = async (id) => {
         try {
             const res = await deletePersonalRequest(id);
-            if (res.status === 204) setPersonal(personal.filter((personal) => personal.personal_id !== id));
+            if (res.status === 204) 
+              setPersonals(prevPersonals => prevPersonals.filter(p => p.personal_id !== id))
             getPersonals();
         } catch (error) {
             console.error("Error deleting Personal:", error);

@@ -4,7 +4,7 @@ import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useUsuario } from "../context";
 import { useRef } from "react";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 export const UsuarioDetails = ({ usuario }) => {
@@ -28,6 +28,7 @@ const confirmDelete = () => {
             message: '¿Está seguro que desea eliminar este usuario?',
             header: 'Confirmación de eliminación',
             icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Si',    // Texto personalizado para "Aceptar"
             accept: async () => {
               await deleteUsuario(usuario.user_id);
               toast.current.show({
@@ -67,7 +68,6 @@ const confirmDelete = () => {
           />
         </div>
       )}
-      <ConfirmDialog />
       <Toast  ref={toast} position="top-right" baseZIndex={1000} />
     </div>
     

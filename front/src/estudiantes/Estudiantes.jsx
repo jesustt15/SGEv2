@@ -4,7 +4,6 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
-import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useEstudiante } from '../context';
 import { NavLink } from 'react-router-dom';
 import './estudiantes.css';
@@ -145,7 +144,6 @@ export const Estudiantes = () => {
     <div className="estudiantes-page">
       <div className="estudiantes-table">
         <Toast ref={toast} />
-        <ConfirmDialog />
         <DataTable
             value={Array.isArray(estudiante) ? estudiante : []}
             paginator

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useRef, useState } from "react";
@@ -31,50 +32,52 @@ export function AutorizadoProvider({ children }) {
         }
     };
 
-    const createAutorizado = async (auto) => {
-        try {
-
-          const cedulaCompletaFromForm = auto.get('ced'); 
-          const telfFromForm = auto.get('telf')// Get the complete cedula from formData
-
-          const existingAutorizado = autorizado.find(u => u.ced === cedulaCompletaFromForm);
-          if (existingAutorizado) {
-            throw [{ field: 'ced', message: 'Este autorizado ya existe.' }];
-          }
-          const existingByTelf = autorizado.find(u => u.telf === telfFromForm);
-          if (existingByTelf) {
-            throw [{ field: 'telf', message: 'Este telf ya existe.' }];
-          }
-
-          const res = await createAutorizadosRequest(auto);
-
-      
-          // Actualiza la lista de Autorizados
-          getAutorizados();
-      
-          // Muestra el mensaje de éxito
-          toast.current.show({
-            severity: 'success',
-            summary: 'Registro Exitoso',
-            detail: 'Nuevo Autorizado agregado',
-            life: 3000,
-          });
-      
-          
-          navigate('/estudiantes');
-        } catch (error) {
-          console.error("Error creating autorizado:", error);
-          if (error.response && error.response.data && error.response.data.errors) {
-              throw error.response.data.errors;
-          } else if (Array.isArray(error)) {
-              throw error;
-          }
-          else {
-              // Handle any other unexpected errors
-              throw [{ message: 'Error al crear el autorizado' }];
-          }
-      }
-      };
+       const createAutorizado = async (auto) => {
+         try {
+           // Extrae los valores del FormData y normalízalos
+           const cedulaCompletaFromForm = auto.get('ced');
+           const telfFromForm = auto.get('telf');
+     
+           const normalizedCedula = cedulaCompletaFromForm?.trim().toLowerCase();
+           const normalizedTelf = telfFromForm?.trim();
+       
+           const existingRepresentante = autorizados.find(u => {
+             const storedCed = u.ced?.trim().toLowerCase();
+             return storedCed === normalizedCedula;
+           });
+           if (existingRepresentante) {
+             throw [{ field: 'ced', message: 'Este autorizado ya existe.' }];
+           }
+           
+           const existingPhone = autorizados.find(u => u.telf?.trim() === normalizedTelf);
+           if (existingPhone) {
+             throw [{ field: 'telf', message: 'Este telf ya está registrado' }];
+           }
+           
+           const res = await createAutorizadosRequest(auto);
+           const createdRepresentante = res.data;
+           
+           getAutorizados();
+   
+           toast.current.show({
+             severity: 'success',
+             summary: 'Registro Exitoso',
+             detail: 'Nuevo Autorizado agregado',
+             life: 3000,
+           });
+           
+           return createdRepresentante;
+         } catch (error) {
+           console.error("Error creating Autorizado", error);
+           if (error.response && error.response.data && error.response.data.errors) {
+             throw error.response.data.errors;
+           } else if (Array.isArray(error)) {
+             throw error;
+           } else {
+             throw [{ message: 'Error al crear Autorizado' }];
+           }
+         }
+       };
       
     const updateAutorizado = async (id, autorizado) => {
       try {

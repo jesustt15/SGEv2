@@ -28,6 +28,7 @@ export const PersonalPage = () => {
       />
       <h4>DATOS DEL PERSONAL</h4>
       <div className="pdfContent" id='pdfContent'>
+        <hr />
         <HeaderEdit />
         <EstudianteFoto estudiante={personal} />
         <div className="page-section">
