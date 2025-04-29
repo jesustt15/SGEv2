@@ -38,6 +38,8 @@ export const EstudiantePage = () => {
           <div className="form-columnone">
             <label>Nombres</label>
             <h5>{estudiante.nombres}</h5>
+            <label>Cedula Escolar</label>
+            <h5>{estudiante.cedulaEscolar}</h5>
             <div className="group-label">
               <div className="group-item">
                 <label>Fecha de Nacimiento</label>

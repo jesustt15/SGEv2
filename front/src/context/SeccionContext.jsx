@@ -41,14 +41,14 @@ export function SeccionProvider({ children }) {
         if (docenteId) {
           const existingDocenteSeccion = seccion.find(u => u.docente_id === docenteId);
           if (existingDocenteSeccion) {
-            throw new Error('El docente ya está asociado a una sección.');
+            throw [{ field:"docente", message: 'Este Docente ya tiene una sección asignada.' }];
           }
         }
     
         // Validación: si la sección con ese nombre ya existe
         const existingSeccion = seccion.find(u => u.nombre === nombre);
         if (existingSeccion) {
-          throw new Error('Este Seccion ya existe.');
+          throw [{ field:"nombre", message: 'Este nombre seccion ya existe' }];
         }
     
         // Llamada a la API para crear la sección
@@ -66,12 +66,14 @@ export function SeccionProvider({ children }) {
         });
         navigate('/secciones');
         return res;
-      } catch (error) {
-        console.error("Error creating Seccion:", error);
+      }catch (error) {
+        console.error("Error creating representante", error);
         if (error.response && error.response.data && error.response.data.errors) {
           throw error.response.data.errors;
+        } else if (Array.isArray(error)) {
+          throw error;
         } else {
-          throw [{ message: 'Error al crear Seccion' }];
+          throw [{ message: 'Error al crear representante' }];
         }
       }
     };

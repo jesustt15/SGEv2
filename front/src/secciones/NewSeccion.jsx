@@ -13,7 +13,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
   const { createSeccion } = useSeccion();
   const { getPersonals, personals } = usePersonal();
   const { getEstudiantes, estudiante, updateSeccionEstudiante } = useEstudiante();
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const { handleSubmit, control, formState: { errors }, setError } = useForm();
   const toast = useRef(null);
 
   // Obtiene los datos al montar el componente
@@ -78,13 +78,20 @@ export const NewSeccion = ( {onStudentCreated}) => {
         });
       }
     } catch (error) {
-      console.error("Error al crear la sección o actualizar estudiantes:", error);
+      console.log("Error al crear autorizado:", error);
+      if (Array.isArray(error)) {
+        error.forEach(err => {
+          if (err.field) {
+            setError(err.field, { type: 'manual', message: err.message });
+          }
+        });
+      }
       toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Revisa los campos marcados o la conexión con la API."
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Revisa los campos marcados.'
       });
-    }
+    }    
   };
   
   
@@ -245,6 +252,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
             </>
           )}
         />
+        {errors.docente && <small className="p-error">{errors.docente.message}</small>}
          <Toast ref={toast} />
           <button type="submit" className="btn-next">
             Guardar

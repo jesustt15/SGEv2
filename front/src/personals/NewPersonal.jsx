@@ -233,7 +233,12 @@ export const NewPersonal = () => {
                     name="telf"
                     control={control}
                     defaultValue=""
-                    rules={{ required: "Ingrese el nro telefónico" }}
+                    rules={{ required: "Ingrese el nro telefónico" ,
+                      pattern: {
+                        value: /^\d{7}$/,
+                        message: "El número de teléfono debe contener exactamente 11 dígitos."
+                      }
+                    }}
                     render={({ field }) => (
                     <>
                         <InputText placeholder="Ingresa Telefono" className="input-ced" id="telf" {...field} />
