@@ -71,7 +71,7 @@ export const EstudiantePage = () => {
         <hr />
             {representantePadre ? (
               <>
-                <h4 className="parent-type">Representantes</h4>
+                <h4 className="parent-type">Representante</h4>
                 <EstudianteFoto estudiante={representantePadre} />
                 <div className="page-section-large">
                   <div className="form-columnone">
@@ -117,7 +117,7 @@ export const EstudiantePage = () => {
             )}
             {representanteMadre ? (
               <>
-                <h4 className="parent-type">Representantes</h4>
+                <h4 className="parent-type">Representante</h4>
                 <EstudianteFoto estudiante={representanteMadre} />
                 <div className="page-section-large">
                   <div className="form-columnone">

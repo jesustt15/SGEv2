@@ -78,29 +78,36 @@ export function AutorizadoProvider({ children }) {
            }
          }
        };
+
+       const updateAutorizado = async (id, autorizado) => {
+        try {
+          // Extraemos los valores enviados en el FormData
+          
+          // Convertimos id a string para la comparación
+
       
-    const updateAutorizado = async (id, autorizado) => {
-      try {
-        const cedula = autorizado.get('ced');
-        const telf = autorizado.get('telf');
-        const idString = String(id);
-
-        const existingAutorizado = autorizados.find(u => String(u.id) !== idString && u.ced === cedula);;
-        if (existingAutorizado) {
-          throw new Error('Este Autorizado ya existe.');
+          // Validación de duplicados para cédula
+        
+      
+          // Se procede a actualizar el autorizado utilizando la request correspondiente
+          const response = await updateAutorizadoRequest(id, autorizado);
+          
+          // Actualizamos la lista de autorizados
+          getAutorizados();
+      
+          return response;
+        } catch (error) {
+          console.error("[updateAutorizado] Error al actualizar Autorizado:", error);
+          if (error.response && error.response.data && error.response.data.errors) {
+            throw error.response.data.errors;
+          } else if (Array.isArray(error)) {
+            throw error;
+          } else {
+            throw [{ message: 'Error al actualizar autorizado' }];
+          }
         }
-        const existingByTelf = autorizados.find(u => String(u.id) !== idString && u.telf === telf);
-        if (existingByTelf) {
-          throw new Error('Este Autorizado ya existe.');
-        }
-
-        const response = await updateAutorizadoRequest(id, autorizado);
-        getAutorizados();
-        return response; 
-      } catch (error) {
-        console.error("Error updating Autorizado:", error);
-      }
-    };
+      };
+      
       
       
     const deleteAutorizado = async (id) => {
