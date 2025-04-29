@@ -63,7 +63,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
       data.telf_trabajo = telfTrabajoCompleto;
 
       if (watch("trabajaOption") === "No") {
-        data.trabajo = "NO";
+        data.dire_trabajo = "NO";
         data.telf_trabajo = 'NO';
      }
 

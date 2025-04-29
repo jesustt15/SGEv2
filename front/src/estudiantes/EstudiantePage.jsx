@@ -96,7 +96,7 @@ export const EstudiantePage = () => {
                     <label>Cédula</label>
                     <h5>{representantePadre.ced}</h5>
                     <label>¿trabaja?</label>
-                    <h5>{representantePadre.trabajo}</h5>
+                    <h5>{representantePadre.dire_trabajo}</h5>
                     <label>correo electrónico</label>
                     <h5>{representantePadre.correoElectronico}</h5>
                   </div>
@@ -108,7 +108,7 @@ export const EstudiantePage = () => {
                     <label>Teléfono</label>
                     <h5>{representantePadre.telf}</h5>
                     <label>Telefono del trabajo</label>
-                    <h5>{representantePadre.telfTrabajo}</h5>
+                    <h5>{representantePadre.telf_trabajo}</h5>
                   </div>
                 </div>
             </>
@@ -142,7 +142,7 @@ export const EstudiantePage = () => {
                     <label>Cédula</label>
                     <h5>{representanteMadre.ced}</h5>
                     <label>¿trabaja?</label>
-                    <h5>{representanteMadre.trabajo}</h5>
+                    <h5>{representanteMadre.dire_trabajo}</h5>
                     <label>correo electrónico</label>
                     <h5>{representanteMadre.correoElectronico}</h5>
                   </div>
@@ -154,7 +154,7 @@ export const EstudiantePage = () => {
                     <label>Teléfono</label>
                     <h5>{representanteMadre.telf}</h5>
                     <label>Telefono del trabajo</label>
-                    <h5>{representanteMadre.telfTrabajo}</h5>
+                    <h5>{representanteMadre.telf_trabajo}</h5>
                   </div>
                 </div>
               </>
