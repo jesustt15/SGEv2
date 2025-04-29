@@ -33,6 +33,7 @@ export const EstudiantePage = () => {
       <div id="pdfContent" className="pdfContent">
         <HeaderEdit />
         <hr />
+        <h4>Alumno</h4>
         <EstudianteFoto estudiante={estudiante} />
         <div className="page-section">
           <div className="form-columnone">

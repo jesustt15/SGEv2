@@ -11,7 +11,7 @@ export const NewEstudianteStepper = () => {
   const navigate = useNavigate();
 
   const stepsModel = [
-    { label: 'Estudiante' },
+    { label: 'Alumno' },
     { label: 'Padres' },
     { label: 'Autorizado' },
   ];

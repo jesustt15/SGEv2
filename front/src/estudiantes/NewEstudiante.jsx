@@ -97,7 +97,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
   
   return (
     <div className="card">
-        <h4>Datos Alumnos</h4>
+        <h4>Datos del Alumno</h4>
       <form className="form-alumno" onSubmit={handleSubmit(createEstudianteSubmit, onInvalid)}>
         <div className="form-columnone">
           <Controller
