@@ -132,7 +132,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
               />
               {errors.fechaNacimiento && <small className="p-error">{errors.fechaNacimiento.message}</small>}
             </div>
-            <div className="group-item">
+            <div className="group-item-xs">
             <Controller
               name="edad"
               control={control}

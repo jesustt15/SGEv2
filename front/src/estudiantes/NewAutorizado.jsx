@@ -147,14 +147,14 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             name="observaciones"
             control={control}
             defaultValue=""
-            rules={{ required: "Coloque unas observaciones." }}
+            rules={{ required: "El observaciones es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="observaciones">Observaciones</label>
-                <InputText id="observaciones" {...field} placeholder="Observaciones" />
+                <label htmlFor="observaciones">observaciones</label>
+                <InputText placeholder="Ingrese observaciones" id="observaciones" {...field} />
               </>
             )}
-          />
+            />             
           {errors.observaciones && <small className="p-error">{errors.observaciones.message}</small>}
         </div>
         <div className="form-columntwo">

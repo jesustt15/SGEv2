@@ -35,14 +35,14 @@ const getOneAutorizado = async(req, res = response) => {
 
 const crearAutorizado = async(req, res = response) => {
 
-    const {nombre, apellido, ced, direccion, parentesco ,telf, estudiante_id} = req.body;
+    const {nombre, apellido, ced, direccion, parentesco ,telf,observaciones, estudiante_id} = req.body;
     const foto = req.file;
     const fotoPath = foto ? path.join('uploads', 'fotoAutorizado', foto.filename) : null;
 
     try {
 
         const autorizado = await Autorizado.create({nombre, apellido, ced, direccion, 
-            parentesco ,telf, foto:fotoPath, estudiante_id});
+            parentesco ,telf, foto:fotoPath,observaciones, estudiante_id});
         res.status(201).json(autorizado)
         
     } catch (error) {

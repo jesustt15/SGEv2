@@ -116,6 +116,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
 
   return (
     <div className="card">
+      <h4>DATOS DEl PADRE O MADRE</h4>
       <form className="form-alumno" onSubmit={handleSubmit(createRepresentanteSubmit)}>
         <div className="form-columnone">
           <Controller
