@@ -8,9 +8,10 @@ import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
 import { NavLink } from 'react-router-dom';
 import '../estudiantes/estudiantes.css';
-import { usePersonal } from '../context';
+import { useAuth, usePersonal } from '../context';
 
 export const Personal = () => {
+  const {role} = useAuth();
   const { personals, getPersonals, setSelectedPersonal, selectedPersonal } = usePersonal();
   const [globalFilter, setGlobalFilter] = useState(null);
   const [filters, setFilters] = useState({
@@ -38,9 +39,11 @@ export const Personal = () => {
     return (
       <>
         <div className="button-container">
-          <NavLink className="p-button p-component" to="/personals/new">
+        {role === 'admin' && (
+            <NavLink className="p-button p-component" to="/personals/new">
             AÑADIR PERSONAL
-          </NavLink>
+          </NavLink>  
+          )}
         </div>
         <div className="header-container">
           <div className="searcher">

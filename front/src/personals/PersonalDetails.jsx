@@ -2,7 +2,7 @@
 import { Button } from "primereact/button";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { usePersonal } from "../context";
+import { useAuth, usePersonal } from "../context";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { useRef } from "react";
@@ -10,7 +10,7 @@ import { useRef } from "react";
 export const PersonalDetails = ({ personal }) => {
   const navigate = useNavigate();
   const { deletePersonal } = usePersonal();
-  const { role } = usePersonal(); // Obtención del rol del usuario
+  const { role } = useAuth(); // Obtención del rol del usuario
   const toast = useRef(null);
 
   const confirmDelete = () => {

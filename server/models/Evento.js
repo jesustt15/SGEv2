@@ -25,6 +25,14 @@ const Evento = sequelize.define('eventos', {
     type: DataTypes.ENUM('escolar', 'administrativo'),
     allowNull: false,
   },
+  start_time: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  end_time: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
   
 });
 

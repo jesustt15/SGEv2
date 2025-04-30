@@ -33,11 +33,11 @@ const getOneEvento = async(req, res = response) => {
 
 const crearEvento = async(req, res = response) => {
 
-    const {title, description, type, date} = req.body;
+    const {title, description, type, date, start_time, end_time} = req.body;
     console.log(req.body);
     try {
 
-        const evento = await Evento.create({title, description, type, date});
+        const evento = await Evento.create({title, description, type, date, start_time, end_time});
         res.status(201).json(evento)
         
     } catch (error) {

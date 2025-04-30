@@ -21,166 +21,245 @@ Modal.setAppElement('#root');
 export default function CalendarWithModal() {
   const { evento, getEventos, createEvento, updateEvento, deleteEvento } = useEvento();
 
+  
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("create"); // "create" | "view" | "edit"
-  const [formData, setFormData] = useState({
-    id: '',
-    title: '',
-    description: '',
-    date: '',
-    type: 'escolar', // valor por defecto
-    color: '#000000'
-  });
-
+   const [modalMode, setModalMode] = useState("create"); // "create" | "view" | "edit"
+   const [formData, setFormData] = useState({
+  id: '',
+ title: '',
+  description: '',
+  date: '', // Debe ser YYYY-MM-DD string
+  startTime: '08:00:00', // Debe ser HH:mm:ss string
+  endTime: '12:00:00',   // Debe ser HH:mm:ss string (Ajustado default)
+  type: 'escolar',
+  color: '#000000' // Puede que no necesites color aquí si se basa en 'type'
+   });
+  
   useEffect(() => {
     getEventos();
-  }, []);
-
-
-  // Al seleccionar una fecha en FullCalendar
+    }, []);
+  
+  
   const handleDateSelect = (selectInfo) => {
-    setModalMode("create");
-    const startDate = selectInfo.startStr; 
-    setFormData({
-      id: '',
-      title: '',
-      description: '',
-      date: startDate,
-      type: 'escolar',
-      color: '#000000'
-    });
-    setModalIsOpen(true);
-  };
-
-  // Al hacer click en un evento del calendario
-  const handleEventClick = (clickInfo) => {
-    const clickedEvent = clickInfo.event;
-    const eventDetails = {
-      id: clickedEvent.id,
-      title: clickedEvent.title,
-      description: clickedEvent.extendedProps.description,
-      date: moment(clickedEvent.start).format("YYYY-MM-DD"),
-      type: clickedEvent.extendedProps.type,
-      color: clickedEvent.backgroundColor,
-    };
-    setFormData(eventDetails);
-    setModalMode("view");
-    setModalIsOpen(true);
-  };
-
-  const handleEdit = () => {
-    setModalMode("edit");
-  };
-
-
-  // Cierra el modal y reinicia el formulario
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setModalMode("create");
-    setFormData({
-      id: '',
-      title: '',
-      description: '',
-      date: '',
-      type: 'escolar',
-      color: '#000000'
-    });
-  };
-
-  const handleInputChange = (e, name) => {
-    let value;
-
-    if (e && e.value !== undefined) {
-      // Si es un objeto Date, lo convertimos a cadena en formato YYYY-MM-DD
-      value = e.value instanceof Date
-        ? e.value.toISOString().split('T')[0]
-        : e.value;
-    } else if (e && e.target) {
-      value = e.target.value;
-    }
-
-    const fieldName = name || (e && e.target && e.target.name);
-    setFormData({ ...formData, [fieldName]: value });
-  };
-
-  const confirmDelete = () => {
-    confirmDialog({
-      message: '¿Está seguro que desea eliminar este evento?',
-      header: 'Confirmación de eliminación',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Si',    // Texto personalizado para "Aceptar"
-      rejectLabel: 'No',    // Texto personalizado para "Rechazar"
-      accept: async () => {
-        // Asumiendo que el id del evento a eliminar está en formData.id
-        await deleteEvento(formData.id);
-        await getEventos();
-        closeModal();
-      },
-      reject: () => {
-        // Opcionalmente, alguna acción si se rechaza
-      }
-    });
+   setModalMode("create");
+   const startDate = selectInfo.startStr; // "YYYY-MM-DD"
+   setFormData({
+   // Reinicia todos los campos al crear
+   id: '',
+   title: '',
+   description: '',
+   date: startDate,
+   startTime: '08:00:00', // valor predeterminado
+   endTime: '12:00:00',   // valor predeterminado
+   type: 'escolar',
+   color: '#000000'
+   });
+   setModalIsOpen(true);
   };
   
-
-  // Envía el formulario para crear o editar
-  const handleSubmit = async (e) => {
+    const handleEventClick = (clickInfo) => {
+   const clickedEvent = clickInfo.event;
+      // IMPORTANTE: Lee las horas desde el evento original si existen
+      // Asume que tu backend devuelve start_time y end_time como timestamps completos
+      const startTimeStr = clickedEvent.start ? moment(clickedEvent.start).format("HH:mm:ss") : '08:00:00';
+      const endTimeStr = clickedEvent.end ? moment(clickedEvent.end).format("HH:mm:ss") : '12:00:00';
+      const dateStr = clickedEvent.start ? moment(clickedEvent.start).format("YYYY-MM-DD") : '';
+  
+  
+  const eventDetails = {
+   id: clickedEvent.id,
+   title: clickedEvent.title || '',
+   description: clickedEvent.extendedProps?.description || '',
+   date: dateStr, // Fecha del evento
+  tartTime: startTimeStr, // Hora de inicio del evento
+  endTime: endTimeStr,   // Hora de fin del evento
+    type: clickedEvent.extendedProps?.type || 'escolar',
+    color: clickedEvent.backgroundColor || '#000000',
+  };
+  setFormData(eventDetails);
+  setModalMode("view");
+  setModalIsOpen(true);
+  };
+  
+   const handleEdit = () => {
+    setModalMode("edit");
+   }; 
+   const closeModal = () => {
+   setModalIsOpen(false);
+   // Opcional: No reiniciar aquí si siempre reinicias al ABRIR el modal
+   setFormData({
+   id: '', title: '', description: '', date: '',
+   startTime: '08:00:00', endTime: '12:00:00', type: 'escolar', color: '#000000'
+   });
+   };
+  
+    // Modificamos handleInputChange para manejar Date de Calendar (fecha y hora)
+    const handleInputChange = (e, name) => {
+      const fieldName = name || e.target?.name;
+      let value;
+      
+      // Para componentes de PrimeReact (Calendar, Dropdown, etc.)
+      if (e && e.target === undefined && e.value !== undefined) {
+        if (e.value instanceof Date) {
+          if (fieldName === 'date') {
+            value = moment(e.value).format('YYYY-MM-DD');
+          } else if (fieldName === 'startTime' || fieldName === 'endTime') {
+            value = moment(e.value).format('HH:mm:ss');
+          } else {
+            value = e.value;
+          }
+        } else {
+          value = e.value;
+        }
+      } else if (e && e.target) { // Inputs HTML normales
+        value = e.target.value;
+      } else {
+        value = e;
+      }
+      
+      console.log(`handleInputChange - Campo: ${fieldName}, Valor a establecer: ${value}`);
+      
+      if (fieldName) {
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          [fieldName]: value
+        }));
+      } else {
+        console.warn("handleInputChange recibió un evento sin nombre de campo:", e);
+      }
+    };
+    
+    
+  
+  
+     const confirmDelete = () => {
+       if (!formData.id) return; // Asegurarse que hay un ID
+      confirmDialog({
+       message: '¿Está seguro que desea eliminar este evento?',
+       header: 'Confirmación de eliminación',
+       icon: 'pi pi-exclamation-triangle',
+       acceptLabel: 'Si',
+       rejectLabel: 'No',
+       accept: async () => {
+        try {
+             await deleteEvento(formData.id);
+              await getEventos(); // Recargar eventos
+              closeModal();
+          } catch(error) {
+              console.error("Error al eliminar:", error);
+          }
+     },
+     reject: () => {}
+    });
+    };
+  
+   // Envía el formulario para crear o editar
+   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Valores de formData al inicio de handleSubmit:", JSON.stringify(formData, null, 2));
+    
     try {
+      // Validaciones
+      if (!formData.date || !moment(formData.date, "YYYY-MM-DD", true).isValid()) {
+        alert("Por favor, seleccione una fecha válida.");
+        return;
+      }
+      if (!formData.startTime || !moment(formData.startTime, "HH:mm:ss", true).isValid()) {
+        alert("Por favor, seleccione una hora de inicio válida.");
+        return;
+      }
+      if (!formData.endTime || !moment(formData.endTime, "HH:mm:ss", true).isValid()) {
+        alert("Por favor, seleccione una hora de fin válida.");
+        return;
+      }
+      
+      // Crear el objeto moment para la fecha del evento
+      const eventDate = moment(formData.date, "YYYY-MM-DD");
+      const startTimeMoment = moment(formData.startTime, "HH:mm:ss");
+      const endTimeMoment = moment(formData.endTime, "HH:mm:ss");
+      
+      // Combinar la fecha con las horas seleccionadas
+      const finalStartTime = eventDate.clone()
+        .hours(startTimeMoment.hours())
+        .minutes(startTimeMoment.minutes())
+        .seconds(startTimeMoment.seconds());
+      const finalEndTime = eventDate.clone()
+        .hours(endTimeMoment.hours())
+        .minutes(endTimeMoment.minutes())
+        .seconds(endTimeMoment.seconds());
+      
+      console.log('Inicio del evento:', finalStartTime.format("YYYY-MM-DD HH:mm:ss"));
+      console.log('Fin del evento:', finalEndTime.format("YYYY-MM-DD HH:mm:ss"));
+      
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        type: formData.type,
+        date: formData.date,
+        start_time: finalStartTime.format("YYYY-MM-DD HH:mm:ss"),
+        end_time: finalEndTime.format("YYYY-MM-DD HH:mm:ss"),
+        color: formData.color
+      };
+      
+      console.log("Payload a enviar:", payload);
+      
       if (modalMode === "create") {
-        await createEvento(formData);
-        console.log('llamando a la bd');
+        await createEvento(payload);
       } else if (modalMode === "edit") {
-        await updateEvento(formData.id, formData);
+        await updateEvento(formData.id, payload);
       }
       await getEventos();
       closeModal();
     } catch (error) {
       console.error("Error procesando el evento:", error);
+      const backendError = error.response?.data?.error || error.message;
+      alert(`Error al guardar el evento: ${backendError}`);
     }
   };
-
+  
+  
+  
   const calendarEvents = (evento || []).map((evt) => {
-    const eventDate = moment(evt.date, 'YYYY-MM-DD').toDate();
+    const startMoment = moment(evt.start_time, "YYYY-MM-DD HH:mm:ss");
+    const endMoment = moment(evt.end_time, "YYYY-MM-DD HH:mm:ss");
+    if (!startMoment.isValid() || !endMoment.isValid()) {
+      console.warn("Evento con fecha/hora inválida:", evt);
+      return null;
+    }
     const bgColor =
       evt.type === 'administrativo' ? '#ffd9d9' :
       evt.type === 'escolar' ? '#d2f0ff' :
-      evt.color;
+      evt.color || '#3174ad';
+  
     return {
-        id: evt.evento_id,
-        title: evt.title,
-        start: eventDate,
-        end: eventDate,
-        allDay: true,
-        backgroundColor: bgColor,
-        extendedProps: {
-          description: evt.description,
-          type: evt.type,
-        },
+      id: evt.evento_id,
+      title: evt.title,
+      start: startMoment.toDate(),  // Objeto Date local
+      end: endMoment.toDate(),
+      backgroundColor: bgColor,
+      // NO incluir allDay si el evento es con hora
+      extendedProps: {
+        description: evt.description,
+        type: evt.type,
+      },
     };
-  });
-
-  // Renderiza el contenido de un evento en el calendario
-  function renderEventContent(eventInfo) {
+  }).filter(event => event !== null);
+  // Filtrar nulos si hubo errores de parseo
+  
+    function renderEventContent(eventInfo) {
+      // ... (tu función de renderizado está bien)
     return (
-      <div
-      className='event-content-little'
-        style={{
-          backgroundColor: eventInfo.event.backgroundColor || '#3174ad',
-        }}
-      >
-        <b>{eventInfo.timeText}</b>
-        <i>{eventInfo.event.title}</i>
-      </div>
+    <div /* ... */ >
+      <b>{eventInfo.timeText}</b> {/* Muestra la hora si no es allDay */}
+      <i>{eventInfo.event.title}</i>
+    </div>
     );
   }
-
-  // Opciones para el Dropdown del tipo de evento
-  const typeOptions = [
+  
+   const typeOptions = [
     { label: 'Escolar', value: 'escolar' },
     { label: 'Administrativo', value: 'administrativo' }
-  ];
-
+   ];
   return (
     <div className="calendar-container">
       <FullCalendar
@@ -241,6 +320,7 @@ export default function CalendarWithModal() {
       >
         {modalMode === "view" ? (
           <>
+        {console.log("Modal de vista", formData)}
             <div className="form-modal">
               <div className="group-header-modal">
                 <label className='label-modal'>EVENTO</label>
@@ -279,6 +359,9 @@ export default function CalendarWithModal() {
                   />
                   <p className='p-modal'>{formData.type}</p>
                     </div>
+                    <hr className="divider" />
+                    <label htmlFor="" className="label-modal">INICIO</label>
+                    <p className='p-modal'>{formData.tartTime}</p>
                 </div>
               </div>
             </div>
@@ -303,6 +386,31 @@ export default function CalendarWithModal() {
                   onChange={handleInputChange}
                   required
                 />
+                           <label htmlFor="startTime">Hora de inicio</label>
+<Calendar
+  id="startTime"
+  name="startTime"
+  value={formData.startTime ? moment(formData.startTime, "HH:mm:ss").toDate() : null}
+  onChange={(e) => handleInputChange(e, 'startTime')}
+  timeOnly
+  hourFormat="12" // o "24" según prefieras
+  showIcon
+  required
+/>
+
+<label htmlFor="endTime">Hora de finalización</label>
+<Calendar
+  id="endTime"
+  name="endTime"
+  value={formData.endTime ? moment(formData.endTime, "HH:mm:ss").toDate() : null}
+  onChange={(e) => handleInputChange(e, 'endTime')}
+  timeOnly
+  hourFormat="12"
+  showIcon
+  required
+/>
+
+
                 <div className="group-modal">
                   <div className="group-item-modal">
                     <label htmlFor="date">Fecha</label>

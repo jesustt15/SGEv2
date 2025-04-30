@@ -4,13 +4,14 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
-import { useEstudiante } from '../context';
+import { useAuth, useEstudiante } from '../context';
 import { NavLink } from 'react-router-dom';
 import './estudiantes.css';
 import { MultiSelect } from 'primereact/multiselect';
 import { Button } from 'primereact/button';
 
 export const Estudiantes = () => {
+  const {role} = useAuth();
   const { estudiante, getEstudiantes, setSelectedEstudiante, selectedEstudiante } = useEstudiante();
   const [globalFilter, setGlobalFilter] = useState(null);
   const [filters, setFilters] = useState({
@@ -91,9 +92,11 @@ export const Estudiantes = () => {
     return (
       <>
         <div className="button-container">
-          <NavLink className="p-button p-component" to="/estudiantes/new">
+          {role === 'admin' && (
+            <NavLink className="p-button p-component" to="/estudiantes/new">
             AÑADIR ALUMNO
-          </NavLink>
+          </NavLink>  
+          )}
         </div>
         <div className="header-container">
           <div className="searcher">

@@ -8,11 +8,12 @@ import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
 import { NavLink } from 'react-router-dom';
 import '../estudiantes/estudiantes.css';
-import { useEstudiante, usePersonal, useSeccion } from '../context';
+import { useAuth, useEstudiante, usePersonal, useSeccion } from '../context';
 import { getCantidadAlumnos, getDocenteName } from '../helpers';
 
 export const Secciones = () => {
 
+  const { role } = useAuth();
   const {seccion, getSecciones, setSelectedSeccion, selectedSeccion } = useSeccion();
   const {  getPersonals, personals } = usePersonal();         // Array de docentes
   const { estudiante, getEstudiantes } = useEstudiante();      // Array de estudiantes
@@ -51,9 +52,11 @@ export const Secciones = () => {
     return (
       <>
         <div className="button-container">
-          <NavLink className="p-button p-component" to="/secciones/new">
-            AÑADIR SECCION
-          </NavLink>
+        {role === 'admin' && (
+            <NavLink className="p-button p-component" to="/secciones/new">
+            AÑADIR SECCIÓN
+          </NavLink>  
+          )}
         </div>
         <div className="header-container">
           <div className="searcher">
