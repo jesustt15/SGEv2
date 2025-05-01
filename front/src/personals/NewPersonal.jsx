@@ -89,13 +89,13 @@ export const NewPersonal = () => {
             rules={{ required: "El nombre es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="nombres">Nombres</label>
+                <label htmlFor="nombres">Nombres<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingrese nombres" id="nombres" {...field} />
               </>
             )}
           />
           {errors.nombres && <small className="p-error">{errors.nombres.message}</small>}
-          <label htmlFor="ced">Cédula</label>
+          <label htmlFor="ced">Cédula<span style={{ color: 'red' }}>*</span></label>
           <div className="group">
               <Controller
                 name="tipoCedula"
@@ -136,7 +136,7 @@ export const NewPersonal = () => {
                 rules={{ required: "El codigo es requerido." }}
                 render={({ field }) => (
                   <>
-                  <label>CÓDIGO</label>
+                  <label>CÓDIGO<span style={{ color: 'red' }}>*</span></label>
                     <InputText placeholder="Ingresa el codigo" className="input-ced" id="cod" {...field} />
                   </>
                 )}
@@ -182,7 +182,7 @@ export const NewPersonal = () => {
             rules={{ required: "El apellido es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="apellidos">Apellidos</label>
+                <label htmlFor="apellidos">Apellidos<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingresa Apellidos" id="apellidos" {...field} />
               </>
             )}
@@ -195,7 +195,7 @@ export const NewPersonal = () => {
                 rules={{ required: "El cargo es requerido." }}
                 render={({ field }) => (
                     <>
-                        <label htmlFor="cargo">Cargo</label>
+                        <label htmlFor="cargo">Cargo<span style={{ color: 'red' }}>*</span></label>
                         <Dropdown
                             id="cargo"
                             value={field.value}
@@ -208,7 +208,7 @@ export const NewPersonal = () => {
                     </>
                 )}
             />
-             <label htmlFor="telefono">Teléfono</label>
+             <label htmlFor="telefono">Teléfono<span style={{ color: 'red' }}>*</span></label>
             <div className="group">
                 <Controller
                     name="prefijoTelf"

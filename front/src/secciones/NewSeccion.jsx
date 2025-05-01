@@ -112,7 +112,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
                 rules={{ required: "La Sección es requerida." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="seccion">Sección</label>
+                    <label htmlFor="seccion">Sección<span style={{ color: 'red' }}>*</span></label>
                     <InputText placeholder="Ingrese la sección" id="seccion" {...field} />
                   </>
                 )}
@@ -127,7 +127,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
                 rules={{ required: "El nivel es requerido." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="nivel">Nivel</label>
+                    <label htmlFor="nivel">Nivel<span style={{ color: 'red' }}>*</span></label>
                     <InputText placeholder="Ingresa el nivel" id="nivel" {...field} />
                   </>
                 )}
@@ -183,7 +183,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
             rules={{ required: "El nombre del nivel es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="nombre">Nombre del Nivel</label>
+                <label htmlFor="nombre">Nombre del Nivel<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingresa el nombre" id="nombre" {...field} />
               </>
             )}
@@ -197,7 +197,7 @@ export const NewSeccion = ( {onStudentCreated}) => {
           rules={{ required: "El docente es requerido." }}
           render={({ field }) => (
             <>
-              <label htmlFor="docente">Docente</label>
+              <label htmlFor="docente">Docente<span style={{ color: 'red' }}>*</span></label>
               <Dropdown
                 id="docente"
                 value={field.value}

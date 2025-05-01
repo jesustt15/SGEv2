@@ -107,7 +107,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
             rules={{ required: "El nombre es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="nombres">Nombres</label>
+                <label htmlFor="nombres">Nombres<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingrese nombres" id="nombres" {...field} />
               </>
             )}
@@ -123,7 +123,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                 rules={{ required: "La fecha de nacimiento es requerida." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="fechaNacimiento">Fecha de nacimiento</label>
+                    <label htmlFor="fechaNacimiento">Fecha de nacimiento<span style={{ color: 'red' }}>*</span></label>
                     <Calendar placeholder="00/00/0000" inputId="fechaNacimiento" 
                     dateFormat="dd/mm/yy"
                     locale="es" {...field} />
@@ -149,7 +149,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                     }}
                     render={({ field }) => (
                       <>
-                        <label htmlFor="edad">Edad</label>
+                        <label htmlFor="edad">Edad<span style={{ color: 'red' }}>*</span></label>
                         <InputText placeholder="Ingrese edad" keyfilter="int" id="edad" {...field} />
                       </>
           )}
@@ -157,7 +157,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
         {errors.edad && <small className="p-error">{errors.edad.message}</small>}
         </div>
           </div>
-          <label htmlFor="cedula">Cedula escolar</label>
+          <label htmlFor="cedula">Cedula escolar<span style={{ color: 'red' }}>*</span></label>
           <div className="group">
               <Controller
                 name="tipoCedula"
@@ -246,7 +246,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
             rules={{ required: "El apellido es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="apellidos">Apellidos</label>
+                <label htmlFor="apellidos">Apellidos<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingresa Apellidos" id="apellidos" {...field} />
               </>
             )}
@@ -259,7 +259,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
             rules={{ required: "El lugar de nacimiento es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="lugarNacimiento">Lugar de Nacimiento</label>
+                <label htmlFor="lugarNacimiento">Lugar de Nacimiento<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingresa lugar de nacimiento" id="lugarNacimiento" {...field} />
               </>
             )}
@@ -319,7 +319,7 @@ export const NewEstudiante = ({ onStudentCreated }) => {
                     rules={{ required: "El sexo es requerido." }}
                     render={({ field }) => (
                       <>
-                        <label htmlFor="sexo">Sexo</label>
+                        <label htmlFor="sexo">Sexo<span style={{ color: 'red' }}>*</span></label>
                         <Dropdown
                           id="sexo"
                           value={field.value}

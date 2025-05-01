@@ -126,7 +126,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
               rules={{ required: "El nombre es requerido." }}
               render={({ field }) => (
                 <>
-                  <label htmlFor="nombre">Nombres</label>
+                  <label htmlFor="nombre">Nombres<span style={{ color: 'red' }}>*</span></label>
                   <InputText id="nombre" {...field} placeholder="Nombres " />
                 </>
               )}
@@ -140,7 +140,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                       defaultValue=""
                       render={({ field }) => (
                         <>
-                          <label htmlFor="edo_civil">edo. civil</label>
+                          <label htmlFor="edo_civil">edo. civil<span style={{ color: 'red' }}>*</span></label>
                           <Dropdown
                             id="edo_civil"
                             value={field.value}
@@ -162,14 +162,14 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                       rules={{ required: "La edad es requerida." }}
                       render={({ field }) => (
                         <>
-                          <label htmlFor="edad">Edad</label>
+                          <label htmlFor="edad">Edad<span style={{ color: 'red' }}>*</span></label>
                           <InputText type="number" id="edad" {...field} placeholder="Edad" />
                         </>
                       )}
                     />
              </div>
              </div>
-             <label htmlFor="cedula">CEDULA</label>
+             <label htmlFor="cedula">CEDULA<span style={{ color: 'red' }}>*</span></label>
             <div className="group">
               <Controller
                 name="tipoCedula"
@@ -255,7 +255,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             rules={{ required: "La correoElectronico es requerida." }}
             render={({ field }) => (
               <>
-                <label htmlFor="correoElectronico">correo Electrónico</label>
+                <label htmlFor="correoElectronico">correo Electrónico<span style={{ color: 'red' }}>*</span></label>
                 <InputText type="email" id="correoElectronico" {...field} placeholder="Ingrese correo Electronico" />
               </>
             )}
@@ -300,7 +300,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             rules={{ required: "El apellido es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="apellido">Apellidos</label>
+                <label htmlFor="apellido">Apellidos<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="apellido" {...field} placeholder="Apellidos" />
               </>
             )}
@@ -313,7 +313,7 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
                 rules={{ required: "es requerido." }}
                 render={({ field }) => (
                   <>
-                    <label htmlFor="tipo">Tipo</label>
+                    <label htmlFor="tipo">Tipo<span style={{ color: 'red' }}>*</span></label>
                     <Dropdown
                       id="tipo"
                       value={field.value}
@@ -333,13 +333,13 @@ export const NewRepresentante = ({ studentId, onRepresentanteCreated }) => {
             rules={{ required: "La direccion es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="direccion">Direccion</label>
+                <label htmlFor="direccion">Direccion<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="direccion" {...field} placeholder="Direccion" />
               </>
             )}
           />
           {errors.direccion && <small className="p-error">{errors.direccion.message}</small>}
-          <label htmlFor="telefono">Teléfono</label>
+          <label htmlFor="telefono">Teléfono<span style={{ color: 'red' }}>*</span></label>
             <div className="group">
                 <Controller
                   name="prefijoTelf"

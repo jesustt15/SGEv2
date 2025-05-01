@@ -89,13 +89,13 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             rules={{ required: "El nombre es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="nombre">nombre</label>
+                <label htmlFor="nombre">nombre<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="nombre" {...field} placeholder="Nombre del autorizado" />
               </>
             )}
           />
           {errors.nombre && <small className="p-error">{errors.nombre.message}</small>}
-           <label htmlFor="cedula">CEDULA</label>
+           <label htmlFor="cedula">CEDULA<span style={{ color: 'red' }}>*</span></label>
             <div className="group">
               <Controller
                 name="tipoCedula"
@@ -137,7 +137,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             rules={{ required: "La dirección es requerida." }}
             render={({ field }) => (
               <>
-              <label htmlFor="direccion">Dirección</label>
+              <label htmlFor="direccion">Dirección<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="direccion" {...field} placeholder="Dirección" />
               </>
             )}
@@ -150,7 +150,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             rules={{ required: "El observaciones es requerido." }}
             render={({ field }) => (
               <>
-                <label htmlFor="observaciones">observaciones</label>
+                <label htmlFor="observaciones">observaciones<span style={{ color: 'red' }}>*</span></label>
                 <InputText placeholder="Ingrese observaciones" id="observaciones" {...field} />
               </>
             )}
@@ -165,7 +165,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             rules={{ required: "El apellido es requerido." }}
             render={({ field }) => (
               <>
-              <label htmlFor="apellido">Apellido</label>
+              <label htmlFor="apellido">Apellido<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="apellido" {...field} placeholder="Apellido del autorizado" />
               </>
             )}
@@ -178,13 +178,13 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
             rules={{ required: "El parentesco es requerido." }}
             render={({ field }) => (
               <>
-              <label htmlFor="parentesco">Parentesco</label>
+              <label htmlFor="parentesco">Parentesco<span style={{ color: 'red' }}>*</span></label>
                 <InputText id="parentesco" {...field} placeholder="Parentesco del autorizado" />
               </>
             )}
           />
           {errors.parentesco && <small className="p-error">{errors.parentesco.message}</small>}
-          <label htmlFor="telefono">Teléfono</label>
+          <label htmlFor="telefono">Teléfono<span style={{ color: 'red' }}>*</span></label>
             <div className="group">
                 <Controller
                   name="prefijoTelf"
