@@ -7,6 +7,7 @@ import { PersonalDetails } from '../personals';
 import { useEstudiante, useEvento, usePersonal, useSeccion, useUsuario } from '../context';
 import { SeccionDetails } from '../secciones';
 import { UsuarioDetails } from '../usuarios';
+;
 
 const RightSidebar = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const RightSidebar = () => {
     const fetchEvents = async () => {
       try {
         const eventoData = await getEventos();
+        console.log(eventoData);
         setEvento(eventoData);
       } catch (error) {
         console.error("Error fetching events: ", error);
@@ -38,16 +40,33 @@ const RightSidebar = () => {
   }, [getEventos]);
 
   // Efecto para filtrar los eventos para el día de hoy.
-  useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    const todaysEvents = evento.filter(event => {
-      // Supongamos que en la BD se almacena la fecha en event.date en formato ISO.
-      const eventDate = event.date.split("T")[0];
-      return eventDate === today;
-    });
-    setTodayEvents(todaysEvents);
-  }, [evento]);
-
+   useEffect(() => {
+     // Ensure 'evento' is not null or undefined before filtering
+     if (!evento || evento.length === 0) {
+     console.log("Evento state is empty, skipping today's events filter.");
+     setTodayEvents([]); // Ensure todayEvents is empty if evento is empty
+      return;
+     }
+    
+     const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+    
+        // --- Add debug log for filtering ---
+        console.log(`Filtering events for today: "${today}"`);
+        // --- End debug log ---
+    
+     const todaysEvents = evento.filter(event => {
+            // --- Add debug log for each event comparison ---
+            console.log(`Comparing event date "${event.date}" with today "${today}". Match: ${event.date === today}`);
+            // --- End debug log ---
+            return event.date === today
+        });
+        console.log("Events filtered for today:", todaysEvents);
+        // --- End debug log ---
+    
+     setTodayEvents(todaysEvents);
+    
+     }, [evento]); 
+  
   // Variable que indica si debe o no renderizarse el sidebar.
   const shouldRenderSidebar =
     !(
@@ -89,21 +108,25 @@ const RightSidebar = () => {
       </div>
     );
   } else {
+    console.log("Rendering RightSidebarCalendar and Tareas de Hoy section."); // Log when this section is chosen
     content = (
       <>
         <RightSidebarCalendar />
         <div className="mini-tasks-section">
           <h2 className="tasks-title">Tareas de Hoy</h2>
+          {console.log(`Rendering tasks list. todayEvents.length: ${todayEvents.length}`)}
           {todayEvents.length > 0 ? (
             <ul className="tasks-list">
               {todayEvents.map(evento => (
+                 
                 <li key={evento.id} className="task-item">
-                  <span className="task-time">{evento.date}</span>
+                  <span className="task-time">{evento.start_time}</span>
                   <p className="task-desc">{evento.title}</p>
                 </li>
               ))}
             </ul>
           ) : (
+            
             <p className="no-tasks">No hay eventos hoy</p>
           )}
         </div>
