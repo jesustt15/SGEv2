@@ -438,14 +438,14 @@ const calendarEvents = (evento || []).map((evt) => {
           <>
             <label>{modalMode === "create" ? "AÑADIR EVENTO" : "Editar Evento"}</label>
             <form onSubmit={handleSubmit} className='form-modal'>
-                <label htmlFor="title">Título</label>
+                <label htmlFor="title">Título<span style={{ color: 'red' }}>*</span></label>
                 <InputText
                   type='text'
                   name='title'
                   value={formData.title}
                   onChange={handleInputChange}
                 />
-                <label htmlFor="description">Descripción</label>
+                <label htmlFor="description">Descripción<span style={{ color: 'red' }}>*</span></label>
                 <InputTextarea
                   id='description'
                   name='description'
@@ -453,7 +453,7 @@ const calendarEvents = (evento || []).map((evt) => {
                   onChange={handleInputChange}
                   required
                 />
-              <label htmlFor="startTime">Hora de inicio</label>
+              <label htmlFor="startTime">Hora de inicio<span style={{ color: 'red' }}>*</span></label>
               <Calendar
                 id="startTime"
                 name="startTime"
@@ -465,7 +465,7 @@ const calendarEvents = (evento || []).map((evt) => {
                 required
               />
 
-            <label htmlFor="endTime">Hora de finalización</label>
+            <label htmlFor="endTime">Hora de finalización<span style={{ color: 'red' }}>*</span></label>
             <Calendar
               id="endTime"
               name="endTime"
@@ -489,7 +489,7 @@ const calendarEvents = (evento || []).map((evt) => {
                     />
                   </div>
                   <div className="group-item-modal">
-                    <label htmlFor="type">ETIQUETA</label>
+                    <label htmlFor="type">ETIQUETA<span style={{ color: 'red' }}>*</span></label>
                     <Dropdown
                       id="type"
                       name="type"

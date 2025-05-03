@@ -7,7 +7,26 @@ import { PersonalDetails } from '../personals';
 import { useEstudiante, useEvento, usePersonal, useSeccion, useUsuario } from '../context';
 import { SeccionDetails } from '../secciones';
 import { UsuarioDetails } from '../usuarios';
-;
+
+// --- Helper function to format ISO time string to HH:MM ---
+const formatTime = (isoString) => {
+  if (!isoString) {
+    return ''; // Return empty if no time string provided
+  }
+  try {
+    // Create Date object using the ISO string (which includes timezone info)
+    const dateObj = new Date(isoString);
+    // Get local hours and minutes, padding with '0' if they are single digit
+    const hours = dateObj.getHours().toString().padStart(2, '0');
+    const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  } catch (error) {
+    console.error("Error formatting time:", isoString, error);
+    return 'Invalid Time'; // Fallback for parsing errors
+  }
+};
+// --- End Helper Function ---
+
 
 const RightSidebar = () => {
   const location = useLocation();
@@ -30,43 +49,58 @@ const RightSidebar = () => {
     const fetchEvents = async () => {
       try {
         const eventoData = await getEventos();
-        console.log(eventoData);
-        setEvento(eventoData);
+        console.log("Fetched Events Data:", eventoData); // Log fetched data
+        setEvento(eventoData || []); // Ensure evento is always an array
       } catch (error) {
         console.error("Error fetching events: ", error);
+        setEvento([]); // Set to empty array on error
       }
     };
     fetchEvents();
-  }, [getEventos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getEventos]); // Removed setEvento from dependencies as it might cause loops if getEventos doesn't use useCallback
 
-  // Efecto para filtrar los eventos para el día de hoy.
-   useEffect(() => {
-     // Ensure 'evento' is not null or undefined before filtering
-     if (!evento || evento.length === 0) {
-     console.log("Evento state is empty, skipping today's events filter.");
-     setTodayEvents([]); // Ensure todayEvents is empty if evento is empty
+  // Efecto para filtrar los eventos para el día de hoy (LOCAL TIME).
+  useEffect(() => {
+    // Ensure 'evento' is an array before filtering
+    if (!Array.isArray(evento) || evento.length === 0) {
+      console.log("Evento state is empty or not an array, skipping today's events filter.");
+      setTodayEvents([]); // Ensure todayEvents is empty
       return;
-     }
-    
-     const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
-    
-        // --- Add debug log for filtering ---
-        console.log(`Filtering events for today: "${today}"`);
-        // --- End debug log ---
-    
-     const todaysEvents = evento.filter(event => {
-            // --- Add debug log for each event comparison ---
-            console.log(`Comparing event date "${event.date}" with today "${today}". Match: ${event.date === today}`);
-            // --- End debug log ---
-            return event.date === today
-        });
-        console.log("Events filtered for today:", todaysEvents);
-        // --- End debug log ---
-    
-     setTodayEvents(todaysEvents);
-    
-     }, [evento]); 
-  
+    }
+
+    // --- FIX: Get today's date based on LOCAL timezone ---
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // JS months are 0-indexed
+    const day = now.getDate().toString().padStart(2, '0');
+    const todayLocal = `${year}-${month}-${day}`; // Format "YYYY-MM-DD" using local date parts
+    // --- End FIX ---
+
+    // --- Add debug log for filtering ---
+    console.log(`Filtering events for LOCAL today: "${todayLocal}"`);
+    // --- End debug log ---
+
+    const todaysEvents = evento.filter(event => {
+      // Assuming event.date is stored as "YYYY-MM-DD" string without timezone
+      // If event.date includes time or timezone, this comparison might need adjustment
+      const eventDatePart = event.date ? event.date.split("T")[0] : null; // Extract date part if it's a full ISO string
+
+      // --- Add debug log for each event comparison ---
+      console.log(`Comparing event date "${eventDatePart}" with local today "${todayLocal}". Match: ${eventDatePart === todayLocal}`);
+      // --- End debug log ---
+      return eventDatePart === todayLocal;
+    });
+
+    // --- Add debug log for filtered events ---
+    console.log("Events filtered for local today:", todaysEvents);
+    // --- End debug log ---
+
+    setTodayEvents(todaysEvents);
+
+  }, [evento]); // Dependency is 'evento' state
+
+
   // Variable que indica si debe o no renderizarse el sidebar.
   const shouldRenderSidebar =
     !(
@@ -87,8 +121,8 @@ const RightSidebar = () => {
   let content;
   if (location.pathname.includes('usuarios')) {
     content = <div className="estudiantes-detail-container">
-    <UsuarioDetails usuario={selectedUsuario} />
-  </div>
+      <UsuarioDetails usuario={selectedUsuario} />
+    </div>
   } else if (location.pathname.includes('estudiantes')) {
     content = (
       <div className="estudiantes-detail-container">
@@ -117,16 +151,17 @@ const RightSidebar = () => {
           {console.log(`Rendering tasks list. todayEvents.length: ${todayEvents.length}`)}
           {todayEvents.length > 0 ? (
             <ul className="tasks-list">
-              {todayEvents.map(evento => (
-                 
-                <li key={evento.id} className="task-item">
-                  <span className="task-time">{evento.start_time}</span>
-                  <p className="task-desc">{evento.title}</p>
+              {todayEvents.map(eventoItem => ( // Renamed to avoid conflict with outer 'evento' state
+
+                <li key={eventoItem.evento_id || eventoItem.id} className="task-item"> {/* Use a unique key */}
+                  {/* --- FIX: Use formatTime helper function --- */}
+                  <span className="task-time">{formatTime(eventoItem.start_time)}</span>
+                  {/* --- End FIX --- */}
+                  <p className="task-desc">{eventoItem.title}</p>
                 </li>
               ))}
             </ul>
           ) : (
-            
             <p className="no-tasks">No hay eventos hoy</p>
           )}
         </div>
@@ -138,7 +173,6 @@ const RightSidebar = () => {
 };
 
 export { RightSidebar };
-
 
 
 

@@ -236,8 +236,8 @@ export const NewEstudiante = ({ onStudentCreated }) => {
             />
           </div>
           {errors.alergias && <small className="p-error">{errors.alergias.message}</small>}
+          <span className="spancito">Los campos * son requeridos</span>
         </div>
-        {/* Columna dos */}
         <div className="form-columntwo">
           <Controller
             name="apellidos"

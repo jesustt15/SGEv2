@@ -281,3 +281,11 @@ h5{
     margin-top: 12px;
     text-transform: uppercase;
 }
+
+.spancito {
+    font-family: Archivo, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 200;
+    margin-top: 5rem;
+    align-self: flex-start;
+}

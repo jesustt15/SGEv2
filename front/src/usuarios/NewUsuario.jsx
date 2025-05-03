@@ -55,21 +55,21 @@ export const NewUsuario = () => {
       <h4>DATOS DEL NUEVO USUARIO</h4>
       <form className="form-alumno" onSubmit={handleSubmit(createUsuarioSubmit)}>
         <div className="form-columnone">
-          <label htmlFor="name">Nombre Completo</label>
+          <label htmlFor="name">Nombre Completo<span style={{ color: 'red' }}>*</span></label>
           <InputText
             id="name"
             {...register("name", { required: "El nombre es requerido" })}
           />
           {errors.name && <span>{errors.name.message}</span>}
           
-          <label htmlFor="username">Nombre de Usuario</label>
+          <label htmlFor="username">Nombre de Usuario<span style={{ color: 'red' }}>*</span></label>
           <InputText
             id="username"
             {...register("username", { required: "El usuario es requerido" })}
           />
           {errors.username && <span>{errors.username.message}</span>}
           
-          <label htmlFor="password">Contraseña</label>
+          <label htmlFor="password">Contraseña<span style={{ color: 'red' }}>*</span></label>
           <InputText
             id="password"
             type="password"
@@ -77,7 +77,7 @@ export const NewUsuario = () => {
           />
           {errors.password && <span>{errors.password.message}</span>}
           
-          <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+          <label htmlFor="confirmPassword">Confirmar Contraseña<span style={{ color: 'red' }}>*</span></label>
           <InputText
             id="confirmPassword"
             type="password"
