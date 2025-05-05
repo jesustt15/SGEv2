@@ -212,7 +212,7 @@ export const NewAutorizado = ({ studentId, onAutorizadoCreated }) => {
                   rules={{ required: "Ingrese el nro telefónico" ,
                     pattern: {
                       value: /^\d{7}$/,
-                      message: "El número de teléfono debe contener exactamente 11 dígitos."
+                      message: "El número de teléfono debe contener exactamente 7 dígitos."
                     }
                   }}
                   render={({ field }) => (

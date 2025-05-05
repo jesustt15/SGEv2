@@ -41,7 +41,7 @@ export const WelcomeMid = () => {
         const edad = parseInt(stu.edad, 10);
         if (!isNaN(edad)) {
           // Asigna la edad al grupo correspondiente
-          if (edad < 2) {
+          if (edad <= 2) {
             ageCounts[0]++;
           } else if (edad == 3) {
             ageCounts[1]++;

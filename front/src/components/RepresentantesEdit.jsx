@@ -242,7 +242,7 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
                         defaultValue=""
                         render={({ field }) => (
                         <InputText 
-                            placeholder="Ingresa condición especial" 
+                            placeholder="Ingrese dirección de trabajo" 
                             id="dire_trabajo" 
                             className="input-radio-button"
                             disabled={watch("trabajaOption") === "No"} 

@@ -61,44 +61,75 @@ const RightSidebar = () => {
   }, [getEventos]); // Removed setEvento from dependencies as it might cause loops if getEventos doesn't use useCallback
 
   // Efecto para filtrar los eventos para el día de hoy (LOCAL TIME).
-  useEffect(() => {
-    // Ensure 'evento' is an array before filtering
-    if (!Array.isArray(evento) || evento.length === 0) {
-      console.log("Evento state is empty or not an array, skipping today's events filter.");
-      setTodayEvents([]); // Ensure todayEvents is empty
-      return;
-    }
-
-    // --- FIX: Get today's date based on LOCAL timezone ---
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // JS months are 0-indexed
-    const day = now.getDate().toString().padStart(2, '0');
-    const todayLocal = `${year}-${month}-${day}`; // Format "YYYY-MM-DD" using local date parts
-    // --- End FIX ---
-
-    // --- Add debug log for filtering ---
-    console.log(`Filtering events for LOCAL today: "${todayLocal}"`);
-    // --- End debug log ---
-
-    const todaysEvents = evento.filter(event => {
-      // Assuming event.date is stored as "YYYY-MM-DD" string without timezone
-      // If event.date includes time or timezone, this comparison might need adjustment
-      const eventDatePart = event.date ? event.date.split("T")[0] : null; // Extract date part if it's a full ISO string
-
-      // --- Add debug log for each event comparison ---
-      console.log(`Comparing event date "${eventDatePart}" with local today "${todayLocal}". Match: ${eventDatePart === todayLocal}`);
-      // --- End debug log ---
-      return eventDatePart === todayLocal;
-    });
-
-    // --- Add debug log for filtered events ---
-    console.log("Events filtered for local today:", todaysEvents);
-    // --- End debug log ---
-
-    setTodayEvents(todaysEvents);
-
-  }, [evento]); // Dependency is 'evento' state
+  // Efecto para filtrar Y ORDENAR los eventos para el día de hoy (LOCAL TIME).
+    useEffect(() => {
+        // Ensure 'evento' is an array before filtering
+        if (!Array.isArray(evento) || evento.length === 0) {
+          console.log("Evento state is empty or not an array, skipping today's events filter.");
+          setTodayEvents([]); // Ensure todayEvents is empty
+          return;
+        }
+    
+        // --- Get today's date based on LOCAL timezone ---
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0'); // JS months are 0-indexed
+        const day = now.getDate().toString().padStart(2, '0');
+        const todayLocal = `${year}-${month}-${day}`; // Format "YYYY-MM-DD"
+        // --- End ---
+    
+        console.log(`Filtering events for LOCAL today: "${todayLocal}"`);
+    
+        const todaysEventsFiltered = evento.filter(event => {
+          // Asume que event.start_time es un timestamp ISO completo
+          // Necesitamos extraer la parte de la fecha en la ZONA HORARIA LOCAL del evento
+          // para comparar con todayLocal
+          if (!event.start_time) return false; // Ignorar eventos sin hora de inicio
+    
+          try {
+              // Crear objeto Date desde el timestamp
+              const eventDateObj = new Date(event.start_time);
+              // Obtener año, mes, día LOCALES del evento
+              const eventYear = eventDateObj.getFullYear();
+              const eventMonth = (eventDateObj.getMonth() + 1).toString().padStart(2, '0');
+              const eventDay = eventDateObj.getDate().toString().padStart(2, '0');
+              const eventDateLocal = `${eventYear}-${eventMonth}-${eventDay}`;
+    
+              // Comparar la fecha local del evento con la fecha local de hoy
+              console.log(`Comparing event LOCAL date "${eventDateLocal}" with local today "${todayLocal}". Match: ${eventDateLocal === todayLocal}`);
+              return eventDateLocal === todayLocal;
+          } catch(error) {
+              console.error("Error parsing event start_time for filtering:", event.start_time, error);
+              return false; // No incluir si hay error de parseo
+          }
+        });
+    
+        console.log("Events filtered for local today (before sorting):", todaysEventsFiltered);
+    
+        // --- ORDENAR los eventos filtrados por hora de inicio ---
+        const sortedEvents = todaysEventsFiltered.sort((a, b) => {
+            try {
+                // Convertir start_time (que son strings ISO) a objetos Date para comparar
+                const dateA = new Date(a.start_time);
+                const dateB = new Date(b.start_time);
+    
+                // Restar las fechas devuelve la diferencia en milisegundos,
+                // lo que ordena de más temprano a más tarde.
+                return dateA - dateB;
+            } catch (error) {
+                // Manejar posible error si start_time no es un string de fecha válido
+                console.error("Error comparing event start times during sort:", a.start_time, b.start_time, error);
+                return 0; // Si hay error, no cambiar el orden relativo de a y b
+            }
+        });
+        // --- FIN DE LA ORDENACIÓN ---
+    
+        console.log("Sorted events for local today:", sortedEvents); // Log de los eventos ordenados
+    
+        // Guardar los eventos ORDENADOS en el estado
+        setTodayEvents(sortedEvents);
+    
+      }, [evento]); // La dependencia sigue siendo 'evento' // Dependency is 'evento' state
 
 
   // Variable que indica si debe o no renderizarse el sidebar.

@@ -38,7 +38,7 @@ const Estudiante = sequelize.define('estudiantes', {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      len: [6,90, {msg: 'El lugar de nacimiento debe tener entre 6 y 90 caracteres.'}],
+      len: [2,90, {msg: 'El lugar de nacimiento debe tener entre 6 y 90 caracteres.'}],
     }
   },
   edad: DataTypes.INTEGER,
