@@ -34,7 +34,23 @@
 }
 
 .searcher {
+    width: 50%;
+    position: relative; /* Necesario para posicionar el ícono relativo a este contenedor */
+}
+
+.searcher .pi-search {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1; /* Asegura que el ícono se muestre por encima del input */
+}
+
+.search-bar {
+    padding: 0.7rem;
+    padding-left: 2.5rem; /* Incrementa el padding para dejar espacio al ícono */
     width: 60%;
+    margin-left: 2px;
 }
 
 .filters {
@@ -44,11 +60,7 @@
     width: 40%;
 }
 
-.search-bar{
-    padding: 0.7rem;
-    width: 80%;
-    margin-left: 2px;
-}
+
 
 h3 {
     font-family: Archivo, sans-serif;

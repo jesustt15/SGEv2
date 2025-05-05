@@ -118,9 +118,8 @@ export const Estudiantes = () => {
 
     const renderHeader = () => {
         return (
-            <div className="table-header-container">
-                <div className="button-container">
-                    {/* ... Add Button ... */}
+          <>
+          <div className="button-container">
                     {role === 'admin' && (
                         <NavLink className="p-button p-component p-button-success" to="/estudiantes/new">
                             <span className="pi pi-plus p-button-icon p-button-icon-left"></span>
@@ -128,9 +127,8 @@ export const Estudiantes = () => {
                         </NavLink>
                     )}
                 </div>
-                 {/* --- Filters Row --- */}
-                <div className="filters-container">
-                    <div className="searcher p-input-icon-left">
+                <div className="header-container">
+                    <div className="searcher">
                         <i className="pi pi-search" />
                         <InputText
                             value={globalFilter} // Bind to globalFilter state
@@ -139,7 +137,7 @@ export const Estudiantes = () => {
                             className="search-bar"
                         />
                     </div>
-                    {/* Dropdown for Sexo Filter */}
+                    <div className="filters">
                     <Dropdown
                         value={filters.sexo.value} // Bind to main filters state
                         options={sexOptions}
@@ -163,6 +161,7 @@ export const Estudiantes = () => {
                         placeholder="Condición"
                         showClear
                     />
+                    </div>
                     <Button
                         label="Limpiar"
                         icon="pi pi-filter-slash"
@@ -171,8 +170,8 @@ export const Estudiantes = () => {
                         tooltip="Quitar todos los filtros"
                         tooltipOptions={{ position: 'top' }}
                     />
-                </div>
-            </div>
+              </div>
+          </>              
         );
     };
 
