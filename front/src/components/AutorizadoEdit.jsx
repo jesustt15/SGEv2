@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,7 +12,8 @@ import { FileUpload } from 'primereact/fileupload';
 
 export const AutorizadoEdit = ({ initialData, toastRef,  onAutorizadoUpdated }) => {
   const { updateAutorizado } = useAutorizado();
-  const toast = toastRef || useRef(null);
+  const internalToastRef = useRef(null);
+  const toast = toastRef || internalToastRef;
 
   const { handleSubmit, reset, control, formState: { errors } } = useForm({
     defaultValues: {
