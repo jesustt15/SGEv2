@@ -77,6 +77,7 @@ export const RepresentantesEdit = ({ initialData, toastRef,  onRepresentantesUpd
       formData.append('ced', data.ced);
       formData.append('direccion', data.direccion);    
       formData.append('telf', data.telf);
+      formData.append('edad', data.edad);
       formData.append('edo_civil', data.edo_civil?.name || '');
       formData.append('telf_trabajo', data.telf_trabajo);
       formData.append('dire_trabajo', data.dire_trabajo);

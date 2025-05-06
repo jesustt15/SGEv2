@@ -9,6 +9,7 @@ import { FilterMatchMode } from 'primereact/api';
 import { Toast } from 'primereact/toast';
 import { useEstudiante, useAuth } from '../context';
 import './estudiantes.css';
+import { MultiSelect } from 'primereact/multiselect';
 // Remove MultiSelect import if no longer needed
 // import { MultiSelect } from 'primereact/multiselect';
 
@@ -138,7 +139,7 @@ export const Estudiantes = () => {
                         />
                     </div>
                     <div className="filters">
-                    <Dropdown
+                    <MultiSelect
                         value={filters.sexo.value} // Bind to main filters state
                         options={sexOptions}
                         onChange={onSexoFilterChange} // Updates main filters state
@@ -146,7 +147,7 @@ export const Estudiantes = () => {
                         showClear
                     />
                     {/* Dropdown for Edad Filter */}
-                    <Dropdown
+                    <MultiSelect
                         value={filters.edad.value} // Bind to main filters state
                         options={edadOptions}
                         onChange={onEdadFilterChange} // Updates main filters state

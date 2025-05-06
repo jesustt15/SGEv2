@@ -81,15 +81,7 @@ export function AutorizadoProvider({ children }) {
 
        const updateAutorizado = async (id, autorizado) => {
         try {
-          // Extraemos los valores enviados en el FormData
-          
-          // Convertimos id a string para la comparación
-
-      
-          // Validación de duplicados para cédula
-        
-      
-          // Se procede a actualizar el autorizado utilizando la request correspondiente
+   
           const response = await updateAutorizadoRequest(id, autorizado);
           
           // Actualizamos la lista de autorizados

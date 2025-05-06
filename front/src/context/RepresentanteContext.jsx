@@ -80,17 +80,6 @@ export function RepresentanteProvider({ children }) {
       
       const updateRepresentante = async (id, representante) => {
         try {
-          const cedulaCompletaFromForm = representante.get('ced');
-          const telfFromForm = representante.get('telf');
-
-          const existingRepresentante = representantes.find(u => u.ced === cedulaCompletaFromForm);
-          if (existingRepresentante) {
-            throw [{ field: 'ced', message: 'Este representante ya existe.' }];
-          }
-          const existingPhone = representantes.find(u => u.telf === telfFromForm);
-          if (existingPhone) {
-            throw [{ field: 'telf', message: 'Este telf ya esta registrado' }];
-          }
 
           await updateRepresentanteRequest(id, representante);
 
